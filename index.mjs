@@ -1,1 +1,1 @@
-console.log("diavlo");
+console.log("diablo");
