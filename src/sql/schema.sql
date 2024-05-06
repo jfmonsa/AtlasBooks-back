@@ -1,0 +1,126 @@
+-- Creación de tablas
+CREATE TABLE BOOK (
+    id SERIAL PRIMARY KEY,
+    isbn VARCHAR(50),
+    title VARCHAR(255),
+    year INTEGER,
+    vol VARCHAR(50),
+    nPages INTEGER,
+    publisher VARCHAR(255),
+    pathBookCover VARCHAR(255)
+);
+
+CREATE TABLE BOOK_FILES (
+    id SERIAL PRIMARY KEY,
+    idBook INTEGER REFERENCES BOOK(id),
+    path VARCHAR(255)
+);
+
+CREATE TABLE BOOK_AUTHORS (
+    id SERIAL PRIMARY KEY,
+    idBook INTEGER REFERENCES BOOK(id),
+    author VARCHAR(255)
+);
+
+CREATE TABLE BOOK_LANG (
+    id SERIAL PRIMARY KEY,
+    idBook INTEGER REFERENCES BOOK(id),
+    language VARCHAR(50)
+);
+
+CREATE TABLE USER (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    nickname VARCHAR(50),
+    email VARCHAR(255),
+    country VARCHAR(100),
+    registerDate DATE,
+    password VARCHAR(255),
+    pathProfilePic VARCHAR(255),
+    status VARCHAR(50),
+    isAdmin BOOLEAN
+);
+
+CREATE TABLE BOOK_COMMENT (
+    idComent SERIAL PRIMARY KEY,
+    idUser INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    date DATE,
+    text TEXT
+);
+
+CREATE TABLE BOOK_RATE (
+    idUser INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    rateValue INTEGER,
+    PRIMARY KEY (idUser, idBook)
+);
+
+CREATE TABLE BOOK_UPLOAD (
+    idUser INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    date DATE,
+    PRIMARY KEY (idUser, idBook)
+);
+
+CREATE TABLE BOOK_DOWNLOAD (
+    idUser INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    date DATE,
+    PRIMARY KEY (idUser, idBook)
+);
+
+CREATE TABLE BOOK_REPORT (
+    id SERIAL PRIMARY KEY,
+    idUser INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    date DATE,
+    motivation TEXT
+);
+
+CREATE TABLE BOOK_DELETE (
+    id SERIAL PRIMARY KEY,
+    idAdmin INTEGER REFERENCES USER(id),
+    idBook INTEGER REFERENCES BOOK(id),
+    date DATE,
+    motivation TEXT
+);
+
+CREATE TABLE USER_BAN (
+    id SERIAL PRIMARY KEY,
+    idUserBanned INTEGER REFERENCES USER(id),
+    idAdmin INTEGER REFERENCES USER(id),
+    motivation TEXT,
+    date DATE
+);
+
+CREATE TABLE BOOK_LIST (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    date DATE,
+    idUserCreator INTEGER REFERENCES USER(id)
+);
+
+CREATE TABLE BOOK_IN_LIST (
+    idBook INTEGER REFERENCES BOOK(id),
+    idList INTEGER REFERENCES BOOK_LIST(id),
+    PRIMARY KEY (idBook, idList)
+);
+
+CREATE TABLE CATEGORY (
+    id SERIAL PRIMARY KEY,
+    categoryName VARCHAR(255)
+);
+
+CREATE TABLE SUBCATEGORY (
+    id SERIAL PRIMARY KEY,
+    subCategoryName VARCHAR(255),
+    idCategoryFather INTEGER REFERENCES CATEGORY(id)
+);
+
+CREATE TABLE BOOK_IN_SUBCATEGORY (
+    idBook INTEGER REFERENCES BOOK(id),
+    idSubcategory INTEGER REFERENCES SUBCATEGORY(id),
+    PRIMARY KEY (idBook, idSubcategory)
+);
