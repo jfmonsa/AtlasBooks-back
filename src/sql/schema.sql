@@ -126,9 +126,8 @@ CREATE TABLE BOOK_DELETE (
     motivation TEXT NOT NULL,
 
     PRIMARY KEY(id),
-    -- TODO: Duda sobre esta parte, como preservar los datos en lugar de nulificarlos?
     CONSTRAINT fk_idUser_delete_admin FOREIGN KEY (idAdmin) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT fk_idBook_delete_book FOREIGN KEY (idBook) REFERENCES BOOK(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_idBook_delete_book FOREIGN KEY (idBook) REFERENCES BOOK(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
 
@@ -140,9 +139,8 @@ CREATE TABLE USER_BAN (
     dateBan TIMESTAMP NOT NULL,
 
     PRIMARY KEY(id),
-    -- TODO:Duda sobre esta parte, como preservar los datos en lugar de nulificarlos?
-    CONSTRAINT fk_idUser_ban_userBanned FOREIGN KEY (idUserBanned) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_idBook_ban_userAdmin FOREIGN KEY (idAdmin) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_idUser_ban_userBanned FOREIGN KEY (idUserBanned) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_idBook_ban_userAdmin FOREIGN KEY (idAdmin) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ;
 
 
@@ -154,7 +152,7 @@ CREATE TABLE BOOK_LIST (
     idUserCreator INTEGER,
 
     PRIMARY KEY(id),
-    CONSTRAINT fk_list FOREIGN KEY (idUserCreator) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE
+    CONSTRAINT fk_list FOREIGN KEY (idUserCreator) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
 
