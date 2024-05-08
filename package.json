@@ -4,9 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start-antiguoxd": "node --watch index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node --watch src/index.js"
   },
   "author": "",
   "license": "ISC",
