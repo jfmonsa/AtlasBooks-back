@@ -1,7 +1,7 @@
 # 1. Tabla Entidad libro
 
 ```
-BOOK( id (pk), isbn, title, year, vol, nPages, publisher, pathBookCover )
+BOOK( id (pk), isbn, title, description, year, vol, nPages, publisher, pathBookCover )
 ```
 
 ## 1.1 Tabla Atributos multivalorados de la entidad libro

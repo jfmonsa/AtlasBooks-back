@@ -4,6 +4,7 @@ CREATE TABLE BOOK (
     id SERIAL,
     isbn VARCHAR(50),
     title VARCHAR(255) NOT NULL,
+    descriptionB TEXT NOT NULL,
     yearReleased INTEGER,
     vol INTEGER,
     nPages INTEGER,
