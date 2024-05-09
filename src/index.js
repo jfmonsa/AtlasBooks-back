@@ -1,9 +1,9 @@
 import express from "express";
-//NOTA: Libreria necesaria al utilizar al tener el back y el front separados
+//NOTA:(cors) Libreria necesaria al utilizar al tener el back y el front separados
 // mas info: https://www.youtube.com/watch?v=zGCjxCqxVY4
 import cors from "cors";
 //import morgan from "morgan";
-//import router from "./routes/tasks.routes.js";
+import router from "./routes/atlas.routes.js";
 import { port } from "./config.js";
 import { pool } from "./db.js";
 const app = express();
