@@ -1,24 +1,33 @@
 import express from "express";
+//NOTA: Libreria necesaria al utilizar al tener el back y el front separados
+// mas info: https://www.youtube.com/watch?v=zGCjxCqxVY4
+import cors from "cors";
+//import morgan from "morgan";
+//import router from "./routes/tasks.routes.js";
+import { port } from "./config.js";
 import { pool } from "./db.js";
 const app = express();
 
-// TODO: hacer un archivo donde tengamos todas las constantes env
-// de datos sensibles como la password para la base de datos, el puerto,
-// etc. (este archivo se debe poner en el git ignore)
-const port = process.env.PORT || 3001;
+//---------------------
+// Middlewares
+app.use(cors());
+//app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-app.get("/api", (req, res) => {
-  //response de prueba
-  res.send({
-    data: "Hola mundo",
-  });
+// Routes
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to my API" });
 });
 
-//EJEMPLO: exponer los resultados de usuarios
-// el json de users que retornamos es temporal, ahí debe ir
-// el resultado de una query a la base de datos
-app.get("/api/user", (req, res) => {
-  res.json({ users: ["user1", "user2", "user3", "user4"] });
+app.use(router);
+
+// handling errors
+app.use((err, req, res, next) => {
+  return res.status(500).json({
+    status: "error",
+    message: err.message,
+  });
 });
 
 app.listen(port, () => {
