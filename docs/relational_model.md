@@ -47,7 +47,7 @@ BOOK_DOWNLOAD( (idUser, idBook)(pk), date)
 
 ```
 // Tabla de reporte de contenido inadecuado
-BOOK_REPORT( id (pk), idUser, idBook, date, motivation)
+BOOK_REPORT( id (pk), idUser, idBook, date, motivation, status)
 	idUser -> USERS.id
 	idBook -> BOOK.id
 
@@ -65,7 +65,7 @@ USER_BAN( id (pk), idUserBanned, idAdmin, motivation, date)
 # 5. Tablas Para Registrar el Manejo de Listas
 
 ```
-BOOK_LIST ( id (pk), title, description, date, idUserCreator)
+BOOK_LIST ( id (pk), title, description, date, ispublic?, idUserCreator)
 	idUserCreator -> USERS.id
 
 BOOK_IN_LIST( (idBook, idList) (pk) )
