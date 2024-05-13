@@ -31,5 +31,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server at: http://loacalhost:${port}`);
+  console.log(`Server at: http://localhost:${port}`);
 });
