@@ -5,7 +5,7 @@ import cors from "cors";
 //import morgan from "morgan";
 import router from "./routes/atlas.routes.js";
 import { port } from "./config.js";
-import { pool } from "./db.js";
+//import { pool } from "./db.js";
 const app = express();
 
 //---------------------
