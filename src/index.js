@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to my API" });
+  res.json({ message: "Welcome to AtlasBooks" });
 });
 
 app.use(router);
