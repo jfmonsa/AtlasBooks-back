@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to AtlasBooks" });
 });
 
-app.use(router);
+app.use("/api",router);
 
 // handling errors
 app.use((err, req, res, next) => {
