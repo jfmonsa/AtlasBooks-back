@@ -3,8 +3,8 @@ import express from "express";
 // mas info: https://www.youtube.com/watch?v=zGCjxCqxVY4
 import cors from "cors";
 //import morgan from "morgan";
-import router from "../src/routes/atlas.routes.js";
-import { port } from "../src/config.js";
+import router from "./routes/atlas.routes.js";
+import { port } from "./config.js";
 //import { pool } from "./db.js";
 const app = express();
 
