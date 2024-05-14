@@ -13,7 +13,11 @@
 // });
 
 import { Router } from "express";
+import { register, login } from "../controllers/atlas.controller.js";
 const router = Router();
+
+router.post('/register', register)
+router.post('/login', login)
 
 //routes here
 export default router;
