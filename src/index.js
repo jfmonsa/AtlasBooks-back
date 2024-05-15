@@ -1,26 +1,32 @@
 import express from "express";
-//NOTA:(cors) Libreria necesaria al utilizar al tener el back y el front separados
-// mas info: https://www.youtube.com/watch?v=zGCjxCqxVY4
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
 import cors from "cors";
-//import morgan from "morgan";
-import router from "./routes/atlas.routes.js";
-import { port } from "./config.js";
-//import { pool } from "./db.js";
-const app = express();
 
-//---------------------
+const app = express();
+const port = process.env.PORT || 3000;
+import router from "./routes/atlas.routes.js";
+
 // Middlewares
 app.use(cors());
-//app.use(morgan("dev"));
+// -- support post requests
 app.use(express.json());
+// -- support file uploading
+app.use(express.static("storage"));
+// -- xd?
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
+// TODO: Abstraer toda la logica de las rutas al router
+/*
+ * API Rest
+ */
+app.use("/api", router);
+
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to AtlasBooks" });
 });
-
-app.use("/api",router);
 
 // handling errors
 app.use((err, req, res, next) => {
@@ -33,3 +39,18 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server at: http://localhost:${port}`);
 });
+
+//y esto xd?
+// morganBody(app, {
+//   skip: function (req, res) {
+//     return (
+//       [403, 404, 409, 401].includes(res.statusCode) || res.statusCode < 400
+//     );
+//   },
+//   stream: loggerSlack,
+// });
+
+/**
+ * API - Documentation
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+ */
