@@ -45,8 +45,3 @@ app.listen(port, () => {
 //   },
 //   stream: loggerSlack,
 // });
-
-/**
- * API - Documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
- */
