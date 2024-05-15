@@ -10,5 +10,11 @@ router.get("/", (req, res) => {
 router.post("/register", register);
 router.post("/login", login);
 
+// TODO: route /books: GET, POST, DELETE, PUT
+router.get("/books", (req, res) => {
+  const data = ["hola"];
+  res.send({ data });
+});
+
 //routes here
 export default router;

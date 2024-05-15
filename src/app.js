@@ -1,10 +1,49 @@
 import express from "express";
-import moragn from "morgan";
+// import dotenv from 'dotenv';
+// dotenv.config();
+// const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
+//import morgan from "morgan"; ??
+import cors from "cors";
 
-import atlasRoutes from "./routes/atlas.routes.js";
 const app = express();
+const port = process.env.PORT || 3000;
+import router from "./routes/atlas.routes.js";
 
-app.use(moragn("dev"));
+// Middlewares
+// app.use(morgan("dev")); ??
+app.use(cors());
+// -- support post requests
 app.use(express.json());
-app.use(atlasRoutes);
-export default app;
+// -- support file uploading
+app.use(express.static("storage"));
+// -- xd?
+app.use(express.urlencoded({ extended: false }));
+
+// Routes
+// TODO: Abstraer toda la logica de las rutas al router
+/*
+ * API Rest
+ */
+app.use("/api", router);
+
+// handling errors
+app.use((err, req, res, next) => {
+  return res.status(500).json({
+    status: "error",
+    message: err.message,
+  });
+});
+
+app.listen(port, () => {
+  console.log(`Server at: http://localhost:${port}`);
+});
+
+//y esto xd?
+// morganBody(app, {
+//   skip: function (req, res) {
+//     return (
+//       [403, 404, 409, 401].includes(res.statusCode) || res.statusCode < 400
+//     );
+//   },
+//   stream: loggerSlack,
+// });
