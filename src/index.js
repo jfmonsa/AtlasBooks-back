@@ -24,10 +24,6 @@ app.use(express.urlencoded({ extended: false }));
  */
 app.use("/api", router);
 
-app.get("/", (req, res) => {
-  res.json({ message: "Welcome to AtlasBooks" });
-});
-
 // handling errors
 app.use((err, req, res, next) => {
   return res.status(500).json({

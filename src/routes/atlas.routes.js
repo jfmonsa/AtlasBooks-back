@@ -2,7 +2,7 @@ import { Router } from "express";
 import { register, login } from "../controllers/atlas.controller.js";
 const router = Router();
 
-//Hellow world
+//Hello world
 router.get("/", (req, res) => {
   res.json({ message: "Welcome to AtlasBooks" });
 });
