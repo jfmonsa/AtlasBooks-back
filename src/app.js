@@ -7,7 +7,7 @@ import cors from "cors";
 
 const app = express();
 const port = process.env.PORT || 3000;
-import router from "./routes/atlas.routes.js";
+import router from "./routes/index.js";
 
 // Middlewares
 // app.use(morgan("dev")); ??
