@@ -27,6 +27,9 @@ const loadRoutes = async () => {
         try {
           // Utiliza la importación dinámica para importar el módulo
           let module = await import(`./${fileWithOutExt}.js`);
+          // let module = await import(
+          //   path.join(PATH_ROUTES, `${fileWithOutExt}.js`)
+          // );
           router.use(`/${fileWithOutExt}`, module.default);
         } catch (error) {
           console.error(
@@ -41,5 +44,10 @@ const loadRoutes = async () => {
   }
 };
 loadRoutes();
+
+//Hello world
+router.get("/", (req, res) => {
+  res.send({ hola: "Hola mundo" });
+});
 
 export default router;
