@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 // -- support file uploading
 app.use(express.static("storage"));
-// -- xd?
+// -- converts form data in objects, extended false = accept only simple data, not matrices and so on
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
