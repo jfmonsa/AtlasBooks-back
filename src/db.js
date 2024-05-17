@@ -2,8 +2,16 @@
 import pg from "pg";
 const { Pool } = pg;
 
-export const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
+// export const pool = new Pool({
+//   connectionString: process.env.POSTGRES_URL,
+// });
+
+export const pool = new Pool ({ 
+  user: process.env.LOCALDB_USER,
+  host: process.env.LOCALDB_HOST,
+  database : process.env.LOCALDB_NAME,
+  password : "RamSterB",
+  port : process.env.LOCALDB_PORT,
 });
 
 pool.connect((err) => {
