@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../db.local.js";
 
 /**
  * Get books from the data base

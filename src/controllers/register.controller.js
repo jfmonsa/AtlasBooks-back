@@ -42,14 +42,15 @@ export const register = async (req, res) => {
 
     //Insert the user into the database
     const result = await pool.query(
-      "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate,statusu,isadmin) VALUES ($1, $2, $3, $4,$5, $6,$7,$8)",
+      "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate,statusu,isadmin) VALUES ($1, $2, $3, $4,$5, $6,$7,$8) returning *",
       [name, email, passwordHash, nickName, country, registerDate, true, false]
     );
 
-    //Create the token
-    const data = {
-      token: await tokenSign(result.rows[0]),
-      user: result,
+    
+    // //Create the token
+     const data = {
+       token: await tokenSign(result.rows[0]),
+       user: result.rows[0],
     };
 
     //Return the response
