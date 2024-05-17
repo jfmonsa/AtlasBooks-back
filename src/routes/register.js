@@ -3,6 +3,6 @@ import { register } from "../controllers/atlas.controller.js";
 
 const router = Router();
 
-router.post("/register", register);
+router.post("/", register);
 
 export default router;

@@ -2,6 +2,6 @@ import { Router } from "express";
 import { login } from "../controllers/atlas.controller.js";
 const router = Router();
 
-router.post("/login", login);
+router.post("/", login);
 
 export default router;
