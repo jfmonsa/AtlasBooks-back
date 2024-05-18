@@ -31,17 +31,18 @@ export const login = async (req, res) => {
 
     //Create the token
     const data = {
-      token: await tokenSign(result.rows[0]),
-      user: result,
+      token: await tokenSign(user.rows[0]),
+      user: user.rows[0],
     };
 
     //Return the response
-    res.json({ token });
+    res.status(201).json("User logged in successfully");
+    //console.log(data);
+
   } catch (error) {
     console.log(error.message);
   }
 
-  res.send("login");
 };
 
 
