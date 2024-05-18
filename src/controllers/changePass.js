@@ -1,13 +1,5 @@
 import bycript from "bcryptjs";
 import  {pool}  from "../db.js";
-import { JWTE } from "jsonwebtoken";
-
-export const current_user = async (req, res) => {
-    return res.status(200).send({
-        message: "Current user data successfully fetched",
-        data: req.user
-    });
-}
 
 export const change_password = async (req, res) => {
     try{
@@ -22,9 +14,10 @@ export const change_password = async (req, res) => {
             throw new Error("New password must be different from the current password");
         }
 
-         if(newPassword !== confirmPassword){
-              throw new Error("Passwords do not match");
-         }
+        const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        if (user.rows.length === 0) {
+        return res.status(400).json("Email or password is incorrect");
+        }
 
          
 
@@ -32,7 +25,7 @@ export const change_password = async (req, res) => {
 
          const result = await pool.query(
             "UPDATE users SET passwordu = $1 WHERE id = $2",
-            [passwordHash, req.user.id]
+            [passwordHash, req.user.passwordu]
           );
         
 
