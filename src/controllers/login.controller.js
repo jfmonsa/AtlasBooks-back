@@ -1,4 +1,4 @@
-import {pool} from "../db.js";
+import { pool } from "../db.js";
 import bycript from "bcryptjs";
 import { tokenSign } from "../utils/handleJWT.js";
 
@@ -15,7 +15,7 @@ export const login = async (req, res) => {
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
-    
+
     if (user.rows.length === 0) {
       return res.status(400).json("Email or password is incorrect");
     }
@@ -36,13 +36,8 @@ export const login = async (req, res) => {
     };
 
     //Return the response
-    res.status(201).json("User logged in successfully");
-    //console.log(data);
-
+    res.json({ data });
   } catch (error) {
     console.log(error.message);
   }
-
 };
-
-
