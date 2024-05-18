@@ -11,14 +11,13 @@ if (BD == "remota") {
     connectionString: process.env.POSTGRES_URL,
   });
 } else {
-  console.log("Hola");
-  pool = new Pool ({ 
+  pool = new Pool({
     user: process.env.LOCALDB_USER,
     host: process.env.LOCALDB_HOST,
-    database : process.env.LOCALDB_NAME,
-    password : process.env.LOCALDB_PASSWORD,
-    port : process.env.LOCALDB_PORT,
-  });  
+    database: process.env.LOCALDB_NAME,
+    password: process.env.LOCALDB_PASSWORD,
+    port: process.env.LOCALDB_PORT,
+  });
 }
 pool.connect((err) => {
   if (err) throw err;

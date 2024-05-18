@@ -1,3 +1,6 @@
 node_modules
 .env
-db.local.js
+
+# files uploaded by users on the server 
+storage
+>>>>>>> e5266c7 (Upload files to the server working :))

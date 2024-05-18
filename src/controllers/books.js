@@ -1,5 +1,4 @@
-import { pool } from "../db.local.js";
-
+import { pool } from "../db.js";
 /**
  * Get books from the data base
  * @param {*} req
@@ -33,21 +32,16 @@ export const getBook = async (req, res) => {
  * @param {*} req
  * @param {*} res
  */
+
 export const createBook = async (req, res) => {
   //getting data
-  const {
-    isbn,
-    title,
-    descriptionB,
-    yearReleased,
-    vol,
-    nPages,
-    publisher,
-    pathBookCover,
-  } = req.body;
+  console.log(req.body);
+
+  const { isbn, title, descriptionB, yearReleased, vol, nPages, publisher } =
+    req.body;
 
   //arr values for db query
-  const values = [
+  const query_values = [
     isbn,
     title,
     descriptionB,
@@ -55,14 +49,34 @@ export const createBook = async (req, res) => {
     vol,
     nPages,
     publisher,
-    pathBookCover,
   ];
-  console.log(values);
 
-  /*const db_query = await pool.query(
+  console.log(req.files);
+
+  // Obtén los archivos subidos
+  const cover = req.files["cover"] ? req.files["cover"][0].path : null;
+  const bookFiles = req.files["bookFiles"]
+    ? req.files["bookFiles"].map((file) => file.path)
+    : [];
+
+  /*
+  const db_query = await pool.query(
   "INSERT INTO BOOK (isbn, title, descriptionB, yearReleased, vol, nPages, publisher, pathBookCover) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-  values
+  query_values
 );*/
+
+  /*
+   const bookId = db_query.rows[0].id;
+
+    // Si tienes una tabla separada para almacenar las rutas de los archivos, puedes hacer algo como esto:
+    if (bookFiles.length > 0) {
+      const fileQueries = bookFiles.map(path => pool.query(
+        'INSERT INTO BookFiles (bookId, filePath) VALUES ($1, $2)',
+        [bookId, path]
+      ));
+      await Promise.all(fileQueries);
+    }
+*/
   res.send({ algo: 1 });
 };
 
