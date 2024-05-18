@@ -1,10 +1,10 @@
-import  bycript  from "bcryptjs";
+import bycript from "bcryptjs";
 import { pool } from "../db.js";
 import { tokenSign } from "../utils/handleJWT.js";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, nickName, country, registerDate } = req.body;
+    const { name, email, password, nickName, country } = req.body;
 
     //Validate if the fields are empty
     if (
@@ -12,8 +12,7 @@ export const register = async (req, res) => {
       !email ||
       !password ||
       !nickName ||
-      !country ||
-      !registerDate
+      !country 
     ) {
       return res.status(400).json("Missing fields");
     }
@@ -40,17 +39,19 @@ export const register = async (req, res) => {
       return res.status(400).json("Nickname already exists");
     }
 
+    //Get the current date
+    const registerDate = new Date(Date.now());
+
     //Insert the user into the database
     const result = await pool.query(
-      "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate,statusu,isadmin) VALUES ($1, $2, $3, $4,$5, $6,$7,$8) returning *",
-      [name, email, passwordHash, nickName, country, registerDate, true, false]
+      "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate, statusu, isadmin, pathprofilepic) VALUES ($1, $2, $3, $4,$5, $6,$7,$8,$9) returning *",
+      [name, email, passwordHash, nickName, country, registerDate, true, false,"../storage/usersProfilePic/default.webp"]
     );
 
-    
     // //Create the token
-     const data = {
-       token: await tokenSign(result.rows[0]),
-       user: result.rows[0],
+    const data = {
+      token: await tokenSign(result.rows[0]),
+      user: result.rows[0],
     };
 
     //Return the response
@@ -60,4 +61,3 @@ export const register = async (req, res) => {
     console.log(error.message);
   }
 };
-
