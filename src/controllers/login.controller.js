@@ -1,4 +1,4 @@
-import {pool} from "../db.local.js";
+import {pool} from "../db.js";
 import bycript from "bcryptjs";
 import { tokenSign } from "../utils/handleJWT.js";
 

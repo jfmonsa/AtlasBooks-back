@@ -1,5 +1,5 @@
 import  bycript  from "bcryptjs";
-import { pool } from "../db.local.js";
+import { pool } from "../db.js";
 import { tokenSign } from "../utils/handleJWT.js";
 
 export const register = async (req, res) => {
