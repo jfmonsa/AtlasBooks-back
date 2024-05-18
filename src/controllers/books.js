@@ -65,8 +65,9 @@ export const createBook = async (req, res) => {
   query_values
 );*/
 
+  //getting the auto increment id
+  //const bookId = db_query.rows[0].id;
   /*
-   const bookId = db_query.rows[0].id;
 
     // Si tienes una tabla separada para almacenar las rutas de los archivos, puedes hacer algo como esto:
     if (bookFiles.length > 0) {
