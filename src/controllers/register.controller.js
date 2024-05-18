@@ -1,4 +1,4 @@
-import  bycript  from "bcryptjs";
+import bycript from "bcryptjs";
 import { pool } from "../db.js";
 import { tokenSign } from "../utils/handleJWT.js";
 
@@ -46,11 +46,10 @@ export const register = async (req, res) => {
       [name, email, passwordHash, nickName, country, registerDate, true, false]
     );
 
-    
     // //Create the token
-     const data = {
-       token: await tokenSign(result.rows[0]),
-       user: result.rows[0],
+    const data = {
+      token: await tokenSign(result.rows[0]),
+      user: result.rows[0],
     };
 
     //Return the response
@@ -60,4 +59,3 @@ export const register = async (req, res) => {
     console.log(error.message);
   }
 };
-
