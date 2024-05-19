@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+import { pool } from "../db.js";
+
+export const logout = (req, res) => {
+  console.log("logout");
+};
+=======
 
 
 export const logout = (req, res) => {
@@ -7,3 +14,4 @@ export const logout = (req, res) => {
   }
 
 
+>>>>>>> 42482312054c3eb51ad31bcd3f57c2a8f162f901
