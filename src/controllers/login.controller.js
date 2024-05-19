@@ -30,14 +30,27 @@ export const login = async (req, res) => {
     }
 
     //Create the token
-    const data = {
-      token: await tokenSign(user.rows[0]),
-      user: user.rows[0],
+    const token = await tokenSign(user.rows[0]);
+    // //Create the cookie
+    res.cookie("token", token);
+
+    //select information from the user
+    const dataUser = {
+      id: user.rows[0].id,
+      name: user.rows[0].nameu,
+      email: user.rows[0].email,
+      nickname: user.rows[0].nickname,
+      country: user.rows[0].country,
+      registerDate: user.rows[0].registerdate,
+      status: user.rows[0].statusu,
+      isAdmin: user.rows[0].isadmin,
+      pathProfilePic: user.rows[0].pathprofilepic,
     };
 
+
     //Return the response
-    res.json({ data });
+    res.status(200).json(dataUser);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json(error.message);
   }
 };

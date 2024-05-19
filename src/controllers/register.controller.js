@@ -7,13 +7,7 @@ export const register = async (req, res) => {
     const { name, email, password, nickName, country } = req.body;
 
     //Validate if the fields are empty
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !nickName ||
-      !country 
-    ) {
+    if (!name || !email || !password || !nickName || !country) {
       return res.status(400).json("Missing fields");
     }
 
@@ -45,19 +39,39 @@ export const register = async (req, res) => {
     //Insert the user into the database
     const result = await pool.query(
       "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate, statusu, isadmin, pathprofilepic) VALUES ($1, $2, $3, $4,$5, $6,$7,$8,$9) returning *",
-      [name, email, passwordHash, nickName, country, registerDate, true, false,"../storage/usersProfilePic/default.webp"]
+      [
+        name,
+        email,
+        passwordHash,
+        nickName,
+        country,
+        registerDate,
+        true,
+        false,
+        "../storage/usersProfilePic/default.webp",
+      ]
     );
 
-    // //Create the token
-    const data = {
-      token: await tokenSign(result.rows[0]),
-      user: result.rows[0],
+    const newUser = {
+      id: result.rows[0].id,
+      name: result.rows[0].nameu,
+      email: result.rows[0].email,
+      nickname: result.rows[0].nickname,
+      country: result.rows[0].country,
+      registerDate: result.rows[0].registerdate,
+      status: result.rows[0].statusu,
+      isAdmin: result.rows[0].isadmin,
+      pathProfilePic: result.rows[0].pathprofilepic,
     };
 
+    //Create the token
+    const token = await tokenSign(result.rows[0]);
+    // //Create the cookie
+    res.cookie("token", token);
+    
     //Return the response
-    res.status(201).json("User created successfully");
-    console.log(data);
+    res.status(201).json(newUser);
   } catch (error) {
-    console.log(error.message);
+    res.status(400).json("Error creating the user");
   }
 };
