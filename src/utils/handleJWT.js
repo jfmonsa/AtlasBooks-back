@@ -11,8 +11,11 @@ export function tokenSign(user) {
       {
         id: user.id,
         role: user.isadmin,
-        name: user.name,
+        name: user.nameu,
         nick: user.nickname,
+        email: user.email,
+        path: user.pathprofilepic,
+        country: user.country,
       },
       JWT_SECRET,
       {
