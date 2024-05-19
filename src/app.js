@@ -4,6 +4,7 @@ import express from "express";
 // const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
 //import morgan from "morgan"; ??
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -18,6 +19,8 @@ app.use(express.json());
 app.use(express.static("storage"));
 // -- converts form data in objects, extended false = accept only simple data, not matrices and so on
 app.use(express.urlencoded({ extended: false }));
+// -- support cookies
+app.use(cookieParser());
 
 // Routes
 // TODO: Abstraer toda la logica de las rutas al router

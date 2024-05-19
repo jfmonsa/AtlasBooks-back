@@ -4,6 +4,7 @@ import { pool } from "../db.js";
 export const change_password = async (req, res) => {
   try {
     const { id } = req.user;
+    console.log(id);
 
     const { currentPassword, newPassword, confirmPassword } = req.body;
 

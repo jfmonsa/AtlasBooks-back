@@ -20,6 +20,11 @@ export const login = async (req, res) => {
       return res.status(400).json("Email or password is incorrect");
     }
 
+    //Validate if the user is active
+    if (!user.rows[0].statusu) {
+      return res.status(400).json("The user does not exist ");
+    }
+
     //Validate the password
     const validPassword = await bycript.compare(
       password,
@@ -42,7 +47,6 @@ export const login = async (req, res) => {
       nickname: user.rows[0].nickname,
       country: user.rows[0].country,
       registerDate: user.rows[0].registerdate,
-      status: user.rows[0].statusu,
       isAdmin: user.rows[0].isadmin,
       pathProfilePic: user.rows[0].pathprofilepic,
     };
