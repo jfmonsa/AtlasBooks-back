@@ -8,7 +8,6 @@ import { pool } from "../db.js";
 export const getBooks = async (req, res) => {
   try {
     const db_result = await pool.query("SELECT * FROM BOOK");
-    console.log(db_result.rows);
     res.send({ message: "ruta de los libros", rows: db_result.rows });
   } catch (error) {
     console.log(error);
@@ -21,11 +20,43 @@ export const getBooks = async (req, res) => {
  * @param {*} res
  */
 export const getBook = async (req, res) => {
-  const idBook = req.params.id;
-  const query_bd = await pool.query("SELECT * FROM BOOK WHERE isbn = $1", [
-    idBook,
-  ]);
-  res.send({ idBook, data: query_bd.rows });
+  try {
+    const idBook = req.params.id;
+    const query_book = await pool.query("SELECT * FROM BOOK WHERE id = $1", [
+      idBook,
+    ]);
+
+    //Get book's authors
+    const query_book_authors = await pool.query(
+      "SELECT * FROM BOOK_AUTHORS WHERE idBook = $1",
+      [idBook]
+    );
+
+    //Get book's languages
+    const query_book_lang = await pool.query(
+      "SELECT * FROM BOOK_LANG WHERE idBook = $1",
+      [idBook]
+    );
+
+    //Get book's files
+    const query_book_files = await pool.query(
+      "SELECT * FROM BOOK_FILES WHERE idBook = $1",
+      [idBook]
+    );
+
+    res.status(201).send({
+      idBook,
+      data: {
+        book_info: query_book.rows,
+        book_authors: query_book_authors.rows,
+        book_lang: query_book_lang.rows,
+        book_filesPaths: query_book_files.rows,
+      },
+    });
+  } catch (error) {
+    console.error("Error creating book:", error);
+    res.status(500).send({ error: "Error getting the book" });
+  }
 };
 
 /**
@@ -72,7 +103,6 @@ export const createBook = async (req, res) => {
     // ==== insert into BOOK_FILES talbe =====
     // -- getting the auto increment id of BOOK
     const bookId = newBook_query.rows[0].id;
-    console.log(req.files);
 
     // -- Get the paths of uploaded files
     const bookFiles = req.files["bookFiles"]
