@@ -37,8 +37,11 @@ export const register = async (req, res) => {
     const registerDate = new Date(Date.now());
 
     //Insert the user into the database
-    const result = await pool.query(
-      "INSERT INTO users (nameu, email, passwordu, nickname, country, registerdate, statusu, isadmin, pathprofilepic) VALUES ($1, $2, $3, $4,$5, $6,$7,$8,$9) returning *",
+    const result = await pool.query(`
+      INSERT INTO users (
+        nameu, email, passwordu, nickname, country, registerdate, statusu, isadmin, pathprofilepic
+      ) 
+      VALUES ($1, $2, $3, $4,$5, $6,$7,$8,$9) returning *`,
       [
         name,
         email,
