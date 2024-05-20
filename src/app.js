@@ -12,7 +12,12 @@ import router from "./routes/index.js";
 
 // Middlewares
 // app.use(morgan("dev")); ??
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 // -- support post requests
 app.use(express.json());
 // -- support file uploading
