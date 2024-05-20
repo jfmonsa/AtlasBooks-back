@@ -33,53 +33,86 @@ export const getBook = async (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-
 export const createBook = async (req, res) => {
-  //getting data
-  console.log(req.body);
+  try {
+    //getting data
+    const {
+      isbn,
+      title,
+      descriptionB,
+      yearReleased,
+      vol,
+      nPages,
+      publisher,
+      //multivalued fields
+      authors,
+      languages,
+    } = req.body;
 
-  const { isbn, title, descriptionB, yearReleased, vol, nPages, publisher } =
-    req.body;
+    //Get path book cover
+    const cover = req.files["cover"] ? req.files["cover"][0].path : null;
 
-  //arr values for db query
-  const query_values = [
-    isbn,
-    title,
-    descriptionB,
-    yearReleased,
-    vol,
-    nPages,
-    publisher,
-  ];
+    // ==== insert into BOOK table =====
+    const query_values = [
+      isbn,
+      title,
+      descriptionB,
+      yearReleased,
+      vol,
+      nPages,
+      publisher,
+      cover,
+    ];
 
-  console.log(req.files);
+    const newBook_query = await pool.query(
+      "INSERT INTO BOOK (isbn, title, descriptionB, yearReleased, vol, nPages, publisher, pathBookCover) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+      query_values
+    );
 
-  // Obtén los archivos subidos
-  const cover = req.files["cover"] ? req.files["cover"][0].path : null;
-  const bookFiles = req.files["bookFiles"]
-    ? req.files["bookFiles"].map((file) => file.path)
-    : [];
+    // ==== insert into BOOK_FILES talbe =====
+    // -- getting the auto increment id of BOOK
+    const bookId = newBook_query.rows[0].id;
+    console.log(req.files);
 
-  /*
-  const db_query = await pool.query(
-  "INSERT INTO BOOK (isbn, title, descriptionB, yearReleased, vol, nPages, publisher, pathBookCover) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-  query_values
-);*/
+    // -- Get the paths of uploaded files
+    const bookFiles = req.files["bookFiles"]
+      ? req.files["bookFiles"].map((file) => file.path)
+      : [];
 
-  //getting the auto increment id
-  //const bookId = db_query.rows[0].id;
-  /*
-
-    // Si tienes una tabla separada para almacenar las rutas de los archivos, puedes hacer algo como esto:
     if (bookFiles.length > 0) {
-      const fileQueries = bookFiles.map(path => pool.query(
-        'INSERT INTO BookFiles (bookId, filePath) VALUES ($1, $2)',
-        [bookId, path]
-      ));
+      const fileQueries = bookFiles.map((path) =>
+        pool.query("INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)", [
+          bookId,
+          path,
+        ])
+      );
       await Promise.all(fileQueries);
     }
-*/
-  res.send({ algo: 1 });
+
+    // ==== insert into BOOK_AUTHORS talbe =====
+    const insertAuthorQueries = authors.map(async (author) => {
+      pool.query("INSERT INTO BOOK_AUTHORS (idBook, author) VALUES ($1, $2)", [
+        bookId,
+        author,
+      ]);
+    });
+    await Promise.all(insertAuthorQueries);
+
+    // ==== insert into BOOK_LANG talbe =====
+    const insertLanguageQueries = languages.map(async (language) => {
+      pool.query("INSERT INTO BOOK_LANG (idBook, languageB) VALUES ($1, $2)", [
+        bookId,
+        language,
+      ]);
+    });
+    await Promise.all(insertLanguageQueries);
+
+    // ==== response ====
+    res.status(201).send({ message: "Book created successfully" });
+  } catch (error) {
+    console.error("Error creating book:", error);
+    res.status(500).send({ error: "Failed to create book" });
+  }
 };
 
 /**
