@@ -12,9 +12,10 @@ export const login = async (req, res) => {
     }
 
     //Validate if the userNickname exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1 or nickname = $1", [
-      userNickname,
-    ]);
+    const user = await pool.query(
+      "SELECT * FROM users WHERE email = $1 or nickname = $1",
+      [userNickname]
+    );
 
     if (user.rows.length === 0) {
       return res.status(400).json(["userNickname or password is incorrect"]);
@@ -51,12 +52,9 @@ export const login = async (req, res) => {
       pathProfilePic: user.rows[0].pathprofilepic,
     };
 
-
     //Return the response
     res.status(200).json(dataUser);
   } catch (error) {
-    res.status(400).json(['Error login in user']);
+    res.status(400).json(["Error login in user"]);
   }
 };
-
-
