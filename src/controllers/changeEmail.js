@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 import { sendMail } from "../middleware/mailer.js";
-//Coautor Juan David Cataño
+
 export const change_email = async (req, res) => {
   try {
     const { id } = req.user;

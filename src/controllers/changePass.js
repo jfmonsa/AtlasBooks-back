@@ -1,6 +1,6 @@
 import bycript from "bcryptjs";
 import { pool } from "../db.js";
-//Coautor Juan David Cataño
+
 export const change_password = async (req, res) => {
   try {
     const { id } = req.user;
