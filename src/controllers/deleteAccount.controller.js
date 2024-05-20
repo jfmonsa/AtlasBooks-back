@@ -1,3 +1,5 @@
+import { pool } from "../db.js";
+
 export const deleteAccount = async (req, res) => {
   try {
     const { id } = req.user;
@@ -15,4 +17,4 @@ export const deleteAccount = async (req, res) => {
       data: err,
     });
   }
-}
+};
