@@ -8,7 +8,7 @@ export const register = async (req, res) => {
 
     //Validate if the fields are empty
     if (!name || !email || !password || !nickName || !country) {
-      return res.status(400).json("Missing fields");
+      return res.status(400).json(["Missing fields"]);
     }
 
     //Encrypt the password
@@ -20,7 +20,7 @@ export const register = async (req, res) => {
       [email]
     );
     if (errorEmail.rows.length > 0) {
-      return res.status(400).json("Email already exists");
+      return res.status(400).json(["Email already exists"]);
     }
 
     //Validate if the nickname already exists
@@ -30,7 +30,7 @@ export const register = async (req, res) => {
     );
 
     if (errorNick.rows.length > 0) {
-      return res.status(400).json("Nickname already exists");
+      return res.status(400).json(["Nickname already exists"]);
     }
 
     //Get the current date
@@ -72,6 +72,6 @@ export const register = async (req, res) => {
     //Return the response
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).json("Error creating the user");
+    res.status(400).json(["Error creating the user"]);
   }
 };
