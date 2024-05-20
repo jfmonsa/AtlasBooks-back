@@ -3,7 +3,6 @@ import { pool } from "../db.js";
 
 export const authMiddleware = async (req, res, next) => {
   try {
-
     const { token } = req.cookies;
 
     if (!token) {
@@ -46,7 +45,8 @@ export const authMiddleware = async (req, res, next) => {
       country: user.rows[0].country,
       registerDate: user.rows[0].registerdate,
       isAdmin: user.rows[0].isadmin,
-      pathProfilePic: user.rows[0].pathprofilepic};
+      pathProfilePic: user.rows[0].pathprofilepic,
+    };
 
     next();
   } catch (err) {
