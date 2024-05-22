@@ -1,4 +1,6 @@
 import multer from "multer";
+import removeFileExt from "./src/utils/removeFileExt.js";
+
 // Obtener __dirname en ES6
 import { fileURLToPath } from "url";
 import path from "path";
@@ -11,7 +13,7 @@ export const storage = multer.diskStorage({
     cb(null, `${CURRENT_DIRNAME}/storage/books`);
   },
   filename: function (req, file, cb) {
-    const ext = file.originalname.split(".").pop();
+    const ext = removeFileExt(file.originalname);
     const filename = `file-${Date.now()}.${ext}`;
     cb(null, filename);
   },
