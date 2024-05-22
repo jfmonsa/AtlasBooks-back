@@ -26,6 +26,8 @@ app.use(express.static("storage"));
 app.use(express.urlencoded({ extended: false }));
 // -- support cookies
 app.use(cookieParser());
+// -- support serving static files
+app.use("/storage", express.static("storage"));
 
 // Routes
 // TODO: Abstraer toda la logica de las rutas al router

@@ -1,4 +1,10 @@
 import { pool } from "../db.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import path from "path";
+
+// Obtén la ruta del archivo actual (este módulo)
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Get books from the data base
@@ -25,6 +31,11 @@ export const getBook = async (req, res) => {
     const query_book = await pool.query("SELECT * FROM BOOK WHERE id = $1", [
       idBook,
     ]);
+
+    // Si no se encuentra el libro, devolver un error 404
+    if (query_book.rows.length === 0) {
+      return res.status(404).json({ error: "Book not found" });
+    }
 
     //Get book's authors
     const query_book_authors = await pool.query(
@@ -81,7 +92,7 @@ export const createBook = async (req, res) => {
     } = req.body;
 
     //Get path book cover
-    const cover = req.files["cover"] ? req.files["cover"][0].path : null;
+    const cover = req.files["cover"] ? req.files["cover"][0].filename : null;
 
     // ==== insert into BOOK table =====
     const query_values = [
