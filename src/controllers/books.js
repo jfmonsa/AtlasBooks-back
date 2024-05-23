@@ -76,17 +76,29 @@ export const getBook = async (req, res) => {
       (subObj) => subObj.subcategoryname
     );
 
-    const query_categoryname = await pool.query(
-      "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
-      [query_subcategories.rows[0].idcategoryfather]
-    );
+    let subcategories;
+    let category;
+    if (query_subcategories.rows > 0) {
+      const query_categoryname = await pool.query(
+        "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
+        [query_subcategories?.rows[0]?.idcategoryfather]
+      );
+      subcategories = query_subcategories.rows.map((row) => row.idsubcategory);
+      category =
+        query_categoryname.rows > 0 ? query_categoryname.rows[0].id : null;
+    } else {
+      subcategories = null;
+      category = null;
+    }
 
     //Get related books (20)
     const related_books = await getRelatedBooks(
       idBook,
-      query_subcategories.rows.map((row) => row.idsubcategory),
-      query_categoryname.rows[0].id
+      subcategories,
+      category
     );
+
+    //TODO: Si la imagen del libro es null, mandar una por default
 
     //Send response
     res.status(201).send({
@@ -107,8 +119,8 @@ export const getBook = async (req, res) => {
       book_lang: query_book_lang.rows.map((langObj) => langObj.languageb),
       book_files,
       book_files_type,
-      book_category: query_categoryname.rows[0],
-      book_subcategories,
+      book_category: category,
+      book_subcategories: subcategories,
       related_books,
     });
   } catch (error) {
@@ -121,22 +133,25 @@ export const getBook = async (req, res) => {
 // Retorna 20 libros relacionados primero por subcategorias y los restantes por categoria y random
 const getRelatedBooks = async (idBook, subcategoryIds, categoryId) => {
   try {
-    // Get related books by subcategory
-    let relatedBooksQuery = await pool.query(
-      `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors 
-       FROM BOOK b
-       INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
-       INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-       WHERE bis.idsubcategory = ANY($1) AND b.id != $2
-       GROUP BY b.id
-       LIMIT 20`,
-      [subcategoryIds, idBook]
-    );
+    let relatedBooks = [];
 
-    let relatedBooks = relatedBooksQuery.rows;
+    // Get related books by subcategory
+    if (subcategoryIds) {
+      let relatedBooksQuery = await pool.query(
+        `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors 
+         FROM BOOK b
+         INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
+         INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
+         WHERE bis.idsubcategory = ANY($1) AND b.id != $2
+         GROUP BY b.id
+         LIMIT 20`,
+        [subcategoryIds, idBook]
+      );
+      relatedBooks.concat(relatedBooksQuery.rows);
+    }
 
     // Si hay menos de 20 libros, obtener más libros relacionados por categoría
-    if (relatedBooks.length < 20) {
+    if (relatedBooks.length < 20 && categoryId) {
       const additionalBooksQuery = await pool.query(
         `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
          FROM BOOK b
@@ -198,8 +213,9 @@ export const createBook = async (req, res) => {
       //multivalued fields
       authors,
       languages,
+      //(n,m) rel
+      subcategoryIds,
     } = req.body;
-    // TODO: add category and subcategories
 
     //Get path book cover
     const cover = req.files["cover"] ? req.files["cover"][0].filename : null;
@@ -238,25 +254,46 @@ export const createBook = async (req, res) => {
         ])
       );
       await Promise.all(fileQueries);
+    } else {
+      res.status(500).send({ error: "there should be at least one book file" });
     }
 
     // ==== insert into BOOK_AUTHORS talbe =====
-    const insertAuthorQueries = authors.map(async (author) => {
-      pool.query("INSERT INTO BOOK_AUTHORS (idBook, author) VALUES ($1, $2)", [
-        bookId,
-        author,
-      ]);
-    });
-    await Promise.all(insertAuthorQueries);
+    if (authors) {
+      const insertAuthorQueries = authors.map(async (author) => {
+        pool.query(
+          "INSERT INTO BOOK_AUTHORS (idBook, author) VALUES ($1, $2)",
+          [bookId, author]
+        );
+      });
+      await Promise.all(insertAuthorQueries);
+    } else {
+      res.status(500).send({ error: "there should be at least one author" });
+    }
 
     // ==== insert into BOOK_LANG talbe =====
-    const insertLanguageQueries = languages.map(async (language) => {
-      pool.query("INSERT INTO BOOK_LANG (idBook, languageB) VALUES ($1, $2)", [
-        bookId,
-        language,
-      ]);
-    });
-    await Promise.all(insertLanguageQueries);
+    if (languages) {
+      const insertLanguageQueries = languages.map(async (language) => {
+        pool.query(
+          "INSERT INTO BOOK_LANG (idBook, languageB) VALUES ($1, $2)",
+          [bookId, language]
+        );
+      });
+      await Promise.all(insertLanguageQueries);
+    } else {
+      res.status(500).send({ error: "there should be at least one language" });
+    }
+
+    // ==== insert into  BOOK_IN_SUBCATEGORY table ====
+    if (subcategoryIds) {
+      const insertSubcategoryQueries = subcategoryIds.map((subcategoryId) => {
+        return pool.query(
+          "INSERT INTO BOOK_IN_SUBCATEGORY (idBook, idSubcategory) VALUES ($1, $2)",
+          [bookId, subcategoryId]
+        );
+      });
+      await Promise.all(insertSubcategoryQueries);
+    }
 
     // ==== response ====
     res.status(201).send({ message: "Book created successfully" });
