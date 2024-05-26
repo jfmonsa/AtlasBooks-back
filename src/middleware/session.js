@@ -12,7 +12,6 @@ export const authMiddleware = async (req, res, next) => {
     }
 
     const dataToken = await tokenVerify(token);
-    console.log(dataToken.id);
 
     if (!dataToken.id) {
       return res.status(401).send({
