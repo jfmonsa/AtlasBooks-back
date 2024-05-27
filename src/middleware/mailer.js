@@ -3,10 +3,12 @@ import jwt from "jsonwebtoken";
 
 export const sendMail = async (req, res, email) => {
   try {
-    const tokenmail = jwt.sign({ email }, process.env.JWT_SECRET, {
-      expiresIn: "10m",
+    const { id } = req.user;
+
+    const tokenmail = jwt.sign({ id, email }, process.env.JWT_SECRET, {
+      expiresIn: "60m",
     });
-    const verficationLink = `http://localhost:5173/verify-email?email=${tokenmail}`;
+    const verficationLink = `http://localhost:5173/received-email/${tokenmail}`;
 
     await transporter.sendMail({
       from: `"New Email" <${process.env.MAILER_USER}>`,

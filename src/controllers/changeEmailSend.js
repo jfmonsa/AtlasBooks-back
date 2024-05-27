@@ -1,7 +1,7 @@
 import { pool } from "../db.js";
 import { sendMail } from "../middleware/mailer.js";
 
-export const change_email = async (req, res) => {
+export const change_email_send = async (req, res) => {
   try {
     const { id } = req.user;
 
@@ -15,24 +15,28 @@ export const change_email = async (req, res) => {
       throw new Error("New email must be different from the current email");
     }
 
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
-      currentEmail,
-    ]);
+    const userCurrentEmail = await pool.query(
+      "SELECT * FROM users WHERE email = $1 and id = $2",
+      [currentEmail, id]
+    );
 
-    if (user.rows.length === 0) {
+    if (userCurrentEmail.rows.length === 0) {
       return res.status(400).json("CurrentEmail is incorrect");
+    }
+
+    const userNewEmail = await pool.query(
+      "SELECT * FROM users WHERE email = $1",
+      [newEmail]
+    );
+
+    if (userNewEmail.rows.length != 0) {
+      return res.status(400).json("NewEmail already in use by another user");
     }
 
     await sendMail(req, res, newEmail);
 
-    //await mailRecived();
-
-    await pool.query("UPDATE users SET email = $1 WHERE id = $2", [
-      newEmail,
-      id,
-    ]);
     res.status(200).send({
-      message: "Email changed successfully",
+      message: "Email enviado",
     });
   } catch (err) {
     return res.status(400).send({

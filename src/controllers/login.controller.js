@@ -5,6 +5,7 @@ import { tokenSign } from "../utils/handleJWT.js";
 export const login = async (req, res) => {
   try {
     const { userNickname, userPassword } = req.body;
+    console.log(req.body);
 
     //Validate if the fields are empty
     if (!userNickname || !userPassword) {
