@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { getBooks, getBook, createBook } from "../controllers/books.js";
+import { createBook } from "../controllers/books.js";
+import { getBook } from "../controllers/getBook.js";
 const router = Router();
 import multer from "multer";
 import { storage } from "../../multer_config.js";
@@ -8,7 +9,6 @@ const uploadMiddleware = multer({
   storage,
 });
 
-router.get("/", getBooks);
 router.get("/:id", getBook);
 router.post(
   "/",
