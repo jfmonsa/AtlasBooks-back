@@ -2,6 +2,8 @@ import { pool } from "../db.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import removeFileExt from "../utils/removeFileExt.js";
+import { get } from "http";
+import { getComments } from "./comments.js";
 
 // Obtén la ruta del archivo actual (este módulo)
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -98,11 +100,14 @@ export const getBook = async (req, res) => {
       category
     );
 
+    //Get comments
+    const comments = await getComments(req);
+
     //TODO: Si la imagen del libro es null, mandar una por default
 
     //Send response
     res.status(201).send({
-      idBook,
+      idBook: query_book.rows[0].id,
       isbn: query_book.rows[0].isbn,
       title: query_book.rows[0].title,
       description: query_book.rows[0].descriptionb,
@@ -122,6 +127,7 @@ export const getBook = async (req, res) => {
       book_category: category,
       book_subcategories: subcategories,
       related_books,
+      comments: comments,
     });
   } catch (error) {
     console.error("Error creating book:", error);
