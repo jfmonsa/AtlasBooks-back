@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { search_filter } from "../controllers/searchFilter.js";
+import { searchFilter } from "../controllers/searchFilter.js";
 const router = Router();
 
-router.get('/', search_filter); 
+router.get('/', searchFilter); 
 
 export default router;
