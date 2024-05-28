@@ -54,12 +54,13 @@ export const searchFilter = async (req, res) => {
 
         const databook = book.rows.map(row => ({
             title: row.title,
-            pathbookcover: row.pathbookcover,
+            year: row.yearreleased,
+            pathCoverBook: row.pathbookcover,
             id: row.id,
             publisher: row.publisher,
-            author: row.author,
+            autors: row.author,
             language: row.language,
-            rating: row.rating
+            rate: row.rating
         }));
 
         res.status(200).json({ error: false, message: "Books found", data: databook });
