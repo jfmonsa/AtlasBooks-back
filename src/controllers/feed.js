@@ -93,7 +93,6 @@ export const getFeedRecomended = async (req, res) => {
       );
       results = results.concat(randomBooksQuery.rows);
 
-      console.log(results);
       results = results.map((book) => ({
         authors: book.authors.join(", "),
         title: book.title,
