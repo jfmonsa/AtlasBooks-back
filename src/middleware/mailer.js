@@ -41,9 +41,7 @@ export const sendMailRecovery = async (req, res, id ,email, url) => {
       html: `<b>Porfavor presiona en el siguiente link, o copialo en tu navegador para completar la verificación:</b>
              <a href=${verficationLink}>${verficationLink}</a>`,
     });
-    console.log("Email sent successfully",id ,email, url);
   } catch (err) {
-    console.log("Error sendMail",err);
     return res.status(401).json({
       message: err.message,
       data: err,
