@@ -12,11 +12,11 @@ export const searchFilter = async (req, res) => {
       yearTo,
     });
 
-    if (!language || !yearFrom || !yearTo || !search) {
-      return res
-        .status(400)
-        .json({ error: true, message: "Missing required parameters" });
-    }
+
+        if (!search) {
+            return res.status(400).json({ error: true, message: "Missing required parameters" });
+        }
+
 
     const query = `
             SELECT 
@@ -37,18 +37,26 @@ export const searchFilter = async (req, res) => {
             INNER JOIN 
                 book_rate ON book.id = book_rate.idbook
             WHERE 
-                book.yearreleased >= $1
-                AND book.yearreleased <= $2
-                AND book_lang.languageb = $3
-                AND (
+                book.title ILIKE $4
+                OR book.yearreleased <= $2
+                OR book_lang.languageb = $3
+                OR (
                     book_authors.author ILIKE $4
-                    OR book.title ILIKE $4
+                    OR book.yearreleased >= $1
                     OR book.isbn ILIKE $4
                 )`;
 
     const values = [yearFrom, yearTo, language, `%${search}%`];
 
+
+        if (book.rows.length === 0) {
+            return res.status(404).json({ error: true, message: "No books found" });
+        }
+        console.log(values);
+        console.log(book.rows);
+
     const book = await pool.query(query, values);
+
 
     if (book.rows.length === 0) {
       return res.status(404).json({ error: true, message: "No books found" });
