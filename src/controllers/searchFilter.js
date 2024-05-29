@@ -1,17 +1,24 @@
-import {pool} from "../db.js";
+import { pool } from "../db.js";
 
 export const searchFilter = async (req, res) => {
-    try {
-        const { search, language, yearFrom, yearTo } = req.query;
+  try {
+    const { search, language, yearFrom, yearTo } = req.query;
 
-        // Log to check received query parameters
-        console.log('Received query parameters:', { search, language, yearFrom, yearTo });
+    // Log to check received query parameters
+    console.log("Received query parameters:", {
+      search,
+      language,
+      yearFrom,
+      yearTo,
+    });
+
 
         if (!search) {
             return res.status(400).json({ error: true, message: "Missing required parameters" });
         }
 
-        const query = `
+
+    const query = `
             SELECT 
                 book.title, 
                 book.yearreleased,
@@ -39,14 +46,8 @@ export const searchFilter = async (req, res) => {
                     OR book.isbn ILIKE $4
                 )`;
 
-        const values = [
-            yearFrom,
-            yearTo,
-            language,
-            `%${search}%`
-        ];
+    const values = [yearFrom, yearTo, language, `%${search}%`];
 
-        const book = await pool.query(query, values);
 
         if (book.rows.length === 0) {
             return res.status(404).json({ error: true, message: "No books found" });
@@ -54,22 +55,29 @@ export const searchFilter = async (req, res) => {
         console.log(values);
         console.log(book.rows);
 
-        const databook = book.rows.map(row => ({
-            title: row.title,
-            year: row.yearreleased,
-            pathCoverBook: row.pathbookcover,
-            id: row.id,
-            publisher: row.publisher,
-            autors: row.author,
-            language: row.language,
-            rate: row.rating
-        }));
+    const book = await pool.query(query, values);
 
-        res.status(200).json({ error: false, message: "Books found", data: databook });
 
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).json({ error: true, message: "Internal server error"});
+    if (book.rows.length === 0) {
+      return res.status(404).json({ error: true, message: "No books found" });
     }
-};
 
+    const databook = book.rows.map((row) => ({
+      title: row.title,
+      year: row.yearreleased,
+      pathCoverBook: row.pathbookcover,
+      id: row.id,
+      publisher: row.publisher,
+      autors: row.author,
+      language: row.language,
+      rate: row.rating,
+    }));
+
+    res
+      .status(200)
+      .json({ error: false, message: "Books found", data: databook });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: true, message: "Internal server error" });
+  }
+};
