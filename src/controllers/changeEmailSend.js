@@ -5,6 +5,8 @@ export const change_email_send = async (req, res) => {
   try {
     const { id } = req.user;
 
+    const url = "received-email";
+
     const { currentEmail, newEmail } = req.body;
 
     if (!currentEmail || !newEmail) {
@@ -33,7 +35,7 @@ export const change_email_send = async (req, res) => {
       return res.status(400).json("NewEmail already in use by another user");
     }
 
-    await sendMail(req, res, newEmail);
+    await sendMail(req, res, newEmail, url);
 
     res.status(200).send({
       message: "Email enviado",

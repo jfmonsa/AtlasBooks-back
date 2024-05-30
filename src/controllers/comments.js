@@ -4,7 +4,6 @@ export const getComments = async (req, res) => {
   try {
     //We get the id of the book from the parameters (id of the book)
     const bookId = req.params.id;
-    console.log("bookid", req.params.id);
 
     let comments = [];
 
