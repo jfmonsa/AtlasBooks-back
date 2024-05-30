@@ -1,14 +1,22 @@
 import { Router } from "express";
 const router = Router();
-import { createList, getList } from "../controllers/lists.js";
+import {
+  createList,
+  getAllLists,
+  getList,
+  saveBookToList,
+} from "../controllers/lists.js";
 
+router.post("/:listId", saveBookToList);
 // Ruta para crear una lista
 router.post("/", createList);
+
+//
 
 // Ruta para obtener una lista por su ID
 router.get("/:id", getList);
 
-// Eliminar esta ruta ya que no tiene sentido tener una ruta get "/" que se solapa con get("/:id")
-// router.get("/", getList);
+//Ruta para obtener todas las listas
+router.get("/", getAllLists);
 
 export default router;
