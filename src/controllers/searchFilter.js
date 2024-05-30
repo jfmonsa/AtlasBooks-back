@@ -11,7 +11,8 @@ export const searchFilter = async (req, res) => {
             return res.status(400).json({ error: true, message: "Missing required parameters" });
         }
 
-        const query = `
+        // Construye la consulta SQL dinámicamente
+        let baseQuery = `
             SELECT 
                 book.title, 
                 book.yearreleased,
@@ -29,29 +30,50 @@ export const searchFilter = async (req, res) => {
                 book_lang ON book.id = book_lang.idbook
             INNER JOIN 
                 book_rate ON book.id = book_rate.idbook
-            WHERE 
-                book.title ILIKE $4
-                OR book.yearreleased <= $2
-                OR book_lang.languageb = $3
-                OR (
-                    book_authors.author ILIKE $4
-                    OR book.yearreleased >= $1
-                    OR book.isbn ILIKE $4
-                )`;
+        `;
 
-        const values = [
-            yearFrom,
-            yearTo,
-            language,
-            `%${search}%`
-        ];
+        let conditions = [];
+        let params = [];
 
-        const book = await pool.query(query, values);
+        if (search) {
+            conditions.push(`(
+                book.title ILIKE $${conditions.length + 1}
+                OR book_authors.author ILIKE $${conditions.length + 1}
+                OR book.isbn ILIKE $${conditions.length + 1}
+            )`);
+            params.push(`%${search}%`);
+        }
+
+        if (yearFrom) {
+            conditions.push(`
+                
+                book.yearreleased >= $${conditions.length + 1}
+            `);
+            params.push(yearFrom);
+        }
+
+        if (yearTo) {
+            conditions.push(`
+                book.yearreleased <= $${conditions.length + 1}
+            `);
+            params.push(yearTo);
+        }
+
+        if (language) {
+            conditions.push(`book_lang.languageb = $${conditions.length + 1}`);
+            params.push(language);
+        }
+
+        if (conditions.length > 0) {
+            baseQuery += " WHERE " + conditions.join(" AND ");
+        }
+
+        const book = await pool.query(baseQuery, params);
 
         if (book.rows.length === 0) {
             return res.status(404).json({ error: true, message: "No books found" });
         }
-        console.log(values);
+       
         console.log(book.rows);
 
         const databook = book.rows.map(row => ({
@@ -62,7 +84,7 @@ export const searchFilter = async (req, res) => {
             publisher: row.publisher,
             autors: row.author,
             language: row.language,
-            rate: row.rating
+            rate: row.rating || ''
         }));
 
         res.status(200).json({ error: false, message: "Books found", data: databook });
