@@ -28,7 +28,7 @@ export const searchFilter = async (req, res) => {
                 book_authors ON book.id = book_authors.idbook 
             INNER JOIN 
                 book_lang ON book.id = book_lang.idbook
-            INNER JOIN 
+            LEFT JOIN
                 book_rate ON book.id = book_rate.idbook
         `;
 
@@ -60,7 +60,7 @@ export const searchFilter = async (req, res) => {
         }
 
         if (language) {
-            conditions.push(`book_lang.languageb = $${conditions.length + 1}`);
+            conditions.push(`book_lang.languageb ILIKE $${conditions.length + 1}`);
             params.push(language);
         }
 
@@ -84,7 +84,7 @@ export const searchFilter = async (req, res) => {
             publisher: row.publisher,
             autors: row.author,
             language: row.language,
-            rate: row.rating || ''
+            rate: row.rating || 0
         }));
 
         res.status(200).json({ error: false, message: "Books found", data: databook });
