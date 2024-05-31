@@ -29,11 +29,7 @@ app.use(cookieParser());
 // -- support serving static files
 app.use("/storage", express.static("storage"));
 
-// Routes
-// TODO: Abstraer toda la logica de las rutas al router
-/*
- * API Rest
- */
+// Routes API Rest
 app.use("/api", router);
 
 // handling errors

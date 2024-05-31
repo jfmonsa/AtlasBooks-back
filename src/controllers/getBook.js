@@ -36,10 +36,15 @@ export const getBook = async (req, res) => {
       "SELECT pathf FROM BOOK_FILES WHERE idBook = $1",
       [idBook]
     );
-    const book_files = query_book_files.rows.map((fileObj) => fileObj.pathf);
-    //getting each file extention, deleting duplicates and CAPITALIZING
+    // Dividir la cadena en un array de cadenas
+    const book_files =
+      query_book_files.rows.length > 0
+        ? query_book_files.rows[0].pathf.split(",").map((file) => file.trim())
+        : [];
+
+    // Obtener tipos de archivos del libro
     const book_files_type = [
-      ...new Set(book_files.map((file) => removeFileExt(file).toUpperCase())),
+      ...new Set(book_files.map((file) => file.split(".").pop().toUpperCase())),
     ];
 
     //Getting book rate
