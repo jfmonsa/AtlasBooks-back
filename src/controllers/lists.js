@@ -103,9 +103,9 @@ export const getAllLists = async (req, res) => {
     const query_lists = await pool.query("SELECT * FROM BOOK_LIST");
 
     // Si no se encuentran listas, devolver un error 404
-    if (query_lists.rows.length === 0) {
-      return res.status(404).json({ error: "No lists found" });
-    }
+    // if (query_lists.rows.length === 0) {
+    //   return res.status(404).json({ error: "No lists found" });
+    // }
 
     // Crear un array de IDs de listas
     const listIds = query_lists.rows.map((row) => row.id);
