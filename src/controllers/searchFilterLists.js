@@ -5,7 +5,8 @@ export const search_filter_lists = async (req, res) => {
     const { listN } = req.query; // Usa req.query para parámetros de consulta
 
     let baseQuery = `
-            SELECT 
+            SELECT
+                book_list.id,
                 book_list.title,
                 book_list.descriptionL,
                 book_list.dateL,
@@ -38,6 +39,7 @@ export const search_filter_lists = async (req, res) => {
     console.log(list.rows);
 
     const datalist = list.rows.map((row) => ({
+      id: row.id,
       title: row.title,
       descriptionL: row.descriptionl,
       dateL: row.datel,
