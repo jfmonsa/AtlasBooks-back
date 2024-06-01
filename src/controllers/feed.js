@@ -7,7 +7,8 @@ import { pool } from "../db.js";
 export const getFeedRecomended = async (req, res) => {
   try {
     // traer 50 libros que tenga converPath en el siguiente orden  de prioridad
-    /*        1.Hacer consulta para que 10 libros sean de los más descargados en la página
+    /*
+    1.Hacer consulta para que 10 libros sean de los más descargados en la página
     2.obtener la categoria de (2 o más) de los 10 libros anteriores y en base a ello traer otros 10
     3. Meter dos de los libros más recientes
     4.El resto de libros obtenerlos de manera random
