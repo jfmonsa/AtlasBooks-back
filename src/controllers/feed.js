@@ -48,7 +48,7 @@ export const getFeedRecomended = async (req, res) => {
 
         // Obtener 10 libros adicionales basados en las categorías de los libros más descargados
         const relatedBooksQuery = await pool.query(
-          `SELECT DISTINCT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors,
+          `SELECT DISTINCT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
            FROM BOOK b
            INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
            INNER JOIN SUBCATEGORY sc ON bis.idsubcategory = sc.id
