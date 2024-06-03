@@ -67,7 +67,6 @@ export const getBook = async (req, res) => {
         "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
         [query_subcategories?.rows[0]?.idcategoryfather]
       );
-      console.log(query_categoryname);
       subcategories = query_subcategories.rows.map(
         (subObj) => subObj.subcategoryname
       );
