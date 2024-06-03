@@ -59,9 +59,10 @@ export const getBook = async (req, res) => {
       "SELECT idcategoryFather, sub.subcategoryname FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub ON insub.idsubcategory = sub.id  WHERE idbook = $1",
       [idBook]
     );
-
+    let subcategoriesIds;
     let subcategories;
     let category;
+    let categoryId;
     if (query_subcategories.rows.length > 0) {
       const query_categoryname = await pool.query(
         "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
@@ -70,20 +71,27 @@ export const getBook = async (req, res) => {
       subcategories = query_subcategories.rows.map(
         (subObj) => subObj.subcategoryname
       );
+      subcategoriesIds = query_subcategories.rows.map((subObj) => subObj.id);
       category =
         query_categoryname.rows.length > 0
           ? query_categoryname.rows[0].categoryname
           : null;
+      categoryId =
+        query_categoryname.rows.length > 0
+          ? query_categoryname.rows[0].id
+          : null;
     } else {
       subcategories = null;
+      subcategoriesIds = null;
       category = null;
+      categoryId = null;
     }
 
     //Get related books (20)
     const related_books = await getRelatedBooks(
       idBook,
-      subcategories,
-      category
+      subcategoriesIds,
+      categoryId
     );
 
     //Get comments
