@@ -59,20 +59,22 @@ export const getBook = async (req, res) => {
       "SELECT idcategoryFather, sub.subcategoryname FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub ON insub.idsubcategory = sub.id  WHERE idbook = $1",
       [idBook]
     );
-    const book_subcategories = query_subcategories.rows.map(
-      (subObj) => subObj.subcategoryname
-    );
 
     let subcategories;
     let category;
-    if (query_subcategories.rows > 0) {
+    if (query_subcategories.rows.length > 0) {
       const query_categoryname = await pool.query(
         "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
         [query_subcategories?.rows[0]?.idcategoryfather]
       );
-      subcategories = query_subcategories.rows.map((row) => row.idsubcategory);
+      console.log(query_categoryname);
+      subcategories = query_subcategories.rows.map(
+        (subObj) => subObj.subcategoryname
+      );
       category =
-        query_categoryname.rows > 0 ? query_categoryname.rows[0].id : null;
+        query_categoryname.rows.length > 0
+          ? query_categoryname.rows[0].categoryname
+          : null;
     } else {
       subcategories = null;
       category = null;
