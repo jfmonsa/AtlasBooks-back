@@ -1,5 +1,6 @@
 import { pool } from "../db.js";
-//Aux function
+
+//Aux functions
 const groupSubcategoriesByCategory = (subcategories) => {
   return subcategories.reduce((acc, row) => {
     const { catid, cat_name, sub_category_id, subcategory_name } = row;
@@ -26,6 +27,22 @@ const groupSubcategoriesByCategory = (subcategories) => {
     return acc;
   }, []);
 };
+
+const getAllSubcategoriesAndCategories = async () => {
+  try {
+    const result = await pool.query(
+      `
+      SELECT sc.id AS sub_category_id, sc.subcategoryname AS subcategory_name, sc.idcategoryfather AS catId, c.categoryname AS cat_name
+      FROM SUBCATEGORY sc
+      INNER JOIN CATEGORY c ON sc.idcategoryfather = c.id
+      `
+    );
+
+    return result.rows;
+  } catch (error) {
+    console.error("Error retrieving subcategories:", error);
+  }
+};
 /**
  * Return groupped subcategories by category
  * @param {*} req
@@ -33,15 +50,9 @@ const groupSubcategoriesByCategory = (subcategories) => {
  */
 export const getCategoriesAndSubCategoriesGroupped = async (req, res) => {
   try {
-    const query = `
-          SELECT sc.id AS sub_category_id, sc.subcategoryname AS subcategory_name, sc.idcategoryfather AS catid, c.categoryname AS cat_name
-          FROM SUBCATEGORY sc
-          INNER JOIN CATEGORY c ON sc.idcategoryfather = c.id
-        `;
+    const result = await getAllSubcategoriesAndCategories();
 
-    const result = await pool.query(query);
-
-    const groupedData = groupSubcategoriesByCategory(result.rows);
+    const groupedData = groupSubcategoriesByCategory(result);
 
     res.status(200).send({ groupedData });
   } catch (error) {
@@ -51,21 +62,15 @@ export const getCategoriesAndSubCategoriesGroupped = async (req, res) => {
 };
 
 /**
- * Get a list of subcategories
+ * Get a list of ungroupped categories and subcategories
  * @param {*} req
  * @param {*} res
  */
-export const getAllSubcategories = async (req, res) => {
+export const getCategoriesAndSubCategoriesUngroupped = async (req, res) => {
   try {
-    const query = `
-        SELECT sc.id AS sub_category_id, sc.subcategoryname AS subcategory_name, sc.idcategoryfather AS catId, c.categoryname AS cat_name
-        FROM SUBCATEGORY sc
-        INNER JOIN CATEGORY c ON sc.idcategoryfather = c.id
-      `;
+    const result = await getAllSubcategoriesAndCategories();
 
-    const result = await pool.query(query);
-
-    res.status(200).json(result.rows);
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error retrieving subcategories:", error);
     res.status(500).json({ error: "Failed to retrieve subcategories" });
