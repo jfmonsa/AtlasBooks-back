@@ -50,9 +50,20 @@ const getAllSubcategoriesAndCategories = async () => {
  */
 export const getCategoriesAndSubCategoriesGroupped = async (req, res) => {
   try {
-    const result = await getAllSubcategoriesAndCategories();
+    const result = await pool.query(
+      `
+      SELECT sc.id AS sub_category_id, sc.subcategoryname AS subcategory_name, sc.idcategoryfather AS catId, c.categoryname AS cat_name
+      FROM SUBCATEGORY sc
+      INNER JOIN CATEGORY c ON sc.idcategoryfather = c.id
+      WHERE EXISTS (
+        SELECT 1
+        FROM BOOK_IN_SUBCATEGORY bis
+        WHERE bis.idSubcategory = sc.id
+      )
+      `
+    );
 
-    const groupedData = groupSubcategoriesByCategory(result);
+    const groupedData = groupSubcategoriesByCategory(result.rows);
 
     res.status(200).send({ groupedData });
   } catch (error) {
