@@ -4,6 +4,8 @@ const { Pool } = pg;
 
 let pool = null;
 
+const BD = process.env.NODE_ENV === "production" ? "Remota" : "Local";
+
 if (process.env.NODE_ENV === "production") {
   pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
