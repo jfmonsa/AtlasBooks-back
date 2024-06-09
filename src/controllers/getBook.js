@@ -1,5 +1,4 @@
 import { pool } from "../db.js";
-import removeFileExt from "../utils/removeFileExt.js";
 import { getComments } from "./comments.js";
 
 /**
@@ -52,7 +51,9 @@ export const getBook = async (req, res) => {
       "SELECT ROUND(AVG(ratevalue),1) as rate_avg FROM BOOK_RATE WHERE idbook = $1",
       [idBook]
     );
-    const book_rate = query_rate.rows[0].rate_avg ? query_rate.rows[0].rate_avg : 0;
+    const book_rate = query_rate.rows[0].rate_avg
+      ? query_rate.rows[0].rate_avg
+      : 0;
     //Get subcategories and categories
     const query_subcategories = await pool.query(
       "SELECT idcategoryFather, sub.subcategoryname FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub ON insub.idsubcategory = sub.id  WHERE idbook = $1",

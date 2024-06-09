@@ -28,21 +28,6 @@ const groupSubcategoriesByCategory = (subcategories) => {
   }, []);
 };
 
-const getAllSubcategoriesAndCategories = async () => {
-  try {
-    const result = await pool.query(
-      `
-      SELECT sc.id AS sub_category_id, sc.subcategoryname AS subcategory_name, sc.idcategoryfather AS catId, c.categoryname AS cat_name
-      FROM SUBCATEGORY sc
-      INNER JOIN CATEGORY c ON sc.idcategoryfather = c.id
-      `
-    );
-
-    return result.rows;
-  } catch (error) {
-    console.error("Error retrieving subcategories:", error);
-  }
-};
 /**
  * Return groupped subcategories by category
  * @param {*} req
@@ -73,17 +58,43 @@ export const getCategoriesAndSubCategoriesGroupped = async (req, res) => {
 };
 
 /**
- * Get a list of ungroupped categories and subcategories
+ * Get a list of subcategories of a category given
  * @param {*} req
  * @param {*} res
  */
-export const getCategoriesAndSubCategoriesUngroupped = async (req, res) => {
+export const getSubCategoriesOfCategory = async (req, res) => {
   try {
-    const result = await getAllSubcategoriesAndCategories();
+    const idCat = req.params.idCat;
+    const query = await pool.query(
+      "select id, subcategoryname from subcategory where idCategoryFather = $1",
+      [idCat]
+    );
+    if (query.rows.length === 0) {
+      return res.status(404).json({ error: "Category not found" });
+    }
 
-    res.status(200).json(result);
+    res.status(200).send({
+      subcategories: query.rows,
+    });
   } catch (error) {
-    console.error("Error retrieving subcategories:", error);
-    res.status(500).json({ error: "Failed to retrieve subcategories" });
+    console.error("Error retrieving subcategories of a category:", error);
+    res
+      .status(500)
+      .json({ error: "Error retrieving subcategories of a category" });
+  }
+};
+
+/**
+ * Get a list of all categories
+ * @param {*} req
+ * @param {*} res
+ */
+export const getCategories = async (req, res) => {
+  try {
+    const query = await pool.query("select * from category");
+    res.status(200).send({ categories: query.rows });
+  } catch (error) {
+    console.error("Error retrieving Categories:", error);
+    res.status(500).json({ error: "Error retrieving Categories" });
   }
 };

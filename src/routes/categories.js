@@ -1,12 +1,14 @@
 import express from "express";
 import {
   getCategoriesAndSubCategoriesGroupped,
-  getCategoriesAndSubCategoriesUngroupped,
+  getSubCategoriesOfCategory,
+  getCategories,
 } from "../controllers/categories.js";
 
 const router = express.Router();
 
 router.get("/groupped", getCategoriesAndSubCategoriesGroupped);
-router.get("/", getCategoriesAndSubCategoriesUngroupped);
+router.get("/onlyCategories", getCategories);
+router.get("/:idCat", getSubCategoriesOfCategory);
 
 export default router;
