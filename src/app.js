@@ -12,7 +12,10 @@ import router from "./routes/index.js";
 
 // Middlewares
 // app.use(morgan("dev")); ??
-const whitelist = [process.env.URL_BACKEND, "http://localhost:5173"];
+const whitelist = [
+  "https://atlas-books-back.vercel.app/",
+  "http://localhost:5173",
+];
 
 app.use(
   cors({
