@@ -12,9 +12,11 @@ import router from "./routes/index.js";
 
 // Middlewares
 // app.use(morgan("dev")); ??
+const whitelist = [process.env.URL_BACKEND, "http://localhost:5173"];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: whitelist,
     credentials: true,
   })
 );
