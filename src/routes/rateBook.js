@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { report } from "../controllers/reports.js";
+import { rateBook } from "../controllers/rateBook.js";
 import { authMiddleware } from "../middleware/session.js";
 
 const router = Router();
 
-router.post("/", authMiddleware , report); //  http://localhost:3000/api/reports
+router.post("/", authMiddleware ,rateBook); //  http://localhost:3000/api/reports
 
 
 export default router;
