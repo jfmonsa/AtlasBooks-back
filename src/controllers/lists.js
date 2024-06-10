@@ -179,8 +179,6 @@ export const saveBookToList = async (req, res) => {
     const { listId } = req.params; // Usar el parámetro listId
     const { book } = req.body;
 
-    console.log("listId:", listId);
-    console.log("book:", book);
     // Verificar si la lista existe
     const query_list = await pool.query(
       "SELECT * FROM BOOK_LIST WHERE id = $1",

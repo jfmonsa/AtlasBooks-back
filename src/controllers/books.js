@@ -32,7 +32,6 @@ export const createBook = async (req, res) => {
     const cover = req.files["cover"]
       ? req.files["cover"][0].filename
       : "default.jpg";
-    console.log(cover);
     // ==== insert into BOOK table =====
     const query_values = [
       isbn,
