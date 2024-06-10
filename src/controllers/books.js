@@ -23,9 +23,16 @@ export const createBook = async (req, res) => {
       subcategoryIds,
     } = req.body;
 
-    //Get path book cover
-    const cover = req.files["cover"] ? req.files["cover"][0].filename : null;
+    // Convertir strings JSON a arrays
+    const authorsArray = JSON.parse(authors);
+    const languagesArray = JSON.parse(languages);
+    const subcategoryIdsArray = JSON.parse(subcategoryIds);
 
+    //Get path book cover
+    const cover = req.files["cover"]
+      ? req.files["cover"][0].filename
+      : "default.jpg";
+    console.log(cover);
     // ==== insert into BOOK table =====
     const query_values = [
       isbn,
@@ -65,8 +72,8 @@ export const createBook = async (req, res) => {
     }
 
     // ==== insert into BOOK_AUTHORS talbe =====
-    if (authors) {
-      const insertAuthorQueries = authors.map(async (author) => {
+    if (authorsArray) {
+      const insertAuthorQueries = authorsArray.map(async (author) => {
         pool.query(
           "INSERT INTO BOOK_AUTHORS (idBook, author) VALUES ($1, $2)",
           [bookId, author]
@@ -78,8 +85,8 @@ export const createBook = async (req, res) => {
     }
 
     // ==== insert into BOOK_LANG talbe =====
-    if (languages) {
-      const insertLanguageQueries = languages.map(async (language) => {
+    if (languagesArray) {
+      const insertLanguageQueries = languagesArray.map(async (language) => {
         pool.query(
           "INSERT INTO BOOK_LANG (idBook, languageB) VALUES ($1, $2)",
           [bookId, language]
@@ -91,13 +98,15 @@ export const createBook = async (req, res) => {
     }
 
     // ==== insert into  BOOK_IN_SUBCATEGORY table ====
-    if (subcategoryIds) {
-      const insertSubcategoryQueries = subcategoryIds.map((subcategoryId) => {
-        return pool.query(
-          "INSERT INTO BOOK_IN_SUBCATEGORY (idBook, idSubcategory) VALUES ($1, $2)",
-          [bookId, subcategoryId]
-        );
-      });
+    if (subcategoryIdsArray) {
+      const insertSubcategoryQueries = subcategoryIdsArray.map(
+        (subcategoryId) => {
+          return pool.query(
+            "INSERT INTO BOOK_IN_SUBCATEGORY (idBook, idSubcategory) VALUES ($1, $2)",
+            [bookId, subcategoryId]
+          );
+        }
+      );
       await Promise.all(insertSubcategoryQueries);
     }
 
