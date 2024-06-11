@@ -9,19 +9,18 @@ import cookieParser from "cookie-parser";
 const app = express();
 const port = process.env.PORT || 3000;
 import router from "./routes/index.js";
+import corsOptions from "./utils/cors.js";
 
 // Middlewares
 // app.use(morgan("dev")); ??
-const whitelist = [
-  "https://atlas-books-back.vercel.app/",
-  "http://localhost:5173",
-];
+// const whitelist = [
+//   "https://atlas-books-back.vercel.app/",
+//   "http://localhost:5173",
+// ];
 
 app.use(
-  cors({
-    origin: whitelist,
-    credentials: true,
-  })
+  cors(corsOptions
+  )
 );
 // -- support post requests
 app.use(express.json());
