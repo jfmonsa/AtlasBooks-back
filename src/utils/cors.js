@@ -13,6 +13,7 @@ const corsOptions = {
       : callback(new Error("Not allowed by CORS").message);
   },
   credentials: true,
+  SameSite: "none",
 };
 
 export default corsOptions;
