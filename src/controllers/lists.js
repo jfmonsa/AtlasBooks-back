@@ -97,72 +97,41 @@ export const getList = async (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-export const getAllLists = async (req, res) => {
+export const getAllListsOfUser = async (req, res) => {
   try {
-    // Obtener todas las listas
-    const query_lists = await pool.query("SELECT * FROM BOOK_LIST");
+    const { userId, bookId } = req.params;
 
-    // Si no se encuentran listas, devolver un error 404
-    // if (query_lists.rows.length === 0) {
-    //   return res.status(404).json({ error: "No lists found" });
-    // }
-
-    // Crear un array de IDs de listas
-    const listIds = query_lists.rows.map((row) => row.id);
-
-    // Obtener libros asociados a cada lista
-    const query_books_in_lists = await pool.query(
-      "SELECT idList, idBook FROM BOOK_IN_LIST WHERE idList = ANY($1::int[])",
-      [listIds]
-    );
-
-    // Crear un mapa de lista a libros
-    const booksByList = query_books_in_lists.rows.reduce((acc, row) => {
-      if (!acc[row.idlist]) {
-        acc[row.idlist] = [];
-      }
-      acc[row.idlist].push(row.idbook);
-      return acc;
-    }, {});
-
-    // Obtener detalles de libros y sus autores
-    let books = [];
-    if (query_books_in_lists.rows.length > 0) {
-      const bookIds = query_books_in_lists.rows.map((row) => row.idbook);
-      const query_books_details = await pool.query(
-        `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
-         FROM BOOK b
-         INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-         WHERE b.id = ANY($1::int[])
-         GROUP BY b.id`,
-        [bookIds]
-      );
-      books = query_books_details.rows.map((book) => ({
-        bookId: book.id,
-        title: book.title,
-        pathBookCover: book.pathbookcover,
-        authors: book.authors.join(", "),
-      }));
+    if (!userId || !bookId) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Missing required parameters" });
     }
 
-    // Crear una respuesta con detalles de listas y libros
-    const lists = query_lists.rows.map((list) => {
-      return {
-        id: list.id,
-        title: list.title,
-        description: list.descriptionl,
-        date: list.datel,
-        isPublic: list.ispublic,
-        books: (booksByList[list.id] || [])
-          .map((bookId) => {
-            return books.find((book) => book.bookId === bookId);
-          })
-          .filter(Boolean),
-      };
-    });
+    // Consulta para obtener las listas del usuario y verificar si el libro está en cada lista
+    const query = `
+      SELECT 
+        bl.id AS listId,
+        bl.title AS listTitle,
+        EXISTS (
+          SELECT 1
+          FROM book_in_list bil
+          WHERE bil.idList = bl.id AND bil.idBook = $2
+        ) AS currentBookIn
+      FROM 
+        book_list bl
+      WHERE 
+        bl.idUserCreator = $1
+    `;
+    const result = await pool.query(query, [userId, bookId]);
+
+    const lists = result.rows.map((row) => ({
+      listTitle: row.listtitle,
+      listId: row.listid,
+      currentBookIn: row.currentbookin,
+    }));
 
     // Enviar respuesta
-    return res.status(200).json(lists);
+    res.status(200).send(lists);
   } catch (error) {
     console.error("Error getting lists:", error);
     res.status(500).send({ error: "Error getting the lists" });
@@ -174,34 +143,113 @@ export const getAllLists = async (req, res) => {
  * @param {*} req
  * @param {*} res
  */
-export const saveBookToList = async (req, res) => {
+export const addBookToList = async (req, res) => {
   try {
-    const { listId } = req.params; // Usar el parámetro listId
-    const { book } = req.body;
+    const { bookId, userId, listId } = req.body;
 
-    // Verificar si la lista existe
-    const query_list = await pool.query(
-      "SELECT * FROM BOOK_LIST WHERE id = $1",
-      [listId]
+    if (!bookId || !userId || !listId) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Missing required parameters" });
+    }
+
+    // Verificar que el libro y la lista existen y pertenecen al usuario
+    const verifyBookQuery = `
+      SELECT id 
+      FROM book 
+      WHERE id = $1
+    `;
+    const verifyBookValues = [bookId];
+    const verifyBookResult = await pool.query(
+      verifyBookQuery,
+      verifyBookValues
     );
 
-    if (query_list.rows.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "La lista especificada no existe." });
+    if (verifyBookResult.rows.length === 0) {
+      return res.status(404).json({ error: true, message: "Book not found" });
+    }
+
+    const verifyListQuery = `
+      SELECT id 
+      FROM book_list 
+      WHERE id = $1 AND idUserCreator = $2
+    `;
+    const verifyListValues = [listId, userId];
+    const verifyListResult = await pool.query(
+      verifyListQuery,
+      verifyListValues
+    );
+
+    if (verifyListResult.rows.length === 0) {
+      return res.status(404).json({
+        error: true,
+        message: "List not found or user not authorized",
+      });
     }
 
     // Insertar el libro en la lista
-    await pool.query(
-      "INSERT INTO BOOK_IN_LIST (idList, idBook) VALUES ($1, $2)",
-      [listId, book]
-    );
+    const insertQuery = `
+      INSERT INTO book_in_list (idBook, idList)
+      VALUES ($1, $2)
+    `;
+    const insertValues = [bookId, listId];
+    await pool.query(insertQuery, insertValues);
 
     res
       .status(200)
-      .json({ message: "El libro se ha guardado en la lista correctamente." });
+      .json({ error: false, message: "Book added to list successfully" });
   } catch (error) {
-    console.error("Error al guardar el libro en la lista:", error);
-    res.status(500).json({ error: "Error al guardar el libro en la lista." });
+    console.error("Error adding book to list:", error);
+    res.status(500).json({ error: true, message: "Internal server error" });
+  }
+};
+
+/**
+ * Guardar un libro en una lista especificada.
+ * @param {*} req
+ * @param {*} res
+ */
+export const deleteBookFromList = async (req, res) => {
+  try {
+    const { bookId, userId, listId } = req.body;
+    if (!bookId || !userId || !listId) {
+      return res
+        .status(400)
+        .json({ error: true, message: "Missing required parameters" });
+    }
+
+    // Verificar que la lista pertenece al usuario
+    const verifyListQuery = `
+      SELECT id 
+      FROM book_list 
+      WHERE id = $1 AND idUserCreator = $2
+    `;
+    const verifyListValues = [listId, userId];
+    const verifyListResult = await pool.query(
+      verifyListQuery,
+      verifyListValues
+    );
+
+    if (verifyListResult.rows.length === 0) {
+      return res.status(404).json({
+        error: true,
+        message: "List not found or user not authorized",
+      });
+    }
+
+    // Eliminar el libro de la lista
+    const deleteQuery = `
+      DELETE FROM book_in_list 
+      WHERE idBook = $1 AND idList = $2
+    `;
+    const deleteValues = [bookId, listId];
+    await pool.query(deleteQuery, deleteValues);
+
+    res
+      .status(200)
+      .json({ error: false, message: "Book removed from list successfully" });
+  } catch (error) {
+    console.error("Error removing book from list:", error);
+    res.status(500).json({ error: true, message: "Internal server error" });
   }
 };
