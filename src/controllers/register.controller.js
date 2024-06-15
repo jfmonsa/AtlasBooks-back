@@ -55,6 +55,19 @@ export const register = async (req, res) => {
       ]
     );
 
+    //Create default list for the user
+    await pool.query(
+      `INSERT INTO book_list 
+        (title, descriptionl, datel, idusercreator, ispublic) 
+      VALUES ($1, $2, $3, $4, $5)`,
+      
+      ["Me Gusta",
+        "Aqui se muestran los libros a los que les has dado 'me gusrta'.",
+        registerDate,
+        result.rows[0].id, 
+        false]
+    );
+
     const newUser = {
       id: result.rows[0].id,
       name: result.rows[0].nameu,
