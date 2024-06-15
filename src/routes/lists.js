@@ -10,7 +10,7 @@ import {
 import { authMiddleware } from "../middleware/session.js";
 
 // Ruta para crear una lista
-router.post("/", createList);
+router.post("/", authMiddleware, createList);
 
 // Ruta para obtener una lista por su ID
 router.get("/:id", getList);
