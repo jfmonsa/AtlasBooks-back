@@ -104,7 +104,7 @@ export const getBook = async (req, res) => {
       title: query_book.rows[0].title,
       description: query_book.rows[0].descriptionb,
       year: query_book.rows[0].yearreleased,
-      vol: query_book.rows[0].vol,
+      vol: query_book.rows[0].vol ? query_book.rows[0].vol : "N/A",
       n_pages: query_book.rows[0].npages,
       publisher: query_book.rows[0].publisher,
       cover_path: query_book.rows[0].pathbookcover,
