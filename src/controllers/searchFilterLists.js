@@ -36,8 +36,6 @@ export const search_filter_lists = async (req, res) => {
       return res.status(400).json({ error: true, message: "No lists found" });
     }
 
-    console.log(list.rows);
-
     const datalist = list.rows.map((row) => ({
       id: row.id,
       title: row.title,
