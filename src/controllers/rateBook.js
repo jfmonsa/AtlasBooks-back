@@ -13,15 +13,18 @@ export const rateBook = async (req, res) => {
     
         //If the user has already rated the book
         if (rated.rows.length > 0) {
-        return res.status(400).json(["You have already rated this book"]);
-        }
-    
+        //Update the rate
+        await pool.query(
+            "UPDATE book_rate SET ratevalue = $1 WHERE iduser = $2 AND idbook = $3",
+            [rate, id, idbook]
+            );
+        } else {
         //Insert the rate
          await pool.query(
-         "INSERT INTO book_rate (iduser, idbook, ratevalue) VALUES ($1, $2, $3)",
-         [id, idbook, rate]
-         );
-    
+            "INSERT INTO book_rate (iduser, idbook, ratevalue) VALUES ($1, $2, $3)",
+            [id, idbook, rate]
+            );
+        }
         //Return the response
         res.status(200).json(["Rating sent successfully"]);
     } catch (error) {
