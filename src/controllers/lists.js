@@ -7,26 +7,38 @@ import { pool } from "../db.js";
  */
 export const createList = async (req, res) => {
   try {
-    // Getting data from the request body
+    // Obtener datos del cuerpo de la solicitud
     const { title, descriptionL, dateL, idUserCreator, isPublic } = req.body;
 
-    // Preparing values for the query
+    // Validar que no exista una lista con el mismo nombre para el mismo usuario
+    const checkQuery =
+      "SELECT * FROM BOOK_LIST WHERE title = $1 AND idUserCreator = $2";
+    const checkResult = await pool.query(checkQuery, [title, idUserCreator]);
+
+    if (checkResult.rows.length > 0) {
+      return res.status(400).send({
+        error: true,
+        message: "Ya existe una lista con el mismo nombre.",
+      });
+    }
+
+    // Preparar valores para la consulta
     const query_values = [title, descriptionL, dateL, idUserCreator, isPublic];
 
-    // Inserting the new list into the LIST table
+    // Insertar la nueva lista en la tabla BOOK_LIST
     const newList_query = await pool.query(
       "INSERT INTO BOOK_LIST (title, descriptionL, dateL, idUserCreator, isPublic) VALUES ($1, $2, $3, $4, $5) RETURNING id",
       query_values
     );
 
-    // Getting the auto-incremented id of the new list
+    // Obtener el id auto-incrementado de la nueva lista
     const listId = newList_query.rows[0].id;
 
-    // Sending response
-    res.status(201).send({ message: "List created successfully", listId });
+    // Enviar respuesta
+    res.status(201).send({ message: "Lista creada exitosamente", listId });
   } catch (error) {
-    console.error("Error creating list:", error);
-    res.status(500).send({ error: "Failed to create list" });
+    console.error("Error creando la lista:", error);
+    res.status(500).send({ error: "Error interno del servidor" });
   }
 };
 
