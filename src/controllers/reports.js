@@ -29,3 +29,24 @@ export const report = async (req, res) => {
     res.status(400).json(["Error getting reports"]);
   }
 };
+
+export const getReports = async (req, res) => {
+  try {
+    //validate if the user is an admin
+    // if (!req.user.isAdmin) {
+    //   return res.status(401).json(["Unauthorized"]);
+    // }
+
+    //get the reports
+    const reports = await pool.query(
+      "SELECT * FROM book_report WHERE status = $1",
+      [true]
+    );
+    
+    //return the response
+    res.status(200).json(reports.rows);
+  } catch (error) {
+    console.error("Error getting reports:", error.message);
+    res.status(400).json(["Error getting reports"]);
+  }
+};
