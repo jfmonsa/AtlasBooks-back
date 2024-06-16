@@ -11,16 +11,18 @@ export const userLists = async (req, res) => {
     }
 
     const userListsQuery = await pool.query(
-      `
-            SELECT 
-            id,
-            title,
-            descriptionl,
-            ispublic
-            FROM  book_list
-            WHERE 
-                idusercreator = $1
-            `,
+        `
+        SELECT 
+          book_list.id,
+          book_list.title,
+          book_list.descriptionl,
+          book_list.ispublic,
+          COUNT(book_in_list.idlist) as book_count
+        FROM book_list
+        LEFT JOIN book_in_list ON book_list.id = book_in_list.idlist
+        WHERE book_list.idusercreator = $1
+        GROUP BY book_list.id
+      `,
       [id]
     );
 
