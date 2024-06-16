@@ -22,7 +22,7 @@ export const userLists = async (req, res) => {
         
             const userLists = userListsQuery.rows;
 
-        if (userLists.length === 0) {res.status(400).json({ error: true, message: "No lists found" });}
+        if (userLists.length === 0) {return res.status(400).json({ error: true, message: "No lists found" });}
 
         res
             .status(200)
