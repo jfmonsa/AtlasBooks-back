@@ -33,9 +33,9 @@ export const report = async (req, res) => {
 export const getReports = async (req, res) => {
   try {
     //validate if the user is an admin
-    // if (!req.user.isAdmin) {
-    //   return res.status(401).json(["Unauthorized"]);
-    // }
+     if (!req.user.isAdmin) {
+       return res.status(401).json(["Unauthorized"]);
+     }
 
     //get the reports
     const reports = await pool.query(
