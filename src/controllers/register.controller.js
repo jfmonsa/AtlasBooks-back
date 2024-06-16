@@ -62,7 +62,7 @@ export const register = async (req, res) => {
       VALUES ($1, $2, $3, $4, $5)`,
       
       ["Me Gusta",
-        "Aqui se muestran los libros a los que les has dado 'me gusrta'.",
+        "Aqui se muestran los libros a los que les has dado 'me gusta'.",
         registerDate,
         result.rows[0].id, 
         false]
