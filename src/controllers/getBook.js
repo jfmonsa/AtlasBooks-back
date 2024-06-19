@@ -65,7 +65,7 @@ export const getBook = async (req, res) => {
       `SELECT idcategoryFather, sub.subcategoryname 
       FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub 
         ON insub.idsubcategory = sub.id  
-      WHERE idbook = $1"`,
+      WHERE idbook = $1`,
       [idBook]
     );
     let subcategoriesIds;
