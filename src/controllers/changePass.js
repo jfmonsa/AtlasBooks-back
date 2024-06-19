@@ -17,7 +17,10 @@ export const change_password = async (req, res) => {
       );
     }
 
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
+    const user = await pool.query(`
+      SELECT * 
+      FROM users 
+      WHERE id = $1`, [id]);
 
     if (user.rows.length === 0) {
       return res.status(400).json("CurrentPassword is incorrect");
@@ -25,7 +28,10 @@ export const change_password = async (req, res) => {
 
     const passwordHash = await bycript.hash(newPassword, 10);
 
-    await pool.query("UPDATE users SET passwordu = $1 WHERE id = $2", [
+    await pool.query(`
+      UPDATE users 
+      SET passwordu = $1 
+      WHERE id = $2`, [
       passwordHash,
       id,
     ]);

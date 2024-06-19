@@ -10,13 +10,18 @@ export const banUser = async (req, res) => {
     if (!isadmin) {
       if (id !== idUser) {
         if (status === true) {
-          await pool.query("UPDATE users SET statusu = $1 WHERE id = $2", [
+          await pool.query(`
+            UPDATE users 
+            SET statusu = $1 
+            WHERE id = $2`, [
             false,
             idUser,
           ]);
 
           await pool.query(
-            "INSERT INTO user_ban (iduserbanned, idadmin, motivation, dateban) VALUES ($1, $2, $3, $4)",
+            `INSERT INTO user_ban 
+              (iduserbanned, idadmin, motivation, dateban) 
+            VALUES ($1, $2, $3, $4)`,
             [idUser, id, "No reason", date]
           );
           res.status(200).send({
@@ -51,7 +56,10 @@ export const desBanUser = async (req, res) => {
     const { id } = req.body;
 
     if (!isadmin) {
-      await pool.query("UPDATE users SET statusu = $1 WHERE id = $2", [
+      await pool.query(`
+        UPDATE users 
+        SET statusu = $1 
+        WHERE id = $2`, [
         true,
         id,
       ]);

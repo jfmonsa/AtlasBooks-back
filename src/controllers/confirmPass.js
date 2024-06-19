@@ -6,7 +6,8 @@ export const confirmPass = async (req, res) => {
   try {
     const { confirmPassword } = req.body;
 
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [
+    const user = await pool.query(`
+      SELECT * FROM users WHERE id = $1`, [
       req.user.id,
     ]);
 

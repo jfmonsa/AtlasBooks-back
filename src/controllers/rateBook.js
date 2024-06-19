@@ -15,13 +15,16 @@ export const rateBook = async (req, res) => {
     if (rated.rows.length > 0) {
       //Update the rate
       await pool.query(
-        "UPDATE book_rate SET ratevalue = $1 WHERE iduser = $2 AND idbook = $3",
+        `UPDATE book_rate 
+        SET ratevalue = $1 
+        WHERE iduser = $2 AND idbook = $3`,
         [rate, id, idbook]
       );
     } else {
       //Insert the rate
       await pool.query(
-        "INSERT INTO book_rate (iduser, idbook, ratevalue) VALUES ($1, $2, $3)",
+        `INSERT INTO book_rate (iduser, idbook, ratevalue) 
+        VALUES ($1, $2, $3)`,
         [id, idbook, rate]
       );
     }
@@ -40,7 +43,9 @@ export const getRate = async (req, res) => {
 
     //Get the rate
     const rate = await pool.query(
-      "SELECT ratevalue FROM book_rate WHERE iduser = $1 AND idbook = $2",
+      `SELECT ratevalue 
+      FROM book_rate 
+      WHERE iduser = $1 AND idbook = $2`,
       [id, idbook]
     );
 

@@ -12,7 +12,7 @@ export const downloadHistory = async (req, res) => {
 
         const downloadHistoryQuery = await pool.query(
             `
-            SELECT 
+        SELECT 
             dh.iduser,
             dh.datedownload,
             b.id AS book_id,

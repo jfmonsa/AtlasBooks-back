@@ -4,7 +4,10 @@ export const deleteAccount = async (req, res) => {
   try {
     const { id } = req.user;
 
-    await pool.query("UPDATE users SET statusu = $1 WHERE id = $2", [
+    await pool.query(`
+      UPDATE users 
+      SET statusu = $1 
+      WHERE id = $2`, [
       false,
       id,
     ]);

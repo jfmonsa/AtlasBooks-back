@@ -28,7 +28,10 @@ export const createNewPass = async (req, res) => {
     }
 
     const hashedPassword = await bycript.hash(password, 10);
-    await pool.query("UPDATE users SET passwordu = $1 WHERE id = $2", [
+    await pool.query(`
+      UPDATE users 
+      SET passwordu = $1 
+      WHERE id = $2`, [
       hashedPassword,
       dataToken.id,
     ]);

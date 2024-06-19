@@ -9,7 +9,10 @@ import { getComments } from "./comments.js";
 export const getBook = async (req, res) => {
   try {
     const idBook = req.params.id;
-    const query_book = await pool.query("SELECT * FROM BOOK WHERE id = $1", [
+    const query_book = await pool.query(`
+      SELECT * 
+      FROM BOOK 
+      WHERE id = $1`, [
       idBook,
     ]);
 
@@ -48,7 +51,10 @@ export const getBook = async (req, res) => {
 
     //Getting book rate
     const query_rate = await pool.query(
-      "SELECT ROUND(AVG(ratevalue),1) as rate_avg FROM BOOK_RATE WHERE idbook = $1",
+      `
+      SELECT ROUND(AVG(ratevalue),1) as rate_avg 
+      FROM BOOK_RATE 
+      WHERE idbook = $1`,
       [idBook]
     );
     const book_rate = query_rate.rows[0].rate_avg
@@ -56,7 +62,10 @@ export const getBook = async (req, res) => {
       : 0;
     //Get subcategories and categories
     const query_subcategories = await pool.query(
-      "SELECT idcategoryFather, sub.subcategoryname FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub ON insub.idsubcategory = sub.id  WHERE idbook = $1",
+      `SELECT idcategoryFather, sub.subcategoryname 
+      FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub 
+        ON insub.idsubcategory = sub.id  
+      WHERE idbook = $1"`,
       [idBook]
     );
     let subcategoriesIds;
@@ -65,7 +74,9 @@ export const getBook = async (req, res) => {
     let categoryId;
     if (query_subcategories.rows.length > 0) {
       const query_categoryname = await pool.query(
-        "SELECT distinct id, categoryname FROM CATEGORY WHERE id = $1",
+        `SELECT distinct id, categoryname 
+        FROM CATEGORY 
+        WHERE id = $1`,
         [query_subcategories?.rows[0]?.idcategoryfather]
       );
       subcategories = query_subcategories.rows.map(

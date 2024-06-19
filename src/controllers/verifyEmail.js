@@ -7,7 +7,10 @@ export const verifyEmail = async (req, res) => {
     const url = "newPassword";
 
     //Validate if the email exists
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const user = await pool.query(`
+      SELECT * 
+      FROM users 
+      WHERE email = $1`, [
       email,
     ]);
     //Validate if the user is active

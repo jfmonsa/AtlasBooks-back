@@ -45,7 +45,10 @@ export const createBook = async (req, res) => {
     ];
 
     const newBook_query = await pool.query(
-      "INSERT INTO BOOK (isbn, title, descriptionB, yearReleased, vol, nPages, publisher, pathBookCover) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+      `INSERT INTO BOOK 
+        (isbn, title, descriptionB, yearReleased, vol, nPages, 
+          publisher, pathBookCover) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
       query_values
     );
 
@@ -60,7 +63,10 @@ export const createBook = async (req, res) => {
 
     if (bookFiles.length > 0) {
       const fileQueries = bookFiles.map((path) =>
-        pool.query("INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)", [
+        pool.query(`
+          INSERT INTO BOOK_FILES 
+            (idBook, pathF) 
+          VALUES ($1, $2)`, [
           bookId,
           path,
         ])
@@ -74,7 +80,9 @@ export const createBook = async (req, res) => {
     if (authorsArray) {
       const insertAuthorQueries = authorsArray.map(async (author) => {
         pool.query(
-          "INSERT INTO BOOK_AUTHORS (idBook, author) VALUES ($1, $2)",
+          `INSERT INTO BOOK_AUTHORS 
+            (idBook, author) 
+          VALUES ($1, $2)`,
           [bookId, author]
         );
       });
@@ -87,7 +95,9 @@ export const createBook = async (req, res) => {
     if (languagesArray) {
       const insertLanguageQueries = languagesArray.map(async (language) => {
         pool.query(
-          "INSERT INTO BOOK_LANG (idBook, languageB) VALUES ($1, $2)",
+          `INSERT INTO BOOK_LANG 
+            (idBook, languageB) 
+          VALUES ($1, $2)`,
           [bookId, language]
         );
       });
@@ -101,7 +111,9 @@ export const createBook = async (req, res) => {
       const insertSubcategoryQueries = subcategoryIdsArray.map(
         (subcategoryId) => {
           return pool.query(
-            "INSERT INTO BOOK_IN_SUBCATEGORY (idBook, idSubcategory) VALUES ($1, $2)",
+            `INSERT INTO BOOK_IN_SUBCATEGORY 
+              (idBook, idSubcategory) 
+            VALUES ($1, $2)`,
             [bookId, subcategoryId]
           );
         }

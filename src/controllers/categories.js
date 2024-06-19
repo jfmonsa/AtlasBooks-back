@@ -66,7 +66,9 @@ export const getSubCategoriesOfCategory = async (req, res) => {
   try {
     const idCat = req.params.idCat;
     const query = await pool.query(
-      "select id, subcategoryname from subcategory where idCategoryFather = $1",
+      `select id, subcategoryname 
+      from subcategory 
+      where idCategoryFather = $1`,
       [idCat]
     );
     if (query.rows.length === 0) {

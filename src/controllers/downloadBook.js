@@ -14,7 +14,11 @@ export const downloadBookFile = async (req, res) => {
 
     // Registrar la descarga en la base de datos
     await pool.query(
-      "INSERT INTO BOOK_DOWNLOAD (idUser, idBook, dateDownload) VALUES ($1, $2, NOW()) ON CONFLICT (idUser, idBook) DO UPDATE SET dateDownload = EXCLUDED.dateDownload",
+      `INSERT INTO BOOK_DOWNLOAD 
+        (idUser, idBook, dateDownload) 
+      VALUES ($1, $2, NOW()) 
+      ON CONFLICT (idUser, idBook) 
+      DO UPDATE SET dateDownload = EXCLUDED.dateDownload`,
       [userId, bookId]
     );
     console.log("Query done");

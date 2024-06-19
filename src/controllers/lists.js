@@ -12,7 +12,9 @@ export const createList = async (req, res) => {
 
     // Validar que no exista una lista con el mismo nombre para el mismo usuario
     const checkQuery =
-      "SELECT * FROM BOOK_LIST WHERE title = $1 AND idUserCreator = $2";
+      `SELECT * 
+      FROM BOOK_LIST 
+      WHERE title = $1 AND idUserCreator = $2`;
     const checkResult = await pool.query(checkQuery, [title, idUserCreator]);
 
     if (checkResult.rows.length > 0) {
@@ -27,7 +29,10 @@ export const createList = async (req, res) => {
 
     // Insertar la nueva lista en la tabla BOOK_LIST
     const newList_query = await pool.query(
-      "INSERT INTO BOOK_LIST (title, descriptionL, dateL, idUserCreator, isPublic) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+      `INSERT INTO BOOK_LIST 
+        (title, descriptionL, dateL, idUserCreator, isPublic) 
+      VALUES ($1, $2, $3, $4, $5) 
+      RETURNING id`,
       query_values
     );
 
