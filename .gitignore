@@ -2,4 +2,8 @@ node_modules
 .env
 
 # files uploaded by users on the server 
-storage
+storage/*
+!storage/books/book.epub
+!storage/books/book.pdf
+!storage/books/default.jpg
+!storage/usersProfilePic/default.webp
