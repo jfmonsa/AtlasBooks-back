@@ -1,12 +1,13 @@
 // file for data base connection (postgresql)
+import dotenv from 'dotenv';
+dotenv.config()
 import pg from "pg";
 const { Pool } = pg;
 
 let pool = null;
+const BD = "local" //possible values: prod || local
 
-const BD = process.env.NODE_ENV === "Production" ? "Remota" : "Local";
-
-if (process.env.NODE_ENV === "Production") {
+if (BD === "prod") {
   pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
   });

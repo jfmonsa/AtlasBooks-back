@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config()
 import { transporter } from "../utils/mailer.js";
 import jwt from "jsonwebtoken";
 

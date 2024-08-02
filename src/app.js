@@ -1,6 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config()
 import express from "express";
-// import dotenv from 'dotenv';
-// dotenv.config();
 // const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
 //import morgan from "morgan"; ??
 import cors from "cors";
