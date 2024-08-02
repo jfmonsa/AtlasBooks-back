@@ -5,9 +5,8 @@ import pg from "pg";
 const { Pool } = pg;
 
 let pool = null;
-const BD = "local" //possible values: prod || local
 
-if (BD === "prod") {
+if (process.env.BD === "prod") {
   pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
   });
