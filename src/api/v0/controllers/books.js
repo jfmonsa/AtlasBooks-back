@@ -58,18 +58,18 @@ export const createBook = async (req, res) => {
 
     // -- Get the paths of uploaded files
     const bookFiles = req.files["bookFiles"]
-      ? req.files["bookFiles"].map((file) => file.filename)
+      ? req.files["bookFiles"].map(file => file.filename)
       : [];
 
     if (bookFiles.length > 0) {
-      const fileQueries = bookFiles.map((path) =>
-        pool.query(`
+      const fileQueries = bookFiles.map(path =>
+        pool.query(
+          `
           INSERT INTO BOOK_FILES 
             (idBook, pathF) 
-          VALUES ($1, $2)`, [
-          bookId,
-          path,
-        ])
+          VALUES ($1, $2)`,
+          [bookId, path]
+        )
       );
       await Promise.all(fileQueries);
     } else {
@@ -78,7 +78,7 @@ export const createBook = async (req, res) => {
 
     // ==== insert into BOOK_AUTHORS talbe =====
     if (authorsArray) {
-      const insertAuthorQueries = authorsArray.map(async (author) => {
+      const insertAuthorQueries = authorsArray.map(async author => {
         pool.query(
           `INSERT INTO BOOK_AUTHORS 
             (idBook, author) 
@@ -93,7 +93,7 @@ export const createBook = async (req, res) => {
 
     // ==== insert into BOOK_LANG talbe =====
     if (languagesArray) {
-      const insertLanguageQueries = languagesArray.map(async (language) => {
+      const insertLanguageQueries = languagesArray.map(async language => {
         pool.query(
           `INSERT INTO BOOK_LANG 
             (idBook, languageB) 
@@ -109,7 +109,7 @@ export const createBook = async (req, res) => {
     // ==== insert into  BOOK_IN_SUBCATEGORY table ====
     if (subcategoryIdsArray) {
       const insertSubcategoryQueries = subcategoryIdsArray.map(
-        (subcategoryId) => {
+        subcategoryId => {
           return pool.query(
             `INSERT INTO BOOK_IN_SUBCATEGORY 
               (idBook, idSubcategory) 

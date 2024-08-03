@@ -1,4 +1,4 @@
-import { tokenVerify } from "../utils/handleJWT.js";
+import { tokenVerify } from "../../v0/utils/handleJWT.js";
 import { pool } from "../db.js";
 
 export const verifyEmail = async (req, res) => {

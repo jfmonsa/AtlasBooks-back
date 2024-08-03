@@ -1,6 +1,6 @@
 // file for data base connection (postgresql)
-import dotenv from 'dotenv';
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 import pg from "pg";
 const { Pool } = pg;
 
@@ -19,7 +19,7 @@ if (process.env.BD === "prod") {
     port: process.env.LOCALDB_PORT,
   });
 }
-pool.connect((err) => {
+pool.connect(err => {
   if (err) throw err;
   console.log(`Conexion a la base de datos ${BD} completada`);
 });

@@ -1,6 +1,6 @@
 import { pool } from "../db.js";
 import bycript from "bcryptjs";
-import { tokenSign } from "../utils/handleJWT.js";
+import { tokenSign } from "../../v0/utils/handleJWT.js";
 
 export const login = async (req, res) => {
   try {

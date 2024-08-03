@@ -1,27 +1,20 @@
-import dotenv from 'dotenv';
-dotenv.config()
 import express from "express";
-// const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
-//import morgan from "morgan"; ??
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import corsOptions from "./config/cors.js";
+
+//import api router
+//import router from "./api/v0/routes/index.js";
+import router_v1 from "./api/v1/routes/index.js";
+
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-import router from "./routes/index.js";
-import corsOptions from "./utils/cors.js";
 
-// Middlewares
-// app.use(morgan("dev")); ??
-// const whitelist = [
-//   "https://atlas-books-back.vercel.app/",
-//   "http://localhost:5173",
-// ];
-
-app.use(
-  cors(corsOptions
-  )
-);
+// -- load cors options
+app.use(cors(corsOptions));
 // -- support post requests
 app.use(express.json());
 // -- support file uploading
@@ -34,7 +27,7 @@ app.use(cookieParser());
 app.use("/storage", express.static("storage"));
 
 // Routes API Rest
-app.use("/api", router);
+app.use("/api/v1", router_v1);
 
 // handling errors
 app.use((err, req, res, next) => {
@@ -47,13 +40,3 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`Server at: http://localhost:${port}`);
 });
-
-//y esto xd?
-// morganBody(app, {
-//   skip: function (req, res) {
-//     return (
-//       [403, 404, 409, 401].includes(res.statusCode) || res.statusCode < 400
-//     );
-//   },
-//   stream: loggerSlack,
-// });

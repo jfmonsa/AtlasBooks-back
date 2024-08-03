@@ -1,6 +1,6 @@
 import bycript from "bcryptjs";
 import { pool } from "../db.js";
-import { tokenSign } from "../utils/handleJWT.js";
+import { tokenSign } from "../../v0/utils/handleJWT.js";
 
 export const register = async (req, res) => {
   try {
@@ -37,7 +37,8 @@ export const register = async (req, res) => {
     const registerDate = new Date(Date.now());
 
     //Insert the user into the database
-    const result = await pool.query(`
+    const result = await pool.query(
+      `
       INSERT INTO users (
         nameu, email, passwordu, nickname, country, registerdate, statusu, isadmin, pathprofilepic
       ) 
@@ -60,12 +61,14 @@ export const register = async (req, res) => {
       `INSERT INTO book_list 
         (title, descriptionl, datel, idusercreator, ispublic) 
       VALUES ($1, $2, $3, $4, $5)`,
-      
-      ["Me Gusta",
+
+      [
+        "Me Gusta",
         "Aqui se muestran los libros a los que les has dado 'me gusta'.",
         registerDate,
-        result.rows[0].id, 
-        false]
+        result.rows[0].id,
+        false,
+      ]
     );
 
     const newUser = {
@@ -84,7 +87,7 @@ export const register = async (req, res) => {
     const token = await tokenSign(result.rows[0]);
     // //Create the cookie
     res.cookie("token", token);
-    
+
     //Return the response
     res.status(201).json(newUser);
   } catch (error) {

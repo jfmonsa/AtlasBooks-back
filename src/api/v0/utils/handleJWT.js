@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config()
+import dotenv from "dotenv";
+dotenv.config();
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -36,7 +36,7 @@ export function tokenSign(user) {
  * @param {*} token
  * @returns
  */
-export const tokenVerify = async (token) => {
+export const tokenVerify = async token => {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch (error) {
