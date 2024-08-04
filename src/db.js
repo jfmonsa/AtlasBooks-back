@@ -5,8 +5,9 @@ import pg from "pg";
 const { Pool } = pg;
 
 let pool = null;
+const DB_ENV = process.env.DB_ENV;
 
-if (process.env.BD === "prod") {
+if (DB_ENV === "prod") {
   pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
   });
@@ -21,7 +22,7 @@ if (process.env.BD === "prod") {
 }
 pool.connect(err => {
   if (err) throw err;
-  console.log(`Conexion a la base de datos ${BD} completada`);
+  console.log(`Conexion a la base de datos ${DB_ENV} completada`);
 });
 
 export { pool };

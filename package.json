@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch src/app.js"
+    "dev": "node --watch src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +31,7 @@
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^9.1.0",
     "globals": "^15.9.0",
+    "morgan": "^1.10.0",
     "prettier": "^3.3.3"
   }
 }

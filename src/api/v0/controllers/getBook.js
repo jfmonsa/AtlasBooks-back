@@ -9,12 +9,13 @@ import { getComments } from "./comments.js";
 export const getBook = async (req, res) => {
   try {
     const idBook = req.params.id;
-    const query_book = await pool.query(`
+    const query_book = await pool.query(
+      `
       SELECT * 
       FROM BOOK 
-      WHERE id = $1`, [
-      idBook,
-    ]);
+      WHERE id = $1`,
+      [idBook]
+    );
 
     // Si no se encuentra el libro, devolver un error 404
     if (query_book.rows.length === 0) {
@@ -41,12 +42,12 @@ export const getBook = async (req, res) => {
     // Dividir la cadena en un array de cadenas
     const book_files =
       query_book_files.rows.length > 0
-        ? query_book_files.rows[0].pathf.split(",").map((file) => file.trim())
+        ? query_book_files.rows[0].pathf.split(",").map(file => file.trim())
         : [];
 
     // Obtener tipos de archivos del libro
     const book_files_type = [
-      ...new Set(book_files.map((file) => file.split(".").pop().toUpperCase())),
+      ...new Set(book_files.map(file => file.split(".").pop().toUpperCase())),
     ];
 
     //Getting book rate
@@ -80,9 +81,9 @@ export const getBook = async (req, res) => {
         [query_subcategories?.rows[0]?.idcategoryfather]
       );
       subcategories = query_subcategories.rows.map(
-        (subObj) => subObj.subcategoryname
+        subObj => subObj.subcategoryname
       );
-      subcategoriesIds = query_subcategories.rows.map((subObj) => subObj.id);
+      subcategoriesIds = query_subcategories.rows.map(subObj => subObj.id);
       category =
         query_categoryname.rows.length > 0
           ? query_categoryname.rows[0].categoryname
@@ -121,10 +122,8 @@ export const getBook = async (req, res) => {
       cover_path: query_book.rows[0].pathbookcover,
       book_rate: book_rate,
       //Multi valued
-      book_authors: query_book_authors.rows.map(
-        (authorObj) => authorObj.author
-      ),
-      book_lang: query_book_lang.rows.map((langObj) => langObj.languageb),
+      book_authors: query_book_authors.rows.map(authorObj => authorObj.author),
+      book_lang: query_book_lang.rows.map(langObj => langObj.languageb),
       book_files,
       book_files_type,
       book_category: category,
@@ -191,7 +190,7 @@ const getRelatedBooks = async (idBook, subcategoryIds, categoryId) => {
       relatedBooks = relatedBooks.concat(additionalBooksQuery.rows);
     }
 
-    return relatedBooks.map((book) => ({
+    return relatedBooks.map(book => ({
       authors: book.authors.join(", "),
       title: book.title,
       pathBookCover: book.pathbookcover,

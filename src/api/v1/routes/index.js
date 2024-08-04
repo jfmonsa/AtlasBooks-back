@@ -2,7 +2,7 @@ import { Router } from "express";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import removeFileExt from "../utils/removeFileExtension.js";
+import removeFileExt from "../../../utils/removeFileExtension.js";
 const router = Router();
 
 /**
