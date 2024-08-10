@@ -1,8 +1,15 @@
-import { pool } from "../../../../db.js";
+import { withTransaction } from "../../../../utils/withTransaction.js";
 import cloudinary from "../../../../config/cloudinary.js";
 import { CustomError } from "../../middlewares/errorMiddleware.js";
 
-// Look at this beatiful declarative code,
+const CLOUDINARY_FOLDERS = {
+  COVER: "bookCoverPics",
+  FILES: "books",
+};
+
+const DEFAULT_COVER = "default.jpg";
+
+// NOTE: Look at this beatiful declarative code,
 // use declarative in every controller
 
 /**
@@ -11,7 +18,50 @@ import { CustomError } from "../../middlewares/errorMiddleware.js";
  * @param {*} res
  */
 export const createBook = async (req, res) => {
-  //getting data
+  validateBookData(req.body);
+
+  const bookData = extractBookData(req.body);
+  const coverUrl = await uploadCoverImage(req.files.cover);
+
+  await withTransaction(async client => {
+    const bookId = await insertBookRecord(client, { ...bookData, coverUrl });
+    await uploadAndInsertBookFiles(client, bookId, req.files.bookFiles);
+    await insertBookAuthors(client, bookId, bookData.authors);
+    await insertBookLanguages(client, bookId, bookData.languages);
+    await insertBookSubcategories(client, bookId, bookData.subcategoryIds);
+  });
+
+  res.status(201).send({ message: "Book created successfully" });
+};
+
+// Declarative aux functions
+/**
+ * Validates the book data object to ensure all required fields are present.
+ * @param {Object} data - The book data object.
+ * @throws {CustomError} If any required field is missing.
+ */
+const validateBookData = data => {
+  const requiredFields = [
+    "isbn",
+    "title",
+    "yearReleased",
+    "authors",
+    "languages",
+  ];
+  for (const field of requiredFields) {
+    if (!data[field]) {
+      throw new CustomError(`Missing required field: ${field}`, 400);
+    }
+  }
+  // Additional specific validations can be added here
+};
+
+/**
+ * Extracts the necessary book data from the request body.
+ * @param {Object} body - The request body.
+ * @returns {Object} The extracted book data.
+ */
+const extractBookData = body => {
   const {
     isbn,
     title,
@@ -20,25 +70,12 @@ export const createBook = async (req, res) => {
     vol,
     nPages,
     publisher,
-    //multivalued fields
     authors,
     languages,
-    //(n,m) rel
     subcategoryIds,
-  } = req.body;
+  } = body;
 
-  // Convertir strings JSON a arrays
-  const authorsArray = authors; //JSON.parse(authors);
-  const languagesArray = languages; //JSON.parse(languages);
-  const subcategoryIdsArray = subcategoryIds; //JSON.parse(subcategoryIds);
-
-  // upload cover pic to cloudinary and get its path
-  const cover = req.files.cover
-    ? uploadToCloudinary(req.files.cover[0], "bookCoverPics")
-    : "default.jpg";
-
-  // ==== insert into BOOK table =====
-  const query_values = [
+  return {
     isbn,
     title,
     descriptionB,
@@ -46,118 +83,172 @@ export const createBook = async (req, res) => {
     vol,
     nPages,
     publisher,
-    cover,
+    authors: Array.isArray(authors) ? authors : JSON.parse(authors),
+    languages: Array.isArray(languages) ? languages : JSON.parse(languages),
+    subcategoryIds: Array.isArray(subcategoryIds)
+      ? subcategoryIds
+      : JSON.parse(subcategoryIds),
+  };
+};
+
+/**
+ * Uploads the cover image to the cloud storage.
+ * @param {Array} coverFile - The cover image file.
+ * @returns {Promise<string>} The URL of the uploaded cover image.
+ * @throws {CustomError} If the cover upload fails.
+ */
+const uploadCoverImage = async coverFile => {
+  if (!coverFile) return DEFAULT_COVER;
+
+  try {
+    const result = await cloudinary.uploader.upload(coverFile[0].path, {
+      folder: CLOUDINARY_FOLDERS.COVER,
+    });
+    return result.secure_url;
+  } catch (error) {
+    throw new CustomError("Failed to upload cover", 500);
+  }
+};
+
+/**
+ * Inserts a new book record into the database.
+ * @param {Object} client - The database client.
+ * @param {Object} bookData - The book data to be inserted.
+ * @returns {Promise<number>} The ID of the inserted book record.
+ */
+const insertBookRecord = async (client, bookData) => {
+  const {
+    isbn,
+    title,
+    descriptionB,
+    yearReleased,
+    vol,
+    nPages,
+    publisher,
+    coverUrl,
+  } = bookData;
+
+  const query = `
+    INSERT INTO BOOK (isbn, title, descriptionB, yearReleased, vol, nPages, publisher, pathBookCover)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    RETURNING id
+  `;
+  const values = [
+    isbn,
+    title,
+    descriptionB,
+    yearReleased,
+    vol,
+    nPages,
+    publisher,
+    coverUrl,
   ];
 
-  const newBook_query = await pool.query(
-    `INSERT INTO BOOK 
-        (isbn, title, descriptionB, yearReleased, vol, nPages, 
-          publisher, pathBookCover) 
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`,
-    query_values
-  );
+  const result = await client.query(query, values);
+  return result.rows[0].id;
+};
 
-  // ==== insert into BOOK_FILES talbe =====
-  // -- getting the auto increment id of BOOK
-  const bookId = newBook_query.rows[0].id;
+/**
+ * Uploads and inserts the book files into the database.
+ * @param {Object} client - The database client.
+ * @param {number} bookId - The ID of the book.
+ * @param {Array} files - The book files to be uploaded and inserted.
+ * @returns {Promise<void>}
+ * @throws {CustomError} If there are no book files or if the upload fails.
+ */
+const uploadAndInsertBookFiles = async (client, bookId, files) => {
+  if (!files || files.length === 0) {
+    throw new CustomError("There should be at least one book file", 400);
+  }
 
-  // -- Get the paths of uploaded files
-  // TODO: replace this with cloudinary upload
-  // const bookFiles = req.files["bookFiles"]
-  //   ? req.files["bookFiles"].map(file => file.filename)
-  //   : [];
-  if (req.files.bookFiles) {
-    req.files.bookFiles.forEach(async file => {
-      let resultUpload = await cloudinary.uploader.upload(file.path, {
-        folder: "books",
+  const uploadPromises = files.map(async file => {
+    try {
+      const resultUpload = await cloudinary.uploader.upload(file.path, {
+        folder: CLOUDINARY_FOLDERS.FILES,
+        resource_type: "auto", // Esto permite subir PDFs
       });
+
       if (resultUpload.error) {
-        throw new CustomError("Failed to upload book file", 500);
+        throw new Error(
+          `Failed to upload book file: ${resultUpload.error.message}`
+        );
       }
-      console.log(resultUpload);
-      // insert into BOOK_FILES table
-      await pool.query(
-        `
-          INSERT INTO BOOK_FILES 
-            (idBook, pathF) 
-          VALUES ($1, $2)`,
+
+      await client.query(
+        "INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)",
         [bookId, resultUpload.secure_url]
       );
-    });
-    // set bookFiles to the names of the uploaded files
-  } else {
-    throw new CustomError("There should be at least one book file", 500);
-  }
 
-  /*if (bookFiles.length > 0) {
-      const fileQueries = bookFiles.map(path =>
-        pool.query(
-          `
-          INSERT INTO BOOK_FILES 
-            (idBook, pathF) 
-          VALUES ($1, $2)`,
-          [bookId, path]
-        )
+      return resultUpload;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw new CustomError(
+        `Failed to upload or insert book file: ${error.message}`,
+        500
       );
-      await Promise.all(fileQueries);
-    }*/
+    }
+  });
 
-  // ==== insert into BOOK_AUTHORS talbe =====
-  if (authorsArray) {
-    const insertAuthorQueries = authorsArray.map(async author => {
-      pool.query(
-        `INSERT INTO BOOK_AUTHORS 
-            (idBook, author) 
-          VALUES ($1, $2)`,
-        [bookId, author]
-      );
-    });
-    await Promise.all(insertAuthorQueries);
-  } else {
-    throw new CustomError("There should be at least one author", 500);
+  try {
+    await Promise.all(uploadPromises);
+  } catch (error) {
+    throw new CustomError(`Error processing book files: ${error.message}`, 500);
   }
-
-  // ==== insert into BOOK_LANG talbe =====
-  if (languagesArray) {
-    const insertLanguageQueries = languagesArray.map(async language => {
-      pool.query(
-        `INSERT INTO BOOK_LANG 
-            (idBook, languageB) 
-          VALUES ($1, $2)`,
-        [bookId, language]
-      );
-    });
-    await Promise.all(insertLanguageQueries);
-  } else {
-    throw new CustomError("There should be at least one language", 500);
-  }
-
-  // ==== insert into  BOOK_IN_SUBCATEGORY table ====
-  if (subcategoryIdsArray) {
-    const insertSubcategoryQueries = subcategoryIdsArray.map(subcategoryId => {
-      return pool.query(
-        `INSERT INTO BOOK_IN_SUBCATEGORY 
-              (idBook, idSubcategory) 
-            VALUES ($1, $2)`,
-        [bookId, subcategoryId]
-      );
-    });
-    await Promise.all(insertSubcategoryQueries);
-  }
-
-  // ==== response ====
-  res.status(201).send({ message: "Book created successfully" });
 };
 
-const validateBookData = data => {
-  // Lógica de validación
+/**
+ * Inserts the book authors into the database.
+ * @param {Object} client - The database client.
+ * @param {number} bookId - The ID of the book.
+ * @param {Array} authors - The authors of the book.
+ * @returns {Promise<void>}
+ * @throws {CustomError} If there are no authors.
+ */
+const insertBookAuthors = async (client, bookId, authors) => {
+  if (!authors || authors.length === 0) {
+    throw new CustomError("There should be at least one author", 400);
+  }
+
+  const query = `
+    INSERT INTO BOOK_AUTHORS (idBook, author)
+    VALUES ${authors.map((_, index) => `($1, $${index + 2})`).join(", ")}
+  `;
+  await client.query(query, [bookId, ...authors]);
 };
 
-const uploadToCloudinary = async (file, folder) => {
-  const result = await cloudinary.uploader.upload(file.path, { folder });
-  if (result.error) {
-    throw new CustomError(`Failed to upload to ${folder}`, 500);
+/**
+ * Inserts the book languages into the database.
+ * @param {Object} client - The database client.
+ * @param {number} bookId - The ID of the book.
+ * @param {Array} languages - The languages of the book.
+ * @returns {Promise<void>}
+ * @throws {CustomError} If there are no languages.
+ */
+const insertBookLanguages = async (client, bookId, languages) => {
+  if (!languages || languages.length === 0) {
+    throw new CustomError("There should be at least one language", 400);
   }
-  console.log(result);
-  return result.secure_url;
+
+  const query = `
+    INSERT INTO BOOK_LANG (idBook, languageB)
+    VALUES ${languages.map((_, index) => `($1, $${index + 2})`).join(", ")}
+  `;
+  await client.query(query, [bookId, ...languages]);
+};
+
+/**
+ * Inserts the book subcategories into the database.
+ * @param {Object} client - The database client.
+ * @param {number} bookId - The ID of the book.
+ * @param {Array} subcategoryIds - The IDs of the subcategories.
+ * @returns {Promise<void>}
+ */
+const insertBookSubcategories = async (client, bookId, subcategoryIds) => {
+  if (subcategoryIds && subcategoryIds.length > 0) {
+    const query = `
+      INSERT INTO BOOK_IN_SUBCATEGORY (idBook, idSubcategory)
+      VALUES ${subcategoryIds.map((_, index) => `($1, $${index + 2})`).join(", ")}
+    `;
+    await client.query(query, [bookId, ...subcategoryIds]);
+  }
 };

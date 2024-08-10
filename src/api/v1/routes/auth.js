@@ -1,6 +1,6 @@
 import { Router } from "express";
 import asyncHandler from "../../../utils/asyncHandler.js";
-// import controllers
+// controllers
 import { login } from "../controllers/auth/login.js";
 import { logout } from "../controllers/auth/logout.js";
 import { register } from "../controllers/auth/register.js";

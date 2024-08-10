@@ -1,14 +1,62 @@
 import { pool } from "../../../../db.js";
 import { CustomError } from "../../middlewares/errorMiddleware.js";
 import { getComments } from "../comments.js";
+import { getRelatedBooks } from "./getRelatedBooks.js";
 
 /**
  * Get a single book information by its id from the data base
- * @param {*} req
- * @param {*} res
+ * @param {*} req - The request object
+ * @param {*} res - The response object
  */
 export const getBook = async (req, res) => {
   const idBook = req.params.id;
+
+  const bookData = await valIfBookExists(idBook);
+
+  const bookAuthors = getBoookAuthors(idBook);
+  const bookLangs = getBookLangs(idBook);
+  const bookFiles = getBookFiles(idBook);
+  const bookFilesType = getBookFilesType(query_book_files);
+  const bookRate = getBookRate(idBook);
+  const { subcategories, subcategoriesIds, category, categoryId } =
+    await getBookSubcategories(idBook);
+
+  const relatedBooks = getRelatedBooks(idBook, subcategoriesIds, categoryId);
+
+  const comments = await getComments(req);
+
+  res.status(201).send({
+    //bookData
+    idBook: bookData.id,
+    isbn: bookData.isbn,
+    title: bookData.title,
+    description: bookData.descriptionb,
+    year: bookData.yearreleased,
+    vol: bookData.vol ? bookData.vol : "N/A",
+    n_pages: bookData.npages,
+    publisher: bookData.publisher,
+    cover_path: bookData.pathbookcover,
+    //bookData
+    book_rate: bookRate,
+    //Multi valued
+    book_authors: bookAuthors,
+    book_lang: bookLangs,
+    book_files: bookFiles,
+    book_files_type: bookFilesType,
+    book_category: category,
+    book_subcategories: subcategories,
+    related_books: relatedBooks,
+    comments: comments,
+  });
+};
+
+/**
+ * Validate if a book exists in the database, if not throws a CustomError else returns the query result
+ * @param {number} idBook - The id of the book
+ * @throws {CustomError} - Throws a CustomError if the book is not found
+ * @returns {Object} - The query result
+ */
+const valIfBookExists = async idBook => {
   const query_book = await pool.query(
     `
       SELECT * 
@@ -16,41 +64,70 @@ export const getBook = async (req, res) => {
       WHERE id = $1`,
     [idBook]
   );
-
-  // Si no se encuentra el libro, devolver un error 404
   if (query_book.rows.length === 0) {
     throw new CustomError("Book not found", 404);
   }
+  return query_book.rows[0];
+};
 
-  //Get book's authors
+/**
+ * Get the authors of a book
+ * @param {number} idBook - The id of the book
+ * @returns {string[]} - An array of author names
+ */
+const getBoookAuthors = async idBook => {
   const query_book_authors = await pool.query(
     "SELECT author FROM BOOK_AUTHORS WHERE idBook = $1",
     [idBook]
   );
+  return query_book_authors.rows.map(authorObj => authorObj.author);
+};
 
-  //Get book's languages
+/**
+ * Get the languages of a book
+ * @param {number} idBook - The id of the book
+ * @returns {string[]} - An array of language names
+ */
+const getBookLangs = async idBook => {
   const query_book_lang = await pool.query(
     "SELECT languageb FROM BOOK_LANG WHERE idBook = $1",
     [idBook]
   );
+  return query_book_lang.rows.map(langObj => langObj.languageb);
+};
 
-  //Get book's files
+/**
+ * Get the files of a book
+ * @param {number} idBook - The id of the book
+ * @returns {string[]} - An array of file paths
+ */
+const getBookFiles = async idBook => {
   const query_book_files = await pool.query(
     "SELECT pathf FROM BOOK_FILES WHERE idBook = $1",
     [idBook]
   );
-  // Dividir la cadena en un array de cadenas
-  const book_files =
-    query_book_files.rows.length > 0
-      ? query_book_files.rows[0].pathf.split(",").map(file => file.trim())
-      : [];
+  return query_book_files.rows.length > 0
+    ? query_book_files.rows[0].pathf.split(",").map(file => file.trim())
+    : [];
+};
 
-  // Obtener tipos de archivos del libro
-  const book_files_type = [
-    ...new Set(book_files.map(file => file.split(".").pop().toUpperCase())),
+/**
+ * Get the file types of a book
+ * @param {string[]} bookFiles - An array of file paths
+ * @returns {string[]} - An array of file types
+ */
+const getBookFilesType = bookFiles => {
+  return [
+    ...new Set(bookFiles.map(file => file.split(".").pop().toUpperCase())),
   ];
+};
 
-  //Getting book rate
+/**
+ * Get the average rate of a book
+ * @param {number} idBook - The id of the book
+ * @returns {number} - The average rate of the book
+ */
+const getBookRate = async idBook => {
   const query_rate = await pool.query(
     `
       SELECT ROUND(AVG(ratevalue),1) as rate_avg 
@@ -58,10 +135,15 @@ export const getBook = async (req, res) => {
       WHERE idbook = $1`,
     [idBook]
   );
-  const book_rate = query_rate.rows[0].rate_avg
-    ? query_rate.rows[0].rate_avg
-    : 0;
-  //Get subcategories and categories
+  return query_rate.rows[0].rate_avg ? query_rate.rows[0].rate_avg : 0;
+};
+
+/**
+ * Get the subcategories and category of a book
+ * @param {number} idBook - The id of the book
+ * @returns {Object} - An object containing subcategories, subcategoriesIds, category, and categoryId
+ */
+const getBookSubcategories = async idBook => {
   const query_subcategories = await pool.query(
     `SELECT idcategoryFather, sub.subcategoryname 
       FROM BOOK_IN_SUBCATEGORY insub INNER JOIN SUBCATEGORY sub 
@@ -69,10 +151,6 @@ export const getBook = async (req, res) => {
       WHERE idbook = $1`,
     [idBook]
   );
-  let subcategoriesIds;
-  let subcategories;
-  let category;
-  let categoryId;
   if (query_subcategories.rows.length > 0) {
     const query_categoryname = await pool.query(
       `SELECT distinct id, categoryname 
@@ -80,118 +158,26 @@ export const getBook = async (req, res) => {
         WHERE id = $1`,
       [query_subcategories?.rows[0]?.idcategoryfather]
     );
-    subcategories = query_subcategories.rows.map(
-      subObj => subObj.subcategoryname
-    );
-    subcategoriesIds = query_subcategories.rows.map(subObj => subObj.id);
-    category =
-      query_categoryname.rows.length > 0
-        ? query_categoryname.rows[0].categoryname
-        : null;
-    categoryId =
-      query_categoryname.rows.length > 0 ? query_categoryname.rows[0].id : null;
+    return {
+      subcategories: query_subcategories.rows.map(
+        subObj => subObj.subcategoryname
+      ),
+      subcategoriesIds: query_subcategories.rows.map(subObj => subObj.id),
+      category:
+        query_categoryname.rows.length > 0
+          ? query_categoryname.rows[0].categoryname
+          : null,
+      categoryId:
+        query_categoryname.rows.length > 0
+          ? query_categoryname.rows[0].id
+          : null,
+    };
   } else {
-    subcategories = null;
-    subcategoriesIds = null;
-    category = null;
-    categoryId = null;
-  }
-
-  //Get related books (20)
-  const related_books = await getRelatedBooks(
-    idBook,
-    subcategoriesIds,
-    categoryId
-  );
-
-  //Get comments
-  const comments = await getComments(req);
-
-  //Send response
-  res.status(201).send({
-    idBook: query_book.rows[0].id,
-    isbn: query_book.rows[0].isbn,
-    title: query_book.rows[0].title,
-    description: query_book.rows[0].descriptionb,
-    year: query_book.rows[0].yearreleased,
-    vol: query_book.rows[0].vol ? query_book.rows[0].vol : "N/A",
-    n_pages: query_book.rows[0].npages,
-    publisher: query_book.rows[0].publisher,
-    cover_path: query_book.rows[0].pathbookcover,
-    book_rate: book_rate,
-    //Multi valued
-    book_authors: query_book_authors.rows.map(authorObj => authorObj.author),
-    book_lang: query_book_lang.rows.map(langObj => langObj.languageb),
-    book_files,
-    book_files_type,
-    book_category: category,
-    book_subcategories: subcategories,
-    related_books,
-    comments,
-  });
-};
-
-//Aux functions
-// Retorna 20 libros relacionados primero por subcategorias y los restantes por categoria y random
-const getRelatedBooks = async (idBook, subcategoryIds, categoryId) => {
-  try {
-    let relatedBooks = [];
-
-    // Get related books by subcategory
-    if (subcategoryIds) {
-      let relatedBooksQuery = await pool.query(
-        `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors 
-         FROM BOOK b
-         INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
-         INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-         WHERE bis.idsubcategory = ANY($1) AND b.id != $2
-         GROUP BY b.id
-         LIMIT 20`,
-        [subcategoryIds, idBook]
-      );
-      relatedBooks.concat(relatedBooksQuery.rows);
-    }
-
-    // Si hay menos de 20 libros, obtener más libros relacionados por categoría
-    if (relatedBooks.length < 20 && categoryId) {
-      const additionalBooksQuery = await pool.query(
-        `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
-         FROM BOOK b
-         INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
-         INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-         WHERE bis.idsubcategory IN (
-           SELECT id FROM SUBCATEGORY WHERE idcategoryfather = $1
-         ) AND b.id != $2
-         GROUP BY b.id
-         LIMIT $3`,
-        [categoryId, idBook, 20 - relatedBooks.length]
-      );
-      relatedBooks = relatedBooks.concat(additionalBooksQuery.rows);
-    }
-
-    // Si no hay suficientes libros relacionados, obtener libros aleatorios adicionales
-    if (relatedBooks.length < 20) {
-      const additionalBooksQuery = await pool.query(
-        `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
-         FROM BOOK b
-         INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-         WHERE b.id != $1
-         GROUP BY b.id
-         ORDER BY RANDOM()
-         LIMIT $2`,
-        [idBook, 20 - relatedBooks.length]
-      );
-      relatedBooks = relatedBooks.concat(additionalBooksQuery.rows);
-    }
-
-    return relatedBooks.map(book => ({
-      authors: book.authors.join(", "),
-      title: book.title,
-      pathBookCover: book.pathbookcover,
-      bookId: book.id,
-    }));
-  } catch (error) {
-    console.error("Error getting related books:", error);
-    return [];
+    return {
+      subcategories: null,
+      subcategoriesIds: null,
+      category: null,
+      categoryId: null,
+    };
   }
 };

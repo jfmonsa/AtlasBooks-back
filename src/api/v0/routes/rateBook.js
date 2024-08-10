@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { rateBook, getRate } from "../controllers/rateBook.js";
+import { rateBook, getRate } from "../../v1/controllers/books/rateBook.js";
 import { authMiddleware } from "../middleware/session.js";
 
 const router = Router();
