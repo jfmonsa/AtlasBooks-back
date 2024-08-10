@@ -13,15 +13,19 @@ export const getBook = async (req, res) => {
 
   const bookData = await valIfBookExists(idBook);
 
-  const bookAuthors = getBoookAuthors(idBook);
-  const bookLangs = getBookLangs(idBook);
-  const bookFiles = getBookFiles(idBook);
-  const bookFilesType = getBookFilesType(query_book_files);
-  const bookRate = getBookRate(idBook);
+  const bookAuthors = await getBoookAuthors(idBook);
+  const bookLangs = await getBookLangs(idBook);
+  const bookFiles = await getBookFiles(idBook);
+  const bookFilesType = await getBookFilesType(bookFiles);
+  const bookRate = await getBookRate(idBook);
   const { subcategories, subcategoriesIds, category, categoryId } =
     await getBookSubcategories(idBook);
 
-  const relatedBooks = getRelatedBooks(idBook, subcategoriesIds, categoryId);
+  const relatedBooks = await getRelatedBooks(
+    idBook,
+    subcategoriesIds,
+    categoryId
+  );
 
   const comments = await getComments(req);
 

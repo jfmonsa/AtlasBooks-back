@@ -1,3 +1,4 @@
+import { pool } from "../../../../db.js";
 /**
  * Retrieves related books based on the provided parameters.
  *
