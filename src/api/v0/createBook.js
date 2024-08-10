@@ -9,7 +9,7 @@ const CLOUDINARY_FOLDERS = {
 
 const DEFAULT_COVER = "default.jpg";
 
-// Look at this beatiful declarative code,
+// NOTE: Look at this beatiful declarative code,
 // use declarative in every controller
 
 /**
@@ -19,6 +19,7 @@ const DEFAULT_COVER = "default.jpg";
  */
 export const createBook = async (req, res) => {
   validateBookData(req.body);
+
   const bookData = extractBookData(req.body);
   const coverUrl = await uploadCoverImage(req.files.cover);
 
@@ -30,7 +31,7 @@ export const createBook = async (req, res) => {
     await insertBookSubcategories(client, bookId, bookData.subcategoryIds);
   });
 
-  sendSuccessResponse(res);
+  res.status(201).send({ message: "Book created successfully" });
 };
 
 // Declarative aux functions
@@ -181,19 +182,38 @@ const uploadAndInsertBookFiles = async (client, bookId, files) => {
   }
 
   const uploadPromises = files.map(async file => {
-    const resultUpload = await cloudinary.uploader.upload(file.path, {
-      folder: CLOUDINARY_FOLDERS.FILES,
-    });
-    if (resultUpload.error) {
-      throw new CustomError("Failed to upload book file", 500);
+    try {
+      const resultUpload = await cloudinary.uploader.upload(file.path, {
+        folder: CLOUDINARY_FOLDERS.FILES,
+        resource_type: "auto", // Esto permite subir PDFs
+      });
+
+      if (resultUpload.error) {
+        throw new Error(
+          `Failed to upload book file: ${resultUpload.error.message}`
+        );
+      }
+
+      await client.query(
+        "INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)",
+        [bookId, resultUpload.secure_url]
+      );
+
+      return resultUpload;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      throw new CustomError(
+        `Failed to upload or insert book file: ${error.message}`,
+        500
+      );
     }
-    await client.query(
-      "INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)",
-      [bookId, resultUpload.secure_url]
-    );
   });
 
-  await Promise.all(uploadPromises);
+  try {
+    await Promise.all(uploadPromises);
+  } catch (error) {
+    throw new CustomError(`Error processing book files: ${error.message}`, 500);
+  }
 };
 
 /**
@@ -251,13 +271,4 @@ const insertBookSubcategories = async (client, bookId, subcategoryIds) => {
     `;
     await client.query(query, [bookId, ...subcategoryIds]);
   }
-};
-
-/**
- * Sends a success response indicating that the book was created successfully.
- * @param {Object} res - The response object.
- * @returns {void}
- */
-const sendSuccessResponse = res => {
-  res.status(201).send({ message: "Book created successfully" });
 };
