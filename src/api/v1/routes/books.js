@@ -16,7 +16,7 @@ router.post(
     { name: "cover", maxCount: 1 },
     { name: "bookFiles", maxCount: 10 },
   ]),
-  createBook
+  asyncHandler(createBook)
 ); // http://localhost:3000/api/v1/books/
 
 export default router;
