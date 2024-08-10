@@ -1,5 +1,5 @@
 import multer from "multer";
-import getFileExtension from "./src/utils/getFileExtension.js";
+import getFileExtension from "../utils/getFileExtension.js";
 
 // Obtener __dirname en ES6
 import { fileURLToPath } from "url";
@@ -7,7 +7,7 @@ import path from "path";
 
 const CURRENT_DIRNAME = path.dirname(fileURLToPath(import.meta.url));
 
-//Aux function to manage file uploading
+//middleware
 export const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     //puedo usar la req para hacer la logica de guardar

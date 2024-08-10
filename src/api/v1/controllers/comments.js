@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+import { pool } from "../../../db.js";
 
 export const getComments = async (req, res) => {
   try {
@@ -19,7 +19,7 @@ export const getComments = async (req, res) => {
     );
     //We return the comments
     comments = comments.concat(commentsQuery.rows);
-    return comments.map((comment) => ({
+    return comments.map(comment => ({
       idcoment: comment.idcoment,
       iduser: comment.iduser,
       nickname: comment.nickname,

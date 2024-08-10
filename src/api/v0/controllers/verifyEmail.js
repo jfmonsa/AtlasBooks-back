@@ -1,5 +1,5 @@
 import { pool } from "../db.js";
-import { sendMailRecovery } from "../../v0/middleware/mailer.js";
+import { sendMailRecovery } from "../middleware/mailer.js";
 
 export const verifyEmail = async (req, res) => {
   try {

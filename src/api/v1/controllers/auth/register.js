@@ -1,7 +1,7 @@
-import { pool } from "../../../db.js";
+import { pool } from "../../../../db.js";
 import bcrypt from "bcryptjs";
-import { createAccessToken } from "../../../utils/handleJWT.js";
-import { CustomError } from "../middlewares/errorMiddleware.js";
+import { createAccessToken } from "../../../../utils/handleJWT.js";
+import { CustomError } from "../../middlewares/errorMiddleware.js";
 
 /* Recomendaciones y mejoras adicionales:
 

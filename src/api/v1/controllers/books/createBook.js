@@ -1,4 +1,6 @@
-import { pool } from "../db.js";
+import { pool } from "../../../../db.js";
+import cloudinary from "../../../../config/cloudinary.js";
+import { uploader } from "cloudinary";
 
 /**
  * Create a book in the db
@@ -24,9 +26,38 @@ export const createBook = async (req, res) => {
     } = req.body;
 
     // Convertir strings JSON a arrays
-    const authorsArray = JSON.parse(authors);
-    const languagesArray = JSON.parse(languages);
-    const subcategoryIdsArray = JSON.parse(subcategoryIds);
+    const authorsArray = authors; //JSON.parse(authors);
+    const languagesArray = languages; //JSON.parse(languages);
+    const subcategoryIdsArray = subcategoryIds; //JSON.parse(subcategoryIds);
+
+    // uploading book files and book cover pic
+    if (req.files.cover) {
+      let resultUpload = await cloudinary.uploader.upload(
+        req.files.cover[0].path,
+        {
+          folder: "bookCoverPics",
+        }
+      );
+      console.log(resultUpload);
+    }
+
+    if (req.files.bookFiles) {
+      req.files.bookFiles.forEach(async file => {
+        let resultUpload = await cloudinary.uploader.upload(file.path, {
+          folder: "books",
+        });
+        console.log(resultUpload);
+      });
+    }
+    /**
+       * if (uploadResult.error) {
+      console.error(uploadResult.error);
+      res.status(500).json({ message: 'Upload failed' });
+    } else {
+      console.log('File uploaded successfully!');
+      res.json({ message: 'Success!', data: uploadResult }); // Respond with upload data (URL, etc.)
+    }
+       */
 
     //Get path book cover
     const cover = req.files["cover"]
@@ -128,17 +159,3 @@ export const createBook = async (req, res) => {
     res.status(500).send({ error: "Failed to create book" });
   }
 };
-
-/**
- * Update book info in the db
- * @param {*} req
- * @param {*} res
- */
-export const updateBook = async (req, res) => {};
-
-/**
- * Delete a book in the db
- * @param {*} req
- * @param {*} res
- */
-export const deleteBook = async (req, res) => {};

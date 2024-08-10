@@ -1,4 +1,4 @@
-import { tokenVerify } from "../../v0/utils/handleJWT.js";
+import { tokenVerify } from "../../../utils/handleJWT.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 import { CustomError } from "./errorMiddleware.js";
 import { pool } from "../../../db.js";

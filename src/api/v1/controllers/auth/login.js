@@ -1,7 +1,7 @@
-import { pool } from "../../../db.js";
+import { pool } from "../../../../db.js";
 import bycript from "bcryptjs";
-import { CustomError } from "../middlewares/errorMiddleware.js";
-import { createAccessToken } from "../../../utils/handleJWT.js";
+import { CustomError } from "../../middlewares/errorMiddleware.js";
+import { createAccessToken } from "../../../../utils/handleJWT.js";
 
 export const login = async (req, res) => {
   const { userNickname, userPassword } = req.body;

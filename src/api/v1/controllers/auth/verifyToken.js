@@ -1,6 +1,6 @@
-import { tokenVerify } from "../../../utils/handleJWT.js";
-import { pool } from "../../../db.js";
-import { CustomError } from "../middlewares/errorMiddleware.js";
+import { tokenVerify } from "../../../../utils/handleJWT.js";
+import { pool } from "../../../../db.js";
+import { CustomError } from "../../middlewares/errorMiddleware.js";
 
 export const verifyEmail = async (req, res) => {
   try {
@@ -55,6 +55,8 @@ export const verifyEmail = async (req, res) => {
 };
 
 export const verify = async (req, res) => {
+  // try {
+  console.log("verifyToken");
   const { token } = req.cookies;
 
   if (!token) {
@@ -63,7 +65,7 @@ export const verify = async (req, res) => {
 
   const dataToken = await tokenVerify(token);
 
-  if (!dataToken.id) {
+  if (!dataToken?.id) {
     throw new CustomError("Error_Token_Id", 401);
   }
 
@@ -96,4 +98,10 @@ export const verify = async (req, res) => {
     message: "Token_Valid",
     user: req.user,
   });
+  // } catch (err) {
+  //   console.log(err);
+  //   res.status(401).send({
+  //     message: err.message,
+  //   });
+  // }
 };
