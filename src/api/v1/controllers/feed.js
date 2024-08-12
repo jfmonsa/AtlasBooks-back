@@ -18,7 +18,7 @@ export const getFeedRecomended = async (_req, res) => {
   //TODO: 1. In the future, recommend books based on the user (their download history)
 
   // 1. Get 10 most downloaded books
-  let booksFeed = get10MostDownloadedBooks();
+  let booksFeed = await get10MostDownloadedBooks();
   // 2. Get 10 more books from the same category as the mostDownloadedBooks 10 books
   booksFeed = booksFeed.concat(
     await get10SameCategoryAsGivenBooksDistinctFromGiven(booksFeed)
@@ -36,9 +36,9 @@ export const getFeedRecomended = async (_req, res) => {
   booksFeed = formatData(booksFeed);
 
   //Shuffle the entire array before returning it
-  results = await shuffleArray(results);
+  booksFeed = await shuffleArray(booksFeed);
   res.status(201).send({
-    recommended_feed: results,
+    recommended_feed: booksFeed,
   });
 };
 
@@ -55,7 +55,7 @@ const get10MostDownloadedBooks = async () => {
       WHERE b.pathbookcover <> 'default.jpg'
       GROUP BY b.id
       ORDER BY downloads DESC
-      LIMIT $1`
+      LIMIT 10`
   );
   return mostDownloadedBooksQuery.rows;
 };
