@@ -2,23 +2,51 @@ import { pool } from "../../../db.js";
 import shuffleArray from "../../../utils/shuffleArray.js";
 
 /**
- * Return a list of recommended books (objects)
- * @param {*} _req
- * @param {*} res
+ * Get 50 books with coverPath in the following priority order:
+ * 1. Query to get 10 books with the most downloads on the page
+ * 2. Get the category of (2 or more) of the previous 10 books and based on that, fetch another 10 books
+ * 3. Add two of the most recent books
+ * 4. Get the rest of the books randomly
+ * 5. Shuffle the entire array before returning it
+ *
+ * @param {Object} _req - The request object (not used in this function)
+ * @param {Object} res - The response object
+ * @returns {Promise<void>} A promise that resolves when the recommended feed is sent
  */
-export const getFeedRecomended = async (_req, res) => {
-  // Get 50 books with converPath in the following priority order
-  /*
-    1. Query to get 10 books with the most downloads on the page
-    2. Get the category of (2 or more) of the previous 10 books and based on that, fetch another 10 books
-    3. Add two of the most recent books
-    4. Get the rest of the books randomly
-    5. Shuffle the entire array before returning it
-    */
-  //TODO: 1. In the future, recommend books based on the user (their download history)
-  let results = [];
 
-  // 1. Query to get 10 books with the most downloads on the page
+export const getFeedRecomended = async (_req, res) => {
+  //TODO: 1. In the future, recommend books based on the user (their download history)
+
+  // 1. Get 10 most downloaded books
+  let booksFeed = get10MostDownloadedBooks();
+  // 2. Get 10 more books from the same category as the mostDownloadedBooks 10 books
+  booksFeed = booksFeed.concat(
+    await get10SameCategoryAsGivenBooksDistinctFromGiven(booksFeed)
+  );
+  // 3. Add two of the most recent books
+  booksFeed = booksFeed.concat(
+    await get2MostRecentBooksDistinctFromGiven(booksFeed)
+  );
+  // 4. Get the rest of the books randomly
+  booksFeed = booksFeed.concat(
+    await getRandomBooksDistinctFromGiven(booksFeed, 50 - booksFeed.length)
+  );
+
+  //format data
+  booksFeed = formatData(booksFeed);
+
+  //Shuffle the entire array before returning it
+  results = await shuffleArray(results);
+  res.status(201).send({
+    recommended_feed: results,
+  });
+};
+
+/**
+ * Query 10 books with the most downloads
+ * @returns {Promise<Array>} Array of books with the most downloads
+ */
+const get10MostDownloadedBooks = async () => {
   const mostDownloadedBooksQuery = await pool.query(
     `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors, COUNT(d.idbook) AS downloads
       FROM BOOK b
@@ -27,44 +55,74 @@ export const getFeedRecomended = async (_req, res) => {
       WHERE b.pathbookcover <> 'default.jpg'
       GROUP BY b.id
       ORDER BY downloads DESC
-      LIMIT 10`
+      LIMIT $1`
   );
-  // 2. Get the category of (2 or more, up to a maximum of 10) of the previous 10 books and based on that, fetch another 10 books
-  const mostDownloaded = mostDownloadedBooksQuery.rows;
-  results = results.concat(mostDownloaded);
+  return mostDownloadedBooksQuery.rows;
+};
 
-  if (mostDownloaded.length > 0) {
-    // Get the categories of the most downloaded books
-    const mostDownloadedBookIds = results.map(book => book.id);
-    const categoriesQuery = await pool.query(
-      `SELECT DISTINCT sc.idcategoryfather
-        FROM BOOK_IN_SUBCATEGORY bis
+/**
+ * Get 10 books with the same category as the given books, but distinct from the given books
+ * @param {Array} givenBooks - Array of given books
+ * @returns {Promise<Array>} Array of books with the same category as the given books
+ */
+const get10SameCategoryAsGivenBooksDistinctFromGiven = async givenBooks => {
+  if (givenBooks.length === 0) return [];
+  const givenBooksIds = givenBooks.map(book => book.id);
+  const givenBooksCategories = await getCategoriesFromBookIds(givenBooksIds);
+  if (givenBooksCategories.length === 0) return [];
+
+  books = await getDistinctBooksbyCategoriesIds(
+    givenBooksCategories,
+    givenBooksIds
+  );
+};
+
+/**
+ * Get categories from book IDs
+ * @param {Array} bookIds - Array of book IDs
+ * @returns {Promise<Array>} Array of categories
+ */
+const getCategoriesFromBookIds = async bookIds => {
+  const categoriesQuery = await pool.query(
+    `SELECT DISTINCT sc.idcategoryfather
+      FROM BOOK_IN_SUBCATEGORY bis
+      INNER JOIN SUBCATEGORY sc ON bis.idsubcategory = sc.id
+      WHERE bis.idbook = ANY($1::int[])`,
+    [bookIds]
+  );
+  return categoriesQuery.rows;
+};
+
+/**
+ * Get distinct books by category IDs
+ * @param {Array} categoryIds - Array of category IDs
+ * @param {Array} distinctFrom - Array of book IDs to exclude
+ * @returns {Promise<Array>} Array of distinct books
+ */
+const getDistinctBooksbyCategoriesIds = async (categoryIds, distinctFrom) => {
+  const relatedBooksQuery = await pool.query(
+    `SELECT DISTINCT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
+        FROM BOOK b
+        INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
         INNER JOIN SUBCATEGORY sc ON bis.idsubcategory = sc.id
-        WHERE bis.idbook = ANY($1::int[])`,
-      [mostDownloadedBookIds]
-    );
-    if (categoriesQuery.rows.length > 0) {
-      const categoryIds = categoriesQuery.rows.map(row => row.idcategoryfather);
+        INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
+        WHERE sc.idcategoryfather = ANY($1::int[])
+        AND b.id <> ALL ($2::int[])
+        AND b.pathbookcover <> 'default.jpg'
+        GROUP BY b.id
+        LIMIT 10`,
+    [categoryIds, distinctFrom]
+  );
+  return relatedBooksQuery.rows;
+};
 
-      // Get 10 additional books based on the categories of the most downloaded books
-      const relatedBooksQuery = await pool.query(
-        `SELECT DISTINCT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
-           FROM BOOK b
-           INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.idbook
-           INNER JOIN SUBCATEGORY sc ON bis.idsubcategory = sc.id
-           INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-           WHERE sc.idcategoryfather = ANY($1::int[])
-           AND b.id <> ALL ($2::int[])
-           AND b.pathbookcover <> 'default.jpg'
-           GROUP BY b.id
-           LIMIT 10`,
-        [categoryIds, mostDownloadedBookIds]
-      );
-      results = results.concat(relatedBooksQuery.rows);
-    }
-  }
-  // 3. Add two of the most recent books
-  const recentBooksQuery = await pool.query(
+/**
+ * Get 2 most recent books, but distinct from the given books
+ * @param {Array} givenBooks - Array of given books
+ * @returns {Promise<Array>} Array of 2 most recent books
+ */
+const get2MostRecentBooksDistinctFromGiven = async givenBooks => {
+  const mostRecentBooksQuery = await pool.query(
     `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
       FROM BOOK b
       INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
@@ -73,36 +131,42 @@ export const getFeedRecomended = async (_req, res) => {
       GROUP BY b.id
       ORDER BY b.id DESC
       LIMIT 2`,
-    [results.map(book => book.id)]
+    [givenBooks.map(book => book.id)]
   );
-  results = results.concat(recentBooksQuery.rows);
+  return mostRecentBooksQuery.rows;
+};
 
-  // Get random books to complete up to 50 books
-  const remainingBooksCount = 50 - results.length;
-  if (remainingBooksCount > 0) {
-    const randomBooksQuery = await pool.query(
-      `SELECT b.id, b.title, b.pathbookcover,  array_agg(ba.author) AS authors
-        FROM BOOK b
-        INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
-        WHERE b.pathbookcover <> 'default.jpg'
-        AND b.id <> ALL ($1::int[])
-        GROUP BY b.id
-        ORDER BY RANDOM()
-        LIMIT $2`,
-      [results.map(book => book.id), remainingBooksCount]
-    );
-    results = results.concat(randomBooksQuery.rows);
+/**
+ * Get the rest of the books randomly
+ * @param {Array} givenBooks - Array of given books
+ * @param {number} numberLimit - Number of books to fetch
+ * @returns {Promise<Array>} Array of random books
+ */
+const getRandomBooksDistinctFromGiven = async (givenBooks, numberLimit) => {
+  const randomBooksQuery = await pool.query(
+    `SELECT b.id, b.title, b.pathbookcover, array_agg(ba.author) AS authors
+      FROM BOOK b
+      INNER JOIN BOOK_AUTHORS ba ON b.id = ba.idbook
+      WHERE b.pathbookcover <> 'default.jpg'
+      AND b.id <> ALL ($1::int[])
+      GROUP BY b.id
+      ORDER BY RANDOM()
+      LIMIT $2`,
+    [givenBooks.map(book => book.id), numberLimit]
+  );
+  return randomBooksQuery.rows;
+};
 
-    results = results.map(book => ({
-      authors: book.authors.join(", "),
-      title: book.title,
-      pathBookCover: book.pathbookcover,
-      bookId: book.id,
-    }));
-
-    results = await shuffleArray(results);
-  }
-  res.status(201).send({
-    recommended_feed: results,
-  });
+/**
+ * Format book data
+ * @param {Array} books - Array of books
+ * @returns {Array} Formatted array of books
+ */
+const formatData = books => {
+  return books.map(book => ({
+    authors: book.authors.join(", "),
+    title: book.title,
+    pathBookCover: book.pathbookcover,
+    bookId: book.id,
+  }));
 };
