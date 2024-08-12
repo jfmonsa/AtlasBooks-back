@@ -7,7 +7,8 @@ const CLOUDINARY_FOLDERS = {
   FILES: "books",
 };
 
-const DEFAULT_COVER = "default.jpg";
+const DEFAULT_COVER =
+  "https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg";
 
 // NOTE: Look at this beatiful declarative code,
 // use declarative in every controller
@@ -22,6 +23,7 @@ export const createBook = async (req, res) => {
 
   const bookData = extractBookData(req.body);
   const coverUrl = await uploadCoverImage(req.files.cover);
+  console.log(coverUrl);
 
   await withTransaction(async client => {
     const bookId = await insertBookRecord(client, { ...bookData, coverUrl });
@@ -98,18 +100,36 @@ const extractBookData = body => {
  * @throws {CustomError} If the cover upload fails.
  */
 const uploadCoverImage = async coverFile => {
-  if (!coverFile) return DEFAULT_COVER;
-
-  try {
-    const result = await cloudinary.uploader.upload(coverFile[0].path, {
-      folder: CLOUDINARY_FOLDERS.COVER,
-    });
-    return result.secure_url;
-  } catch (error) {
-    throw new CustomError("Failed to upload cover", 500);
+  if (!coverFile || coverFile.length === 0) {
+    try {
+      const result = await cloudinary.api.resource(DEFAULT_COVER);
+      return result.secure_url;
+    } catch (error) {
+      console.error("Error fetching default cover:", error);
+      throw new CustomError("Failed to fetch default cover image", 500);
+    }
   }
-};
+  // Upload the file buffer directly to Cloudinary
+  const uploadResult = await new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: CLOUDINARY_FOLDERS.COVER,
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
 
+    // Write the buffer to the stream
+    uploadStream.end(coverFile[0].buffer);
+  });
+  return uploadResult.secure_url;
+};
 /**
  * Inserts a new book record into the database.
  * @param {Object} client - The database client.
@@ -163,23 +183,35 @@ const uploadAndInsertBookFiles = async (client, bookId, files) => {
 
   const uploadPromises = files.map(async file => {
     try {
-      const resultUpload = await cloudinary.uploader.upload(file.path, {
-        folder: CLOUDINARY_FOLDERS.FILES,
-        resource_type: "auto", // Esto permite subir PDFs
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: CLOUDINARY_FOLDERS.FILES,
+            resource_type: "auto", // Esto permite subir PDFs
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        uploadStream.end(file.buffer);
       });
 
-      if (resultUpload.error) {
+      if (!uploadResult || uploadResult.error) {
         throw new Error(
-          `Failed to upload book file: ${resultUpload.error.message}`
+          `Failed to upload book file: ${uploadResult?.error?.message || "Unknown error"}`
         );
       }
 
       await client.query(
         "INSERT INTO BOOK_FILES (idBook, pathF) VALUES ($1, $2)",
-        [bookId, resultUpload.secure_url]
+        [bookId, uploadResult.secure_url]
       );
 
-      return resultUpload;
+      return uploadResult;
     } catch (error) {
       console.error("Error uploading file:", error);
       throw new CustomError(

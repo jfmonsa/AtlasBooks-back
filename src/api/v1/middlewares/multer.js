@@ -8,21 +8,22 @@ import path from "path";
 const CURRENT_DIRNAME = path.dirname(fileURLToPath(import.meta.url));
 
 // storage config
-export const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (file.fieldname === "cover") {
-      // save book cover pic
-      return cb(null, `${CURRENT_DIRNAME}/../../../../storage/bookCoverPics/`);
-    } else if (file.fieldname === "bookFiles") {
-      // save book files: epub, pdf
-      return cb(null, `${CURRENT_DIRNAME}/../../../../storage/books/`);
-    }
+// export const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     if (file.fieldname === "cover") {
+//       // save book cover pic
+//       return cb(null, `${CURRENT_DIRNAME}/../../../../storage/bookCoverPics/`);
+//     } else if (file.fieldname === "bookFiles") {
+//       // save book files: epub, pdf
+//       return cb(null, `${CURRENT_DIRNAME}/../../../../storage/books/`);
+//     }
 
-    // default
-    return cb(null, `${CURRENT_DIRNAME}/../../../../storage/books`);
-  },
-  filename: genFileName,
-});
+//     // default
+//     return cb(null, `${CURRENT_DIRNAME}/../../../../storage/books`);
+//   },
+//   filename: genFileName,
+// });
+export const storage = multer.memoryStorage();
 
 // actual middleware
 export const uploadMiddleware = multer({

@@ -12,7 +12,7 @@ router.get("/:id", asyncHandler(getBook)); // http://localhost:3000/api/v1/books
 
 router.post(
   "/",
-  authRequired,
+  //authRequired,
   uploadMiddleware.fields([
     { name: "cover", maxCount: 1 },
     { name: "bookFiles", maxCount: 10 },

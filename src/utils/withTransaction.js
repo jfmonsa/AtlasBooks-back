@@ -1,3 +1,5 @@
+import { pool } from "../db.js";
+
 /**
  * Executes the provided operation within a database transaction.
  * @param {Function} operation - The operation to be executed within the transaction.
