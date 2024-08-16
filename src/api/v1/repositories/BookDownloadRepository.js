@@ -1,26 +1,5 @@
-import { pool } from "../../../../db.js";
-import cloudinary from "../../../../config/cloudinary.js";
+import { pool } from "../../../db.js";
 
-/**
- * Downloads a book file.
- * @param {Object} req - The request object.
- * @param {Object} res - The response object.
- * @returns {Promise<void>}
- */
-export const downloadBookFile = async (req, res) => {
-  const { fileName } = req.params;
-  const { userId, bookId } = req.body;
-
-  const fileInfo = await getFileInfo(fileId, bookId);
-  await verifyFileExistsInCloudinary(fileInfo.pathF);
-  await registerDownload(userId, bookId);
-  await streamFileToClient(res, fileInfo);
-
-  // Envía el archivo al cliente
-  // res.status(201).download(filePath);
-};
-
-// Aux declarative code
 /**
  * Retrieves file information from the database.
  * @param {number} fileId - The file ID.
@@ -61,24 +40,9 @@ const verifyFileExistsInCloudinary = async cloudinaryUrl => {
 const registerDownload = async (userId, bookId) => {
   await pool.query(
     `INSERT INTO BOOK_DOWNLOAD (idUser, idBook, dateDownload) 
-     VALUES ($1, $2, NOW()) 
-     ON CONFLICT (idUser, idBook) 
-     DO UPDATE SET dateDownload = EXCLUDED.dateDownload`,
+       VALUES ($1, $2, NOW()) 
+       ON CONFLICT (idUser, idBook) 
+       DO UPDATE SET dateDownload = EXCLUDED.dateDownload`,
     [userId, bookId]
   );
-};
-
-/**
- * Streams a file to the client.
- * @param {Object} res - The response object.
- * @param {Object} fileInfo - The file information.
- * @returns {Promise<void>}
- */
-const streamFileToClient = async (res, fileInfo) => {
-  const { data } = await axios.get(fileInfo.pathF, { responseType: "stream" });
-  res.setHeader(
-    "Content-Disposition",
-    `attachment; filename="${fileInfo.originalFileName}"`
-  );
-  await pipeline(data, res);
 };
