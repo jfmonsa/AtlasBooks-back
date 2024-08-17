@@ -20,8 +20,9 @@ class CustomError extends Error {
  */
 const errorMiddleware = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
+  const message = err.statusCode == 500 ? message : "Internal Server Error";
 
+  console.error(err);
   res.status(statusCode).json({
     success: false,
     error: message,

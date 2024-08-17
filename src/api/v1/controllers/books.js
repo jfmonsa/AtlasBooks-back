@@ -1,17 +1,18 @@
-import { CustomError } from "../../middlewares/errorMiddleware.js";
+import { CustomError } from "../middlewares/errorMiddleware.js";
 import { BookService } from "../services/books.js";
 
-class BooksController {
+export class BooksController {
   static async getById(req, res) {
     const idBook = req.params.id;
 
-    const bookDetails = await BookService.getById(idBook);
+    const bookDetails = await BookService.getBookWithDetails(idBook);
 
     if (!bookDetails) throw new CustomError("Book not found", 404);
-    res.json(bookDetails);
+    res.status(200).success(bookDetails);
   }
 
   static async create(req, res) {
+    // todo
     //use express validator as middleware
     // isbn, title, yearReleased, authors, languages
 
@@ -64,9 +65,3 @@ class BooksController {
 
   static async delete(req, res) {}
 }
-
-// TODO:
-// evaluar si es correcto hacer un middleware para formatear la respuesta
-// basado en:
-// 1. https://github.com/omniti-labs/jsend
-// 2. https://quilltez.com/blog/maintaining-standard-rest-api-response-format-expressjs

@@ -1,5 +1,5 @@
-import cloudinary from "../../../../config/cloudinary.js";
-import { CustomError } from "../../middlewares/errorMiddleware.js";
+import cloudinary from "../../../config/cloudinary.js";
+import { CustomError } from "../middlewares/errorMiddleware.js";
 
 const CLOUDINARY_FOLDERS = {
   COVER: "bookCoverPics",

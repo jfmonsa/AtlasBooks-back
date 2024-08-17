@@ -4,7 +4,7 @@ import { pool } from "../../../db.js";
 /**
  * get a book based on its id
  */
-export const getBook = async idBook => {
+export const getBookById = async idBook => {
   const book = await pool.query(`SELECT * FROM BOOK WHERE id = $1`, [idBook]);
   return book.rows.length > 0 ? book.rows[0] : null;
 };

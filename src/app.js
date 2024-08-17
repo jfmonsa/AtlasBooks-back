@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import corsOptions from "./config/cors.js";
+import { responseFormatter } from "./api/v1/middlewares/responseFormatter.js";
 
 //import api router
 //import router from "./api/v0/routes/index.js";
@@ -28,9 +29,14 @@ app.use("/storage", express.static("storage"));
 // support file uploading
 app.use(express.static("storage"));
 
+// log requests
 if (process.env.SERVER_ENV === "dev") {
   app.use(morgan("dev"));
 }
+
+// format response
+app.use(responseFormatter);
+
 // Routes API Rest
 app.use("/api/v1", router_v1);
 

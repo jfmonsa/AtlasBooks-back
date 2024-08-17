@@ -1,11 +1,15 @@
 // for getBookWithDetails
 import {
+  getBookById,
   getBookAuthors,
   getBookLanguages,
   getBookFileNames,
   getBookFileTypes,
+  getBookRate,
   getBookSubcategories,
-} from "../repositories/BookDetailsRepository";
+} from "../repositories/BookDetailsRepository.js";
+
+import { getBookComments } from "../repositories/BookCommentsRepository.js";
 
 // for getRelatedBooks
 import {
@@ -22,7 +26,7 @@ import {
   insertBookAuthors,
   insertBookLanguages,
   insertBookSubcategories,
-} from "../repositories/BookCreateRepository";
+} from "../repositories/BookCreateRepository.js";
 import { withTransaction } from "../../../utils/withTransaction.js";
 
 // for downloadBook
@@ -30,14 +34,14 @@ import {
   getFileInfo,
   verifyFileExistsInCloudinary,
   registerDownload,
-} from "../repositories/BookDownloadRepository";
+} from "../repositories/BookDownloadRepository.js";
 
 // for rateBook
 import {
   getRate,
   updateRate,
   insertRate,
-} from "../repositories/BookRateRepository";
+} from "../repositories/BookRateRepository.js";
 
 export class BookService {
   /**
@@ -53,27 +57,21 @@ export class BookService {
 
     // return data
     // TODO: Aquí falta usar getBookFileTypes
-    const [
-      authors,
-      languages,
-      files,
-      rate,
-      subcategories,
-      relatedBooks,
-      comments,
-    ] = await Promise.all([
-      getBookAuthors(id),
-      getBookLanguages(id),
-      getBookFileNames(id),
-      getBookRate(id),
-      getBookSubcategories(id),
-      getBookRelatedBooks(
-        id,
-        subcategories.subcategoryIds,
-        subcategories.categoryId
-      ),
-      getBookComments(id),
-    ]);
+    const [authors, languages, files, rate, subcategories, comments] =
+      await Promise.all([
+        getBookAuthors(id),
+        getBookLanguages(id),
+        getBookFileNames(id),
+        getBookRate(id),
+        getBookSubcategories(id),
+        getBookComments(id),
+      ]);
+
+    const relatedBooks = await this.getBookRelatedBooks(
+      id,
+      subcategories.subcategoryIds,
+      subcategories.categoryId
+    );
 
     return {
       ...book,
@@ -98,7 +96,8 @@ export class BookService {
    * @param {string} categoryId - The ID of the category.
    * @returns {Promise<Array>} The array of related books.
    */
-  static async getRelatedBooks(
+  // TODO: modificar para que use solo el id del libro
+  static async getBookRelatedBooks(
     idBook,
     subcategoryIds,
     categoryId,

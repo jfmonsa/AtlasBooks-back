@@ -1,10 +1,22 @@
 import { pool } from "../../../db.js";
+import { BookCommentsService } from "../services/comments.js";
+
+export class BookCommentsController {
+  /*
+  Not implemented as a controller method
+  static async getComments(req, res) {
+    const bookId = req.params.id;
+  }*/
+
+  static async createComment(req, res) {}
+
+  static async updateComment(req, res) {}
+
+  static async deleteComment(req, res) {}
+}
 
 export const getComments = async (req, res) => {
   try {
-    //We get the id of the book from the parameters (id of the book)
-    const bookId = req.params.id;
-
     let comments = [];
 
     //We get all the comments from the database that are related to the book

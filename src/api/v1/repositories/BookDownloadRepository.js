@@ -6,7 +6,7 @@ import { pool } from "../../../db.js";
  * @param {number} bookId - The book ID.
  * @returns {Promise<Object>} - The file information.
  */
-const getFileInfo = async (fileId, bookId) => {
+export const getFileInfo = async (fileId, bookId) => {
   const result = await pool.query(
     "SELECT pathF, originalFileName FROM BOOK_FILES WHERE id = $1 AND idBook = $2",
     [fileId, bookId]
@@ -22,7 +22,7 @@ const getFileInfo = async (fileId, bookId) => {
  * @param {string} cloudinaryUrl - The Cloudinary URL of the file.
  * @returns {Promise<void>}
  */
-const verifyFileExistsInCloudinary = async cloudinaryUrl => {
+export const verifyFileExistsInCloudinary = async cloudinaryUrl => {
   try {
     const publicId = cloudinaryUrl.split("/").slice(-1)[0].split(".")[0];
     await cloudinary.api.resource(publicId);
@@ -37,7 +37,7 @@ const verifyFileExistsInCloudinary = async cloudinaryUrl => {
  * @param {number} bookId - The book ID.
  * @returns {Promise<void>}
  */
-const registerDownload = async (userId, bookId) => {
+export const registerDownload = async (userId, bookId) => {
   await pool.query(
     `INSERT INTO BOOK_DOWNLOAD (idUser, idBook, dateDownload) 
        VALUES ($1, $2, NOW()) 
