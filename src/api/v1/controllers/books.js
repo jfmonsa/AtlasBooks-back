@@ -12,10 +12,8 @@ export class BooksController {
   }
 
   static async create(req, res) {
-    // todo
-    //use express validator as middleware
+    // TODO: use express validator as middleware
     // isbn, title, yearReleased, authors, languages
-
     const bookData = req.body;
     await BookService.createBook({
       ...bookData,

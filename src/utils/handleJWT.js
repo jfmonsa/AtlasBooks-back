@@ -5,12 +5,11 @@ dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 export function createAccessToken(payload) {
-  return new Promise((resolve, reject) => {
-    jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" }, (error, token) => {
-      if (error) reject(error);
-      resolve(token);
-    });
-  });
+  try {
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" });
+  } catch (error) {
+    throw new CustomError("Error creating access token", 500);
+  }
 }
 
 export const tokenVerify = async token => {
