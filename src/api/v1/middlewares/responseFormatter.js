@@ -6,13 +6,9 @@
 export const responseFormatter = (_req, res, next) => {
   res.success = data => {
     res.status(200).json({
-      status: "success",
+      success: true,
       data,
     });
   };
-
-  // already managing with customErrors
-  //res.error = (message, status = 500) => {};
-
   next();
 };

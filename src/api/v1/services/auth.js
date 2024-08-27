@@ -4,6 +4,7 @@ import {
   getUserByNickname,
   createAndGetUser,
   createDefaultBookList,
+  getUserById,
 } from "../repositories/registerRepository";
 import { withTransaction } from "../../../utils/withTransaction";
 import { CustomError } from "../../middlewares/errorMiddleware";
@@ -38,7 +39,7 @@ export class AuthService {
     }
 
     // 4 - the create access token
-    const token = await createAccessToken(user);
+    const token = createAccessToken(user);
 
     // 5 - return the user and access token
     return {
@@ -79,11 +80,69 @@ export class AuthService {
       await createDefaultBookList(client, user.id);
     });
 
+    // don't return the password
+    delete newUser.passwordu;
+
     // 3 - return new user
     const token = createAccessToken(newUser);
     return {
       newUser,
       token,
     };
+  }
+
+  static async verifyToken(token) {
+    // 1 - val if token is valid
+    const dataToken = await tokenVerify(token);
+
+    if (!dataToken?.id) {
+      throw new CustomError("Invalid token", 400);
+    }
+
+    // 3 - val if user exists
+    const user = getUserById(dataToken.id);
+
+    if (!user) {
+      throw new CustomError("User not found", 400);
+    }
+
+    // 4 - val if user is active
+    if (!user.statusu) {
+      throw new CustomError("User is not active", 400);
+    }
+
+    // don't return the password :)
+    delete user.passwordu;
+
+    // 5 - return user
+    return user;
+  }
+
+  // TODO: Estos dos controladores no son exactamente iguales xd? o cual es el motivo?
+  static async verifyEmail(token) {
+    // 1 - val if token is valid
+    const dataToken = await tokenVerify(token);
+
+    if (!dataToken?.id) {
+      throw new CustomError("Invalid token", 400);
+    }
+
+    // 3 - val if user exists
+    const user = getUserById(dataToken.id);
+
+    if (!user) {
+      throw new CustomError("User not found", 400);
+    }
+
+    // 4 - val if user is active
+    if (!user.statusu) {
+      throw new CustomError("User is not active", 400);
+    }
+
+    // don't return the password :)
+    delete user.passwordu;
+
+    // 5 - return user
+    return user;
   }
 }

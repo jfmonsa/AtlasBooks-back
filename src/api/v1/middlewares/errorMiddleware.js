@@ -13,12 +13,12 @@ class CustomError extends Error {
 /**
  * Error middleware
  * @param {Object} err
- * @param {Object} req
+ * @param {Object} _req
  * @param {Object} res
- * @param {Function} next
+ * @param {Function} _next
  * @description Error middleware to handle errors
  */
-const errorMiddleware = (err, req, res, next) => {
+const errorMiddleware = (err, _req, res, _next) => {
   const statusCode = err.statusCode || 500;
   const message = err.statusCode == 500 ? message : "Internal Server Error";
 
@@ -30,3 +30,8 @@ const errorMiddleware = (err, req, res, next) => {
 };
 
 export { CustomError, errorMiddleware };
+
+/*
+NOTE:
++ https://simonplend.com/send-awesome-structured-error-responses-with-express/ intersting, maybe implement it in the future
+*/

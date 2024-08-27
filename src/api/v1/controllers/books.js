@@ -24,9 +24,8 @@ export class BooksController {
         : JSON.parse(subcategoryIds),
     });
 
-    res.status(201).json({
-      status: "success",
-      data: { message: "Book created successfully" },
+    res.status(201).success({
+      message: "Book created successfully",
     });
   }
 
@@ -56,7 +55,7 @@ export class BooksController {
 
     await BookService.rateBook(id, idbook, rate);
 
-    res.status(200).json(["Rating sent successfully"]);
+    res.status(200).success(["Rating sent successfully"]);
   }
 
   static async update(req, res) {}
