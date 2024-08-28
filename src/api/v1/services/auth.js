@@ -1,15 +1,14 @@
-import { getUserByNicknameOrEmail } from "../repositories/loginRepository";
+import { getUserByNicknameOrEmail } from "../repositories/loginRepository.js";
 import {
   getUserByEmail,
   getUserByNickname,
   createAndGetUser,
   createDefaultBookList,
-  getUserById,
-} from "../repositories/registerRepository";
-import { withTransaction } from "../../../utils/withTransaction";
-import { CustomError } from "../../middlewares/errorMiddleware";
+} from "../repositories/registerRepository.js";
+import { withTransaction } from "../../../utils/withTransaction.js";
+import { CustomError } from "../middlewares/errorMiddleware.js";
 import bycript from "bcryptjs";
-import { createAccessToken } from "../../../utils/handleJWT";
+import { createAccessToken } from "../../../utils/handleJWT.js";
 
 export class AuthService {
   /**
@@ -22,7 +21,7 @@ export class AuthService {
    */
   static async login(userNicknameOrEmail, userPassword) {
     // 1 - val if user is registered
-    user = getUserByNicknameOrEmail(userNicknameOrEmail);
+    const user = await getUserByNicknameOrEmail(userNicknameOrEmail);
 
     if (!user) {
       throw new CustomError("userNickname or password is incorrect", 400);
@@ -61,14 +60,16 @@ export class AuthService {
    */
   static async register(name, email, password, nickName, country) {
     // 1 - check if the user is already registered
-    if (getUserByEmail(email) || getUserByNickname(nickName)) {
+
+    if ((await getUserByEmail(email)) || (await getUserByNickname(nickName))) {
       throw new CustomError("User already exists", 400);
     }
 
     // 2 - insert data with transaction (safety for multiple insertions)
     let newUser = null;
+    const passwordHash = await bycript.hash(password, 10);
+
     await withTransaction(async client => {
-      const passwordHash = await bcrypt.hash(password, 10);
       newUser = await createAndGetUser(
         client,
         name,
@@ -77,7 +78,7 @@ export class AuthService {
         nickName,
         country
       );
-      await createDefaultBookList(client, user.id);
+      await createDefaultBookList(client, newUser.id);
     });
 
     // don't return the password

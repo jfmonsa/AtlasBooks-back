@@ -18,7 +18,7 @@ export class AuthController {
    */
   static async login(req, res) {
     // TODO: cambiar userNickname por userNicknameOrEmail
-    const { userNickname: userNicknameOrEmail, userPassword } = req.body;
+    const { userNicknameOrEmail, userPassword } = req.body;
 
     //TODO: val things with express validator
     //TODO: also validate confirm password equals to password and drop user prefix in property values
@@ -92,7 +92,8 @@ export class AuthController {
     res.status(200).success({ user, message: "Token is valid" });
   }
 
-  static async verifyEmail(req, res) {
+  // TODO: esto donde se esta usando ??
+  static async verifyTokenEmail(req, res) {
     const { token } = req.body;
 
     if (!token) {
