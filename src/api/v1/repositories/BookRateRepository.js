@@ -3,7 +3,7 @@ import { pool } from "../../../db.js";
 export const getRate = async (userId, bookId) => {
   const rated = await pool.query(
     "SELECT * FROM book_rate WHERE iduser = $1 AND idbook = $2",
-    [id, idbook]
+    [userId, bookId]
   );
 
   return rated.rows.length > 0 ? rated.rows[0].ratevalue : null;
