@@ -1,4 +1,3 @@
-import { pool } from "../../../db.js";
 import { BookCommentsService } from "../services/comments.js";
 
 export class BookCommentsController {
@@ -40,14 +39,3 @@ export class BookCommentsController {
     await BookCommentsService.deleteComment(id);
   }
 }
-
-export const deleteComment = async (req, res) => {
-  try {
-    //We delete the comment from the database
-
-    //We return the comment that was deleted
-    res.status(200).send(["Comment deleted successfully"]);
-  } catch (error) {
-    res.status(500).send([error.message]);
-  }
-};
