@@ -29,6 +29,10 @@ export class BooksController {
     });
   }
 
+  static async update(req, res) {}
+
+  static async delete(req, res) {}
+
   static async download(req, res) {
     const { fileName } = req.params;
     const { userId, bookId } = req.body;
@@ -55,10 +59,14 @@ export class BooksController {
 
     await BookService.rateBook(id, idbook, rate);
 
-    res.status(200).success(["Rating sent successfully"]);
+    res.status(200).success({ message: "Rating sent successfully" });
   }
 
-  static async update(req, res) {}
+  static async getRateOfBookByUserId(req, res) {
+    const idbook = req.params.idbook; // id of book
+    const { id: userId } = req.user; // id of user
 
-  static async delete(req, res) {}
+    const rateValue = await BookService.getRateOfBookByUserId(userId, idbook);
+    res.status(200).success({ rateValue });
+  }
 }

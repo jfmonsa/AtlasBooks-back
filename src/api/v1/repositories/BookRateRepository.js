@@ -6,7 +6,9 @@ export const getRate = async (userId, bookId) => {
     [userId, bookId]
   );
 
-  return rated.rows.length > 0 ? rated.rows[0].ratevalue : null;
+  return rated.rows.length > 0
+    ? { ratevalue: rated.rows[0].ratevalue }
+    : { ratevalue: 0 };
 };
 
 //Update the rate

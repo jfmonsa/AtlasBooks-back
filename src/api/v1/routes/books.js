@@ -13,7 +13,7 @@ router.get("/:id", asyncHandler(BooksController.getById));
 // /api/v1/books/
 router.post(
   "/",
-  //authRequired,
+  authRequired,
   /*uploadMiddleware.fields([
     { name: "cover", maxCount: 1 },
     { name: "bookFiles", maxCount: 10 },
@@ -22,15 +22,9 @@ router.post(
 );
 
 // /api/v1/books/:fileName
-router.post(
-  "/:fileName",
-  //authMiddleware,
-  asyncHandler(BooksController.download)
-);
+router.post("/:fileName", authRequired, asyncHandler(BooksController.download));
 
-/*
-router.post("/", authMiddleware, rateBook); //  /api/rateBook
-router.get("/:idbook", authMiddleware, getRate); //  /api/reports
-*/
+router.post("/", authRequired, rateBook); //  /api/rateBook
+router.get("/:idbook", authRequired, getRate); //  /api/
 
 export default router;

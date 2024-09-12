@@ -1,6 +1,10 @@
 import { pool } from "../../../db.js";
 import shuffleArray from "../../../utils/shuffleArray.js";
 
+export class UserFeedController {
+  static async getFeedRecomendedForUser(_req, res) {}
+}
+
 /**
  * Get 50 books with coverPath in the following priority order:
  * 1. Query to get 10 books with the most downloads on the page

@@ -41,6 +41,7 @@ import {
   getRate,
   updateRate,
   insertRate,
+  getRateOfBookByUserId,
 } from "../repositories/BookRateRepository.js";
 
 export class BookService {
@@ -172,5 +173,9 @@ export class BookService {
       //If the user has not rated the book -> insert the rate
       await insertRate(userId, bookId, rate);
     }
+  }
+
+  static async getRateOfBookByUserId(userId, bookId) {
+    return await getRate(userId, bookId);
   }
 }
