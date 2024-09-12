@@ -1,7 +1,7 @@
 import { Router } from "express";
 import asyncHandler from "../../../utils/asyncHandler.js";
-import { getFeedRecomended } from "../controllers/feed.js";
+import { UserFeedController } from "../controllers/feed.js";
 const router = Router();
 
-router.get("/", asyncHandler(getFeedRecomended));
+router.get("/", asyncHandler(UserFeedController.getFeedRecomendedForUser));
 export default router;
