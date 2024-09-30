@@ -3,7 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import corsOptions from "./config/cors.js";
 import { responseFormatter } from "./api/v1/middlewares/responseFormatter.js";
-
+import { swaggerDocs as swaggerDocsV1 } from "./api/v1/swagger.js";
 //import api router
 //import router from "./api/v0/routes/index.js";
 import router_modular_v1 from "./api/v1/router.js";
@@ -46,5 +46,6 @@ app.use(errorMiddleware);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
+  swaggerDocsV1(app);
   console.log(`Server at: http://localhost:${port}`);
 });
