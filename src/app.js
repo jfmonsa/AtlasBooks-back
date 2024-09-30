@@ -6,6 +6,7 @@ import { responseFormatter } from "./api/v1/middlewares/responseFormatter.js";
 
 //import api router
 //import router from "./api/v0/routes/index.js";
+import router_modular_v1 from "./api/v1/router.js";
 import router_v1 from "./api/v1/routes/index.js";
 
 import { errorMiddleware } from "./api/v1/middlewares/errorMiddleware.js";
@@ -38,7 +39,7 @@ if (process.env.SERVER_ENV === "dev") {
 app.use(responseFormatter);
 
 // Routes API Rest
-app.use("/api/v1", router_v1);
+app.use("/api/v1", router_modular_v1);
 
 // handling errors
 app.use(errorMiddleware);

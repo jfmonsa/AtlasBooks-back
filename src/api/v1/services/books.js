@@ -9,7 +9,8 @@ import {
   getBookSubcategories,
 } from "../repositories/BookDetailsRepository.js";
 
-import { getBookComments } from "../repositories/BookCommentsRepository.js";
+//import { getBookComments } from "../repositories/BookCommentsRepository.js";
+// TODO: revisar esto
 
 // for getRelatedBooks
 import {
@@ -41,7 +42,7 @@ import {
   getRate,
   updateRate,
   insertRate,
-  getRateOfBookByUserId,
+  //getRateOfBookByUserId,
 } from "../repositories/BookRateRepository.js";
 
 export class BookService {
@@ -65,7 +66,8 @@ export class BookService {
         getBookFileNames(id),
         getBookRate(id),
         getBookSubcategories(id),
-        getBookComments(id),
+        // TODO: revisar esto
+        //getBookComments(id),
       ]);
 
     const relatedBooks = await this.getBookRelatedBooks(

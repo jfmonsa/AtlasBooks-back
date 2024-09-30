@@ -1,4 +1,5 @@
-import { deleteComment } from "../controllers/comments.js";
+//import { deleteComment } from "../controllers/comments.js";
+// TODO: revisar este import
 import {
   getBookCommentsById,
   createComment,

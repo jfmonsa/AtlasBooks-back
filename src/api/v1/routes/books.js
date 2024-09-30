@@ -24,7 +24,9 @@ router.post(
 // /api/v1/books/:fileName
 router.post("/:fileName", authRequired, asyncHandler(BooksController.download));
 
-router.post("/", authRequired, rateBook); //  /api/rateBook
-router.get("/:idbook", authRequired, getRate); //  /api/
+// TODO: revisar esto
+//router.post("/", authRequired, rateBook); //  /api/rateBook
+// TODO: revisar esto
+//router.get("/:idbook", authRequired, getRate); //  /api/
 
 export default router;

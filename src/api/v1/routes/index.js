@@ -19,7 +19,7 @@ const loadRoutes = async () => {
     // iterate over files in `./routes` directory
     for (const file of files) {
       const fileWithoutExt = removeFileExt(file);
-      if (fileWithoutExt !== "index") {
+      if (fileWithoutExt !== "index" || fileWithoutExt !== "auth") {
         try {
           // dynamic importing of modules located in `./routes`
           let module = await import(`./${file}`);
