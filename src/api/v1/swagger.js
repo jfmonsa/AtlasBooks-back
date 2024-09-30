@@ -4,6 +4,7 @@ import swaggerUi from "swagger-ui-express";
 const options = {
   definition: {
     openapi: "3.0.0",
+    failOnErrors: true,
     info: {
       title: "AtlasBooks API",
       description: "Swagger documentation of AtlasBooks API endpoints",
@@ -11,7 +12,13 @@ const options = {
       description: "A simple Express API with Swagger documentation",
     },
   },
-  apis: ["./../api/v1/modules/*/*.route.js"],
+  servers: [
+    {
+      url: "http://localhost:3000",
+      description: "Development server",
+    },
+  ],
+  apis: ["./src/api/v1/modules/**/*.route.js"],
 };
 
 const swaggerSpecs = swaggerJsdoc(options);
