@@ -5,6 +5,9 @@
  */
 class CustomError extends Error {
   constructor(message, statusCode) {
+    message = message || "Internal Server Error";
+    statusCode = statusCode || 500;
+
     super(message);
     this.statusCode = statusCode;
   }
@@ -16,22 +19,27 @@ class CustomError extends Error {
  * @param {Object} _req
  * @param {Object} res
  * @param {Function} _next
- * @description Error middleware to handle errors
+ * @description Format response to client
  */
-const errorMiddleware = (err, _req, res, _next) => {
-  const statusCode = err.statusCode || 500;
-  const message = err.statusCode == 500 ? message : "Internal Server Error";
+const errorHandler = (err, _req, res, _next) => {
+  // log error
+  console.error(err.stack);
 
-  console.error(err);
-  res.status(statusCode).json({
+  // formating response
+  res.status(err.statusCode).json({
     success: false,
-    error: message,
+    error: err.message,
   });
 };
 
-export { CustomError, errorMiddleware };
+export { CustomError, errorHandler };
 
 /*
 NOTE:
 + https://simonplend.com/send-awesome-structured-error-responses-with-express/ intersting, maybe implement it in the future
++ https://medium.com/@ctrlaltvictoria/mastering-express-js-error-handling-from-custom-errors-to-enhanced-error-responses-5fda471d38d4
++ https://reflectoring.io/express-error-handling/ 
+
+TODO: tener varias funciones de manejo de errores, dividir mejor las resposabilidades de este archivo
+ distintas clases por cada tipo de errror
 */

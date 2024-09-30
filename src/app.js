@@ -9,7 +9,7 @@ import { swaggerDocs as swaggerDocsV1 } from "./api/v1/swagger.js";
 import router_modular_v1 from "./api/v1/router.js";
 import router_v1 from "./api/v1/routes/index.js";
 
-import { errorMiddleware } from "./api/v1/middlewares/errorMiddleware.js";
+import { errorHandler } from "./api/v1/middlewares/errorMiddleware.js";
 
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -42,7 +42,7 @@ app.use(responseFormatter);
 app.use("/api/v1", router_modular_v1);
 
 // handling errors
-app.use(errorMiddleware);
+app.use(errorHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
