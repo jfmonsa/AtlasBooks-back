@@ -1,4 +1,6 @@
-import { CustomError } from "../../middlewares/errorMiddleware.js";
+import { HTTP_CODES } from "../../../../utils/httpCodes.js";
+import { AppError } from "../../../../utils/exeptions.js";
+
 import { AuthService } from "./auth.service.js";
 
 const COOKIE_SETTINGS = {
@@ -14,7 +16,6 @@ export class AuthController {
    * @param {Object} req - The request object.
    * @param {Object} res - The response object.
    * @returns {Promise<void>} - A promise that resolves when the login process is complete.
-   * @throws {CustomError} - If required fields are missing.
    */
   static async login(req, res) {
     // TODO: cambiar userNickname por userNicknameOrEmail
@@ -43,7 +44,7 @@ export class AuthController {
 
     // 1 - validations
     if (!name || !email || !password || !nickName || !country) {
-      throw new CustomError("Missing fields", 400);
+      throw new AppError("Missing fields", 400);
     }
 
     // 2 - pass data to service and get data of new user and token
@@ -56,11 +57,12 @@ export class AuthController {
     );
 
     // 3 - set cookie and send response to client
-    // TODO: crear un middleware o helper que ayude a tener una respuesta uniforme en toda la app
-    res.cookie("token", token, COOKIE_SETTINGS);
     res
-      .status(201)
-      .success({ user: newUser, message: "User created successfully" });
+      .cookie("token", token, COOKIE_SETTINGS)
+      .formatResponse(
+        { user: newUser, message: "User created successfully" },
+        HTTP_CODES.CREATED
+      );
   }
 
   /**

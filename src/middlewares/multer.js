@@ -1,5 +1,5 @@
 import multer from "multer";
-import getFileExtension from "../../../utils/getFileExtension.js";
+import getFileExtension from "../utils/helpers/getFileExtension.js";
 
 // Obtener __dirname en ES6
 import { fileURLToPath } from "url";

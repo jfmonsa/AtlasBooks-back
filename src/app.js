@@ -2,14 +2,13 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import corsOptions from "./config/cors.js";
-import { responseFormatter } from "./api/v1/middlewares/responseFormatter.js";
+import { formatResponse } from "./middlewares/formatResponse.js";
 import { swaggerDocs as swaggerDocsV1 } from "./api/v1/swagger.js";
 //import api router
 //import router from "./api/v0/routes/index.js";
 import router_modular_v1 from "./api/v1/router.js";
-import router_v1 from "./api/v1/routes/index.js";
 
-import { errorHandler } from "./api/v1/middlewares/errorMiddleware.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -27,8 +26,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // support serving static files
 app.use("/storage", express.static("storage"));
-// support file uploading
-app.use(express.static("storage"));
 
 // log requests
 if (process.env.SERVER_ENV === "dev") {
@@ -36,7 +33,7 @@ if (process.env.SERVER_ENV === "dev") {
 }
 
 // format response
-app.use(responseFormatter);
+app.use(formatResponse);
 
 // Routes API Rest
 app.use("/api/v1", router_modular_v1);

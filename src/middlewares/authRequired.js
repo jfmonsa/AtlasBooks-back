@@ -1,7 +1,7 @@
 import { tokenVerify } from "../../../utils/handleJWT.js";
 import asyncHandler from "../../../utils/asyncHandler.js";
 import { CustomError } from "./errorMiddleware.js";
-import { pool } from "../../../db.js";
+import { pool } from "../db.js";
 
 export const authRequired = asyncHandler(async (req, res, next) => {
   const { token } = req.cookies;

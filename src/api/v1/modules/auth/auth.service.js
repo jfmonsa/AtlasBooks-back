@@ -5,10 +5,10 @@ import {
   createAndGetUser,
   createDefaultBookList,
 } from "./repositories/register.repository.js";
-import { withTransaction } from "../../../../utils/withTransaction.js";
-import { CustomError } from "../../middlewares/errorMiddleware.js";
+import { withTransaction } from "../../../../utils/helpers/withTransaction.js";
+import { AppError } from "../../../../utils/exeptions.js";
 import bycript from "bcryptjs";
-import { createAccessToken } from "../../../../utils/handleJWT.js";
+import { createAccessToken } from "../../../../utils/helpers/handleJWT.js";
 
 export class AuthService {
   /**
@@ -20,13 +20,13 @@ export class AuthService {
    * @param {string} nickName - The nickname of the user.
    * @param {string} country - The country of the user.
    * @returns {Object} - An object containing the newly registered user and the access token.
-   * @throws {CustomError} - If the user already exists.
+   * @throws {AppError} - If the user already exists.
    */
   static async register(name, email, password, nickName, country) {
     // 1 - check if the user is already registered
 
     if ((await getUserByEmail(email)) || (await getUserByNickname(nickName))) {
-      throw new CustomError("User already exists", 400);
+      throw new AppError("User already exists", 400);
     }
 
     // 2 - insert data with transaction (safety for multiple insertions)
@@ -62,24 +62,24 @@ export class AuthService {
    * @param {string} userNicknameOrEmail - The nickname or email of the user.
    * @param {string} userPassword - The password of the user.
    * @returns {Promise<Object>} - A promise that resolves to an object containing the authenticated user and access token.
-   * @throws {CustomError} - Throws a custom error if the user is not registered, not active, or if the password is incorrect.
+   * @throws {AppError} - Throws a custom error if the user is not registered, not active, or if the password is incorrect.
    */
   static async login(userNicknameOrEmail, userPassword) {
     // 1 - val if user is registered
     const user = await getUserByNicknameOrEmail(userNicknameOrEmail);
 
     if (!user) {
-      throw new CustomError("userNickname or password is incorrect", 400);
+      throw new AppError("userNickname or password is incorrect", 400);
     }
     // 2 - val if user is active
     else if (!user.statusu) {
-      throw new CustomError("user is not active", 400);
+      throw new AppError("user is not active", 400);
     }
     // 3 - val password is correct
     const validPassword = await bycript.compare(userPassword, user.passwordu);
 
     if (!validPassword) {
-      throw new CustomError("userNickname or password is incorrect", 400);
+      throw new AppError("userNickname or password is incorrect", 400);
     }
 
     // 4 - the create access token
@@ -97,19 +97,19 @@ export class AuthService {
     const dataToken = await tokenVerify(token);
 
     if (!dataToken?.id) {
-      throw new CustomError("Invalid token", 400);
+      throw new AppError("Invalid token", 400);
     }
 
     // 3 - val if user exists
     const user = getUserById(dataToken.id);
 
     if (!user) {
-      throw new CustomError("User not found", 400);
+      throw new AppError("User not found", 400);
     }
 
     // 4 - val if user is active
     if (!user.statusu) {
-      throw new CustomError("User is not active", 400);
+      throw new AppError("User is not active", 400);
     }
 
     // don't return the password :)
@@ -125,19 +125,19 @@ export class AuthService {
     const dataToken = await tokenVerify(token);
 
     if (!dataToken?.id) {
-      throw new CustomError("Invalid token", 400);
+      throw new AppError("Invalid token", 400);
     }
 
     // 3 - val if user exists
     const user = getUserById(dataToken.id);
 
     if (!user) {
-      throw new CustomError("User not found", 400);
+      throw new AppError("User not found", 400);
     }
 
     // 4 - val if user is active
     if (!user.statusu) {
-      throw new CustomError("User is not active", 400);
+      throw new AppError("User is not active", 400);
     }
 
     // don't return the password :)
