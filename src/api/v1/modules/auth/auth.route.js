@@ -2,7 +2,6 @@ import { Router } from "express";
 import asyncErrorHandler from "../../../../common/middlewares/asyncErrorHandler.js";
 import { AuthController } from "./auth.controller.js";
 
-
 const router = Router();
 
 /**

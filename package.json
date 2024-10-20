@@ -4,15 +4,15 @@
   "description": "## Install dependencies",
   "main": "app.js",
   "type": "module",
-  "exports": {
-    "@/*.js": "./*.js"
-  },
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node --watch src/app.js"
+    "dev": "node --watch src/app.js",
+    "format": "prettier --write .",
+    "lint": "npx eslint",
+    "lint:fix": "npx eslint . --fix "
   },
   "author": "",
   "license": "ISC",
@@ -34,10 +34,10 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
-    "eslint": "^9.8.0",
+    "@eslint/js": "^9.13.0",
+    "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
-    "globals": "^15.9.0",
+    "globals": "^15.11.0",
     "morgan": "^1.10.0",
     "prettier": "^3.3.3"
   },
