@@ -3,7 +3,7 @@ import asyncHandler from "../../../utils/asyncHandler.js";
 import { CustomError } from "./errorMiddleware.js";
 import { pool } from "../db.js";
 
-export const authRequired = asyncHandler(async (req, res, next) => {
+export const authRequired = asyncHandler(async (req, _res, next) => {
   const { token } = req.cookies;
 
   if (!token) {

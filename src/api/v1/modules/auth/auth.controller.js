@@ -1,5 +1,5 @@
-import { HTTP_CODES } from "../../../../utils/httpCodes.js";
-import { AppError } from "../../../../utils/exeptions.js";
+import { HTTP_CODES } from "../../../../common/httpCodes.js";
+import { AppError } from "../../../../common/exeptions.js";
 
 import { AuthService } from "./auth.service.js";
 

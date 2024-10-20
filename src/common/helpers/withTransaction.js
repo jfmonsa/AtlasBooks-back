@@ -1,4 +1,4 @@
-import { pool } from "../../db.js";
+import { pool } from "../config/db.js";
 
 /**
  * Executes the provided operation within a database transaction.

@@ -2,7 +2,7 @@ import { Router } from "express";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import path from "path";
-import removeFileExt from "../../utils/helpers/removeFileExtension.js";
+import { removeExtension } from "../../common/helpers/fileExtension.js";
 
 const router = Router();
 
@@ -26,7 +26,7 @@ const loadRoutes = async () => {
       // Search for .route.js files in each module directory
       for (const file of moduleFiles) {
         if (file.endsWith(".route.js")) {
-          const fileWithoutExt = removeFileExt(file);
+          const fileWithoutExt = removeExtension(file);
           try {
             // Dynamic importing of the route file
             let routeModule = await import(path.join(modulePath, file));

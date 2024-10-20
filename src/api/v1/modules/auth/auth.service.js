@@ -5,10 +5,10 @@ import {
   createAndGetUser,
   createDefaultBookList,
 } from "./repositories/register.repository.js";
-import { withTransaction } from "../../../../utils/helpers/withTransaction.js";
-import { AppError } from "../../../../utils/exeptions.js";
+import { withTransaction } from "../../../../common/helpers/withTransaction.js";
+import { AppError } from "../../../../common/exeptions.js";
 import bycript from "bcryptjs";
-import { createAccessToken } from "../../../../utils/helpers/handleJWT.js";
+import { createAccessToken } from "../../../../common/helpers/handleJWT.js";
 
 export class AuthService {
   /**

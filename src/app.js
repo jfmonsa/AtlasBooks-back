@@ -1,17 +1,16 @@
 import express from "express";
+import dotenv from "dotenv";
+// middlewares
 import cors from "cors";
+import corsOptions from "./common/config/cors.js";
 import cookieParser from "cookie-parser";
-import corsOptions from "./config/cors.js";
-import { formatResponse } from "./middlewares/formatResponse.js";
+import morgan from "morgan";
+import { formatResponse } from "./common/middlewares/formatResponse.js";
+import { errorHandler } from "./common/middlewares/errorMiddleware.js";
+// api
 import { swaggerDocs as swaggerDocsV1 } from "./api/v1/swagger.js";
-//import api router
-//import router from "./api/v0/routes/index.js";
 import router_modular_v1 from "./api/v1/router.js";
 
-import { errorHandler } from "./middlewares/errorMiddleware.js";
-
-import dotenv from "dotenv";
-import morgan from "morgan";
 dotenv.config();
 
 const app = express();

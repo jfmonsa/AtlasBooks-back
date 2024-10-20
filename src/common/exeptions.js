@@ -1,6 +1,5 @@
-import { HTTP_CODES } from "./httpCodes";
+import { HTTP_CODES } from "./httpCodes.js";
 
-// customErrors.js
 export class AppError extends Error {
   constructor(message, statusCode) {
     super(message);
