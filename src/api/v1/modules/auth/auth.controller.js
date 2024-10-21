@@ -1,5 +1,10 @@
+import {
+  Joi,
+  validate,
+  passwordField,
+} from "../../../../common/validations.js";
 import { HTTP_CODES } from "../../../../common/httpCodes.js";
-import { AppError } from "../../../../common/exeptions.js";
+import { ValidationError } from "../../../../common/exeptions.js";
 
 import { AuthService } from "./auth.service.js";
 
@@ -40,12 +45,19 @@ export class AuthController {
   }
 
   static async register(req, res) {
-    const { name, email, password, nickName, country } = req.body;
-
     // 1 - validations
-    if (!name || !email || !password || !nickName || !country) {
-      throw new AppError("Missing fields", 400);
-    }
+    const registerSchema = Joi.object({
+      name: Joi.string().min(4).max(20).required().trim(),
+      email: Joi.string().email().required().trim(),
+      password: passwordField,
+      nickName: Joi.string().min(4).max(20).required().trim(),
+      country: Joi.string().country().required().trim(),
+    });
+
+    const { name, email, password, nickName, country } = validate(
+      registerSchema,
+      req.body
+    );
 
     // 2 - pass data to service and get data of new user and token
     const { newUser, token } = await AuthService.register(
@@ -78,7 +90,7 @@ export class AuthController {
 
     // 1 - val if token was sent
     if (!token) {
-      throw new CustomError("Token not wasn't sent", 401);
+      throw new ValidationError("Token not wasn't sent");
     }
 
     // 2 - pass data to service and get data of user

@@ -1,5 +1,5 @@
 import { HTTP_CODES } from "../httpCodes.js";
-import { AppError } from "../exeptions.js";
+import { AppError, ValidationError } from "../exeptions.js";
 /**
  * Error middleware
  * @param {Object} err
@@ -11,15 +11,16 @@ import { AppError } from "../exeptions.js";
 export const errorHandler = (err, _req, res, _next) => {
   // log error
   // TODO: use logger like winston
-  console.error(err.stack);
+  console.log(err.stack);
 
   const statusCode = err.statusCode || HTTP_CODES.INTERNAL_SERVER_ERROR;
 
   // manage Exceptions
   if (err instanceof AppError) {
     res.formatError(err.message, statusCode);
+  } else if (err instanceof ValidationError) {
+    res.formatError(err.details, err.statusCode);
   } else {
-    // TODO: handle validation errors else-if
     // unexpected error:
     res.formatError("Algo salió mal", statusCode);
   }
