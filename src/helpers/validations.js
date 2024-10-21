@@ -1,19 +1,13 @@
-import { ValidationError } from "./exeptions.js";
 /** @file @module Global variables and utils for shared field validtions */
 
-/** Joi extended instance with support for country codes, only use it when needed */
-import BaseJoi from "joi";
 import countryStateValidator from "joi-country-state";
-export const Joi = BaseJoi.extend(countryStateValidator);
+import BaseJoi from "joi";
 
-/** generic function to validate joi schemas */
-export const validate = (schema, data) => {
-  const { error, value } = schema.validate(data, { abortEarly: false });
-  if (error) {
-    throw new ValidationError(error);
-  }
-  return value;
-};
+/**
+ * @constant {Object} Joi - Extended Joi instance with support for country codes
+ * use it  when need to validate countries
+ */
+export const Joi = BaseJoi.extend(countryStateValidator);
 
 /** password field */
 const ONE_DIGIT = "(?=.*[0-9])";

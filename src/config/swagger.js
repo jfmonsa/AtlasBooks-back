@@ -32,6 +32,6 @@ export const swaggerDocs = app => {
   });
 
   console.log(
-    `📚 API v1 docs available at ${process.env.SERVER_URL}/api/v1/docs`
+    `-> 📚 API v1 docs available at ${process.env.SERVER_URL}/api/v1/docs`
   );
 };

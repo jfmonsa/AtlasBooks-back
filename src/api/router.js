@@ -5,7 +5,7 @@ import path from "path";
 
 const router = Router({ mergeParams: true });
 
-const loadRoutes = async () => {
+async function loadRoutes() {
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const modules = fs.readdirSync(__dirname);
 
@@ -19,21 +19,14 @@ const loadRoutes = async () => {
     // Search for .routes.js files in each module directory
     for (const file of moduleFiles) {
       if (file.endsWith(".routes.js")) {
-        try {
-          // Dynamic importing of the route file
-          let routeModule = await import(path.join(__dirname, module, file));
-          // Use the module name as the base route
-          router.use(`/${module}`, routeModule.default);
-        } catch (error) {
-          throw new Error(
-            `Error loading routes from ${module}/${file}: ${error}`
-          );
-        }
+        // Dynamic importing of the route file
+        let routeModule = await import(path.join(__dirname, module, file));
+        // Use the module name as the base route
+        router.use(`/${module}`, routeModule.default);
       }
     }
   }
+  return router;
 };
 
-await loadRoutes();
-
-export default router;
+export default loadRoutes;

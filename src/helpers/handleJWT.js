@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-dotenv.config();
+import { AppError } from "./exeptions.js";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -8,14 +7,14 @@ export function createAccessToken(payload) {
   try {
     return jwt.sign(payload, JWT_SECRET, { expiresIn: "2h" });
   } catch (error) {
-    throw new CustomError("Error creating access token", 500);
+    throw new AppError("Error creating access token" + error, 500);
   }
 }
 
 export const tokenVerify = async token => {
   try {
     return jwt.verify(token, JWT_SECRET);
-  } catch (error) {
+  } catch {
     return null;
   }
 };

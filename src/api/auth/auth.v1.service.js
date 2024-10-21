@@ -1,52 +1,42 @@
-import { getUserByNicknameOrEmail } from "./repositories/login.repository.js";
-import {
-  getUserByEmail,
-  getUserByNickname,
-  createAndGetUser,
-  createDefaultBookList,
-} from "./repositories/register.repository.js";
-import { withTransaction } from "../../helpers/withTransaction.js";
 import { AppError } from "../../helpers/exeptions.js";
 import bycript from "bcryptjs";
 import { createAccessToken } from "../../helpers/handleJWT.js";
 
-export class AuthService {
-  /**
-   * Registers a new user.
-   *
-   * @param {string} name - The name of the user.
-   * @param {string} email - The email of the user.
-   * @param {string} password - The password of the user.
-   * @param {string} nickName - The nickname of the user.
-   * @param {string} country - The country of the user.
-   * @returns {Object} - An object containing the newly registered user and the access token.
-   * @throws {AppError} - If the user already exists.
-   */
-  static async register(name, email, password, nickName, country) {
-    // 1 - check if the user is already registered
+export default class AuthService {
+  #userRepository;
+  #bookListRepository;
 
-    if ((await getUserByEmail(email)) || (await getUserByNickname(nickName))) {
+  constructor({ userRepository, bookListRepository }) {
+    this.#userRepository = userRepository;
+    this.#bookListRepository = bookListRepository;
+  }
+
+  async register({ name, email, password, nickname, country }) {
+    // check if user already exists
+    if (
+      (await this.#userRepository.getUserByEmail(email)) ||
+      (await this.#userRepository.getUserByNickname(nickname))
+    ) {
       throw new AppError("User already exists", 400);
     }
 
-    // 2 - insert data with transaction (safety for multiple insertions)
-    let newUser = null;
     const passwordHash = await bycript.hash(password, 10);
+    let newUser;
 
-    await withTransaction(async client => {
-      newUser = await createAndGetUser(
-        client,
-        name,
-        email,
-        passwordHash,
-        nickName,
-        country
+    // insert data with transaction (safety for multiple insertions)
+    await this.#userRepository.transaction(async client => {
+      newUser = await this.#userRepository.createUser(
+        {
+          name,
+          email,
+          password: passwordHash,
+          nickname,
+          country,
+        },
+        client
       );
-      await createDefaultBookList(client, newUser.id);
+      await this.#bookListRepository.createDefaultList(newUser.id, client);
     });
-
-    // don't return the password
-    delete newUser.passwordu;
 
     // 3 - return new user
     const token = createAccessToken(newUser);
@@ -64,9 +54,10 @@ export class AuthService {
    * @returns {Promise<Object>} - A promise that resolves to an object containing the authenticated user and access token.
    * @throws {AppError} - Throws a custom error if the user is not registered, not active, or if the password is incorrect.
    */
-  static async login(userNicknameOrEmail, userPassword) {
+  async login(userNicknameOrEmail, userPassword) {
     // 1 - val if user is registered
-    const user = await getUserByNicknameOrEmail(userNicknameOrEmail);
+    const user =
+      await this.#userRepository.getUserByNicknameOrEmail(userNicknameOrEmail);
 
     if (!user) {
       throw new AppError("userNickname or password is incorrect", 400);
@@ -92,7 +83,7 @@ export class AuthService {
     };
   }
 
-  static async verifyToken(token) {
+  async verifyToken(token) {
     // 1 - val if token is valid
     const dataToken = await tokenVerify(token);
 
@@ -120,7 +111,7 @@ export class AuthService {
   }
 
   // TODO: Estos dos controladores no son exactamente iguales xd? o cual es el motivo?
-  static async verifyEmail(token) {
+  async verifyEmail(token) {
     // 1 - val if token is valid
     const dataToken = await tokenVerify(token);
 

@@ -1,8 +1,5 @@
-import { Joi, validate, passwordField } from "../../helpers/validations.js";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
-import { ValidationError } from "../../helpers/exeptions.js";
-
-import { AuthService } from "./auth.v1.service.js";
+import { AppError, ValidationError } from "../../helpers/exeptions.js";
 
 const COOKIE_SETTINGS = {
   sameSite: "none",
@@ -10,7 +7,19 @@ const COOKIE_SETTINGS = {
   httpOnly: true,
 };
 
-export class AuthController {
+export default class AuthController {
+  #authService;
+
+  constructor({ authService }) {
+    this.#authService = authService;
+
+    this.login = this.login.bind(this);
+    this.register = this.register.bind(this);
+    this.verifyToken = this.verifyToken.bind(this);
+    this.verifyTokenEmail = this.verifyTokenEmail.bind(this);
+    this.forgotPassword = this.forgotPassword.bind(this);
+  }
+
   /**
    * Logs in a user.
    *
@@ -18,17 +27,17 @@ export class AuthController {
    * @param {Object} res - The response object.
    * @returns {Promise<void>} - A promise that resolves when the login process is complete.
    */
-  static async login(req, res) {
+  async login(req, res) {
     // TODO: cambiar userNickname por userNicknameOrEmail
     const { userNicknameOrEmail, userPassword } = req.body;
 
     // 1 - req validations
     if (!userNicknameOrEmail || !userPassword) {
-      throw new CustomError("Missing fields", 400);
+      throw new AppError("Missing fields", 400);
     }
 
     // 2 - pass data to service and get data of user and token
-    const { user, token } = await AuthService.login(
+    const { user, token } = await this.#authService.login(
       userNicknameOrEmail,
       userPassword
     );
@@ -38,31 +47,11 @@ export class AuthController {
     res.status(200).success(user);
   }
 
-  static async register(req, res) {
-    // 1 - validations
-    const registerSchema = Joi.object({
-      name: Joi.string().min(4).max(20).required().trim(),
-      email: Joi.string().email().required().trim(),
-      password: passwordField,
-      nickName: Joi.string().min(4).max(20).required().trim(),
-      country: Joi.string().country().required().trim(),
-    });
+  async register(req, res) {
+    // pass data to service and get data of new user and token
+    const { newUser, token } = await this.#authService.register(req.body);
 
-    const { name, email, password, nickName, country } = validate(
-      registerSchema,
-      req.body
-    );
-
-    // 2 - pass data to service and get data of new user and token
-    const { newUser, token } = await AuthService.register(
-      name,
-      email,
-      password,
-      nickName,
-      country
-    );
-
-    // 3 - set cookie and send response to client
+    // set cookie and send response to client
     res
       .cookie("token", token, COOKIE_SETTINGS)
       .formatResponse(
@@ -80,7 +69,7 @@ export class AuthController {
    * @returns {Promise<void>} - A promise that resolves when the response is sent.
    * @throws {CustomError} - If the token is not sent.
    */
-  static async verifyToken(req, res) {
+  async verifyToken(req, res) {
     const { token } = req.cookies;
 
     // 1 - val if token was sent
@@ -89,23 +78,23 @@ export class AuthController {
     }
 
     // 2 - pass data to service and get data of user
-    const user = await AuthService.verifyToken(token);
+    const user = await this.#authService.verifyToken(token);
 
     // 3 - send response to client
     res.status(200).success({ user, message: "Token is valid" });
   }
 
   // TODO: esto donde se esta usando ??
-  static async verifyTokenEmail(req, res) {
+  async verifyTokenEmail(req, res) {
     const { token } = req.body;
 
     if (!token) {
-      throw new CustomError("Not_Token", 401);
+      throw new AppError("Not_Token", 401);
     }
-    const user = await AuthService.verifyEmail(token);
+    const user = await this.#authService.verifyEmail(token);
     res.status(200).success({ user, message: "Token is valid" });
   }
 
   // not implmented yet
-  static async forgotPassword(req, res) {}
+  async forgotPassword(req, res) {}
 }

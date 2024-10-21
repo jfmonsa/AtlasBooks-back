@@ -1,28 +1,46 @@
-// file for data base connection (postgresql)
-import dotenv from "dotenv";
-dotenv.config();
 import pg from "pg";
 const { Pool } = pg;
 
-let pool = null;
-const DB_ENV = process.env.DB_ENV;
+/** Singleton class to manage the database connection */
+class Database {
+  constructor() {
+    this.pool = null;
+  }
 
-if (DB_ENV === "prod") {
-  pool = new Pool({
-    connectionString: process.env.POSTGRES_URL,
-  });
-} else {
-  pool = new Pool({
-    user: process.env.LOCALDB_USER,
-    host: process.env.LOCALDB_HOST,
-    database: process.env.LOCALDB_NAME,
-    password: process.env.LOCALDB_PASSWORD,
-    port: process.env.LOCALDB_PORT,
-  });
+  initialize() {
+    if (this.pool) return;
+
+    const DB_ENV = process.env.DB_ENV;
+    const config =
+      DB_ENV === "prod"
+        ? { connectionString: process.env.POSTGRES_URL }
+        : {
+            user: process.env.LOCALDB_USER,
+            host: process.env.LOCALDB_HOST,
+            database: process.env.LOCALDB_NAME,
+            password: process.env.LOCALDB_PASSWORD,
+            port: process.env.LOCALDB_PORT,
+          };
+
+    this.pool = new Pool(config);
+
+    // Test connection
+    this.pool
+      .connect()
+      .then(() => {console.log(`-> 🗂️  Connection to (${DB_ENV}) DB ok\n`)
+      
+    })
+      .catch(err => {
+        console.error("Database connection error:", err);
+        process.exit(1);
+      });
+  }
+
+  getPool() {
+    if (!this.pool) this.initialize();
+    return this.pool;
+  }
 }
-pool.connect(err => {
-  if (err) throw err;
-  console.log(`🗂️  Conexion a la base de datos -${DB_ENV}- completada`);
-});
 
-export { pool };
+// Singleton instance
+export const db = new Database();

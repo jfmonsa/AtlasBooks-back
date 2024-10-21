@@ -1,8 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config()
-
 const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((origin) => origin.trim())
+  ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim())
   : [
       "https://atlas-books-back.vercel.app",
       "http://localhost:5173",
@@ -16,7 +13,8 @@ const corsOptions = {
       : callback(new Error("Not allowed by CORS").message);
   },
   credentials: true,
-  SameSite: "None", secure : true
+  SameSite: "None",
+  secure: true,
 };
 
 export default corsOptions;

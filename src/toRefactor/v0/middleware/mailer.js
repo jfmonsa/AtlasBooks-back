@@ -1,5 +1,3 @@
-import dotenv from 'dotenv';
-dotenv.config()
 import { transporter } from "../utils/mailer.js";
 import jwt from "jsonwebtoken";
 
@@ -27,15 +25,14 @@ export const sendMail = async (req, res, email, url) => {
   }
 };
 
-export const sendMailRecovery = async (req, res, id ,email, url) => {
+export const sendMailRecovery = async (req, res, id, email, url) => {
   try {
-    
-    const tokenmail = jwt.sign({id ,email }, process.env.JWT_SECRET, {
+    const tokenmail = jwt.sign({ id, email }, process.env.JWT_SECRET, {
       expiresIn: "60m",
     });
-    
+
     const verficationLink = `http://localhost:5173/${url}/${tokenmail}`;
-    
+
     await transporter.sendMail({
       from: `"New Email" <${process.env.MAILER_USER}>`,
       to: email,

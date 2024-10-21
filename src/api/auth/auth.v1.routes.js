@@ -1,9 +1,12 @@
 import { Router } from "express";
+import container from "../../config/di-container.js";
 import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
 import { apiVersionMiddleware } from "../../middlewares/apiVersionMiddleware.js";
-import { AuthController } from "./auth.v1.controller.js";
+import validateDTO from "../../middlewares/validateDTO.js";
+import registerDTO from "./dto/register.v1.dto.js";
 
 const router = Router({ mergeParams: true });
+const authController = container.resolve("authController");
 
 /**
  * @swagger
@@ -49,9 +52,9 @@ const router = Router({ mergeParams: true });
  *           description: Password for the user account.
  *           format: password
  *           example: TesteandoEstoxd32+
- *         nickName:
+ *         nickname:
  *           type: string
- *           description: Nickname of the user.
+ *           description: nickname of the user.
  *           example: test2
  *         country:
  *           type: string
@@ -116,7 +119,8 @@ const router = Router({ mergeParams: true });
 router.post(
   "/register",
   apiVersionMiddleware(1),
-  asyncErrorHandler(AuthController.register)
+  validateDTO(registerDTO),
+  asyncErrorHandler(authController.register)
 ); //  /api/v1/auth/register
 // router.post("/login", asyncHandler(AuthController.login)); // /api/v1/auth/login
 // router.post("/logout", asyncHandler(AuthController.logout)); // /api/v1/auth/logout
