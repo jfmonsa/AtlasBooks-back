@@ -1,4 +1,4 @@
-import { pool } from "../../../config/db.js";
+import { pool } from "../../../db.js";
 
 export const getUserByNicknameOrEmail = async email => {
   const user = await pool.query(

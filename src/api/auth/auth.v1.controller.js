@@ -1,6 +1,6 @@
-import { Joi, validate, passwordField } from "../../common/validations.js";
-import { HTTP_CODES } from "../../common/httpCodes.js";
-import { ValidationError } from "../../common/exeptions.js";
+import { Joi, validate, passwordField } from "../../helpers/validations.js";
+import { HTTP_CODES } from "../../helpers/httpCodes.js";
+import { ValidationError } from "../../helpers/exeptions.js";
 
 import { AuthService } from "./auth.v1.service.js";
 

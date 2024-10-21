@@ -22,7 +22,7 @@ if (DB_ENV === "prod") {
 }
 pool.connect(err => {
   if (err) throw err;
-  console.log(`Conexion a la base de datos ${DB_ENV} completada`);
+  console.log(`🗂️  Conexion a la base de datos -${DB_ENV}- completada`);
 });
 
 export { pool };

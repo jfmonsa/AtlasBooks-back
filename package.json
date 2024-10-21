@@ -8,7 +8,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "node --watch src/app.js",
+    "dev": "node --env-file .env --watch src/app.js",
     "lint": "npx eslint",
     "lint:fix": "npx eslint . --fix ",
     "format": "prettier --write .",

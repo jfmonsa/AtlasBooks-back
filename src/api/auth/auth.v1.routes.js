@@ -1,6 +1,6 @@
 import { Router } from "express";
-import asyncErrorHandler from "../../common/middlewares/asyncErrorHandler.js";
-import { apiVersionMiddleware } from "../../common/middlewares/apiVersionMiddleware.js";
+import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
+import { apiVersionMiddleware } from "../../middlewares/apiVersionMiddleware.js";
 import { AuthController } from "./auth.v1.controller.js";
 
 const router = Router({ mergeParams: true });

@@ -1,5 +1,5 @@
-import { HTTP_CODES } from "../httpCodes.js";
-import { AppError, ValidationError } from "../exeptions.js";
+import { HTTP_CODES } from "../helpers/httpCodes.js";
+import { AppError, ValidationError } from "../helpers/exeptions.js";
 /**
  * Error middleware
  * @param {Object} err

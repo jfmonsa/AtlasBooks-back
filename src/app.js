@@ -1,17 +1,15 @@
 import express from "express";
-import dotenv from "dotenv";
 // middlewares
 import cors from "cors";
-import corsOptions from "./common/config/cors.js";
+import corsOptions from "./config/cors.js";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import { formatResponse } from "./common/middlewares/formatResponse.js";
-import { errorHandler } from "./common/middlewares/errorMiddleware.js";
+import { formatResponse } from "./middlewares/formatResponse.js";
+import { errorHandler } from "./middlewares/errorMiddleware.js";
 // api
-import { swaggerDocs as swaggerDocsV1 } from "./api/v1/swagger.js";
-import router_modular_v1 from "./api/v1/router.js";
-
-dotenv.config();
+import { swaggerDocs as swaggerDocsV1 } from "./config/swagger.js";
+//import router_modular_v1 from "./api/v1/router.js";
+import router from "./api/router.js";
 
 const app = express();
 
@@ -35,13 +33,14 @@ if (process.env.SERVER_ENV === "dev") {
 app.use(formatResponse);
 
 // Routes API Rest
-app.use("/api/v1", router_modular_v1);
+//app.use("/api/v1", router_modular_v1);
+app.use("/api/:version", router);
 
 // handling errors
 app.use(errorHandler);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 app.listen(port, () => {
   swaggerDocsV1(app);
-  console.log(`Server at: http://localhost:${port}`);
+  console.log(`💻 Server at: ${process.env.SERVER_URL}`);
 });

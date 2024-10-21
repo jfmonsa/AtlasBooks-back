@@ -21,13 +21,13 @@ const loadRoutes = async () => {
       if (file.endsWith(".routes.js")) {
         try {
           // Dynamic importing of the route file
-          console.log(path.join(__dirname, module, file));
           let routeModule = await import(path.join(__dirname, module, file));
-          router.use(`/${module}`, routeModule.default); // Use the module name as the base route
+          // Use the module name as the base route
+          router.use(`/${module}`, routeModule.default);
         } catch (error) {
-          console.error(error);
-          //throw new Error(error);
-          //throw new Error(`Error importing ${module} module`);
+          throw new Error(
+            `Error loading routes from ${module}/${file}: ${error}`
+          );
         }
       }
     }

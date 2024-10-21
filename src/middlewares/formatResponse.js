@@ -1,4 +1,4 @@
-import { HTTP_CODES } from "../httpCodes.js";
+import { HTTP_CODES } from "../helpers/httpCodes.js";
 
 /** Middleware to format responses
  *
