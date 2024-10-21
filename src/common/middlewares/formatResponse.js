@@ -1,3 +1,5 @@
+import { HTTP_CODES } from "../httpCodes.js";
+
 /** Middleware to format responses
  *
  * define custom functions to res object, this functions will
@@ -5,10 +7,11 @@
  */
 export const formatResponse = (req, res, next) => {
   // for success responses
-  res.formatResponse = (data, statusCode) => {
+  res.formatResponse = (data, message, statusCode = HTTP_CODES.OK) => {
     res.status(statusCode).json({
       success: true,
       statusCode,
+      message,
       data,
     });
   };

@@ -26,8 +26,6 @@ export class AuthController {
     // TODO: cambiar userNickname por userNicknameOrEmail
     const { userNicknameOrEmail, userPassword } = req.body;
 
-    //TODO: val things with express validator
-    //TODO: also validate confirm password equals to password and drop user prefix in property values
     // 1 - req validations
     if (!userNicknameOrEmail || !userPassword) {
       throw new CustomError("Missing fields", 400);
@@ -72,7 +70,8 @@ export class AuthController {
     res
       .cookie("token", token, COOKIE_SETTINGS)
       .formatResponse(
-        { user: newUser, message: "User created successfully" },
+        { user: newUser },
+        "User created successfully",
         HTTP_CODES.CREATED
       );
   }
