@@ -121,7 +121,7 @@ router.post(
   apiVersionMiddleware(1),
   validateDTO(registerDTO),
   asyncErrorHandler(authController.register)
-); //  /api/v1/auth/register
+);
 // router.post("/login", asyncHandler(AuthController.login)); // /api/v1/auth/login
 // router.post("/logout", asyncHandler(AuthController.logout)); // /api/v1/auth/logout
 // router.post("/verifyToken", asyncHandler(AuthController.verifyToken)); //  /api/v1/auth/verifyToken

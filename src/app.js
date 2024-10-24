@@ -62,4 +62,4 @@ class Server {
 }
 
 const server = new Server();
-server.create();
+await server.create();

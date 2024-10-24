@@ -17,7 +17,7 @@ const options_v1 = {
       description: "Development server",
     },
   ],
-  apis: ["./src/api/**/v1.route.js"],
+  apis: ["src/api/**/*.routes.js"],
 };
 
 const swaggerSpecs = swaggerJsdoc(options_v1);
