@@ -45,20 +45,6 @@ export default class UserRepository extends BaseRepository {
 }
 
 /*
-  export const createDefaultBookList = async (client, userId) => {
-  await client.query(
-    `INSERT INTO book_list (title, descriptionl, datel, idusercreator, ispublic) 
-     VALUES ($1, $2, $3, $4, $5)`,
-    [
-      "Me Gusta",
-      "Aquí se muestran los libros a los que les has dado 'me gusta'.",
-      new Date(),
-      userId,
-      false,
-    ]
-  );
-};
-
 export const getUserByNicknameOrEmail = async email => {
   const user = await pool.query(
     "SELECT * FROM users WHERE email = $1 or nickname = $1",

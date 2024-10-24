@@ -30,9 +30,9 @@ export function setupDIContainer() {
   });
 
   console.log(
-    "Registered dependencies:",
+    "Registered dependencies in global DI container:",
     Object.keys(container.registrations),
-    "\n"
+    "\n + Learn more in /docs/architecture.md \n"
   );
 }
 

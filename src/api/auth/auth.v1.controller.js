@@ -20,6 +20,20 @@ export default class AuthController {
     this.forgotPassword = this.forgotPassword.bind(this);
   }
 
+  async register(req, res) {
+    // pass data to service and get data of new user and token
+    const { newUser, token } = await this.#authService.register(req.body);
+
+    // set cookie and send response to client
+    res
+      .cookie("token", token, COOKIE_SETTINGS)
+      .formatResponse(
+        { user: newUser },
+        "User created successfully",
+        HTTP_CODES.CREATED
+      );
+  }
+
   /**
    * Logs in a user.
    *
@@ -45,20 +59,6 @@ export default class AuthController {
     // 3 - set cookie and response to client
     res.cookie("token", token, COOKIE_SETTINGS);
     res.status(200).success(user);
-  }
-
-  async register(req, res) {
-    // pass data to service and get data of new user and token
-    const { newUser, token } = await this.#authService.register(req.body);
-
-    // set cookie and send response to client
-    res
-      .cookie("token", token, COOKIE_SETTINGS)
-      .formatResponse(
-        { user: newUser },
-        "User created successfully",
-        HTTP_CODES.CREATED
-      );
   }
 
   /**

@@ -1,6 +1,11 @@
-# Get Started
+## Documentación
 
-## Install dependencies
+1. [Sobre la Arquitectura](docs/architecture.md)
+
+
+## Get Started
+
+### Install dependencies
 
 Run the following commands in the root directory of this project
 
@@ -8,7 +13,7 @@ Run the following commands in the root directory of this project
 npm install
 ```
 
-## To run a developer server
+### To run a developer server
 
 ```bash
 npm run start

@@ -27,9 +27,9 @@ class Database {
     // Test connection
     this.pool
       .connect()
-      .then(() => {console.log(`-> 🗂️  Connection to (${DB_ENV}) DB ok\n`)
-      
-    })
+      .then(() => {
+        console.log(`-> 🗂️  Connection to (${DB_ENV}) DB ok\n`);
+      })
       .catch(err => {
         console.error("Database connection error:", err);
         process.exit(1);
