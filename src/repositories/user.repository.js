@@ -2,8 +2,11 @@ import BaseRepository from "./base.repository.js";
 
 /** Represents a repository for interacting with the users table. */
 export default class UserRepository extends BaseRepository {
-  constructor() {
+  #bookListRepository;
+
+  constructor({ bookListRepository }) {
     super("users");
+    this.#bookListRepository = bookListRepository;
   }
 
   async getUserByEmail(email) {
@@ -24,33 +27,31 @@ export default class UserRepository extends BaseRepository {
     return result?.[0] || null;
   }
 
-  async createUser({ name, email, password, nickname, country }, client) {
+  async createUser(userData, client) {
+    console.log("inicio de createUser");
     const newUser = await super.create(
       {
-        nameu: name,
-        email: email,
-        passwordu: password,
-        nickname: nickname,
-        country: country,
-        registerdate: "NOW()",
-        statusu: true,
-        isadmin: false,
-        pathprofilepic: "../storage/usersProfilePic/default.webp",
+        ...userData,
+        registerDate: "NOW()",
+        isActive: true,
+        isAdmin: false,
+        profileImgPath: "../storage/usersProfilePic/default.webp",
       },
       client
     );
-    delete newUser.passwordu;
+    console.log("New user created:", newUser);
+    delete newUser.password;
+    return newUser;
+  }
+
+  // insert data with transaction (safety for multiple insertions)
+  async createUserWithDetails(userData) {
+    console.log("inicio de createUserWithDetails");
+    let newUser;
+    await super.transaction(async client => {
+      newUser = await this.createUser(userData, client);
+      await this.#bookListRepository.createDefaultList(newUser.id, client);
+    });
     return newUser;
   }
 }
-
-/*
-export const getUserByNicknameOrEmail = async email => {
-  const user = await pool.query(
-    "SELECT * FROM users WHERE email = $1 or nickname = $1",
-    [email]
-  );
-  return user.rows?.[0];
-};
-
-  */

@@ -22,8 +22,8 @@ const authController = container.resolve("authController");
  *           schema:
  *             $ref: '#/components/schemas/RegisterUser'
  *     responses:
- *       200:
- *         description: Successfully registered the user.
+ *       201:
+ *         description: User created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -38,15 +38,15 @@ const authController = container.resolve("authController");
  *     RegisterUser:
  *       type: object
  *       properties:
- *         name:
+ *         fullName:
  *           type: string
- *           description: Name of the user.
- *           example: test2
+ *           description: Full name of the user.
+ *           example: test9
  *         email:
  *           type: string
  *           description: User's email address.
  *           format: email
- *           example: test2@mail.com
+ *           example: test9@mail.com
  *         password:
  *           type: string
  *           description: Password for the user account.
@@ -54,12 +54,12 @@ const authController = container.resolve("authController");
  *           example: TesteandoEstoxd32+
  *         nickname:
  *           type: string
- *           description: nickname of the user.
- *           example: test2
+ *           description: Nickname of the user.
+ *           example: test9
  *         country:
  *           type: string
  *           description: Country of the user.
- *           example: PA
+ *           example: CO
  *
  *     UserResponse:
  *       type: object
@@ -68,6 +68,14 @@ const authController = container.resolve("authController");
  *           type: boolean
  *           description: Whether the operation was successful.
  *           example: true
+ *         statusCode:
+ *           type: integer
+ *           description: The status code of the response.
+ *           example: 201
+ *         message:
+ *           type: string
+ *           description: A success message.
+ *           example: "User created successfully"
  *         data:
  *           type: object
  *           properties:
@@ -77,44 +85,40 @@ const authController = container.resolve("authController");
  *                 id:
  *                   type: integer
  *                   description: The user ID.
- *                   example: 13
- *                 nameu:
+ *                   example: 17
+ *                 fullName:
  *                   type: string
- *                   description: The name of the user.
- *                   example: test2
+ *                   description: The full name of the user.
+ *                   example: test9
  *                 nickname:
  *                   type: string
  *                   description: The nickname of the user.
- *                   example: test2
+ *                   example: test9
  *                 email:
  *                   type: string
  *                   description: The email address of the user.
- *                   example: test2@mail.com
+ *                   example: test9@mail.com
  *                 country:
  *                   type: string
  *                   description: The country of the user.
- *                   example: PA
- *                 registerdate:
+ *                   example: CO
+ *                 registerDate:
  *                   type: string
  *                   format: date-time
  *                   description: The registration date of the user.
- *                   example: 2024-09-30T05:00:00.000Z
- *                 pathprofilepic:
+ *                   example: 2024-10-25T05:00:00.000Z
+ *                 profileImgPath:
  *                   type: string
  *                   description: The path to the user's profile picture.
  *                   example: ../storage/usersProfilePic/default.webp
- *                 statusu:
+ *                 isActive:
  *                   type: boolean
  *                   description: The status of the user.
  *                   example: true
- *                 isadmin:
+ *                 isAdmin:
  *                   type: boolean
  *                   description: Whether the user is an admin.
  *                   example: false
- *         message:
- *           type: string
- *           description: A success message.
- *           example: "User created successfully"
  */
 router.post(
   "/register",

@@ -6,16 +6,18 @@ export default class BookList extends BaseRepository {
   }
 
   async createDefaultList(userId, client) {
-    super.create(
+    console.log("inicio de createDefaultList");
+    await super.create(
       {
         title: "Me Gusta",
-        descriptionl:
+        description:
           "Aquí se muestran los libros a los que les has dado 'me gusta'.",
-        datel: "NOW()",
-        idusercreator: userId,
-        ispublic: false,
+        dateCreatedAt: "NOW()",
+        idUser: userId,
+        isPublic: false,
       },
       client
     );
+    console.log("Fin de createDefaultList");
   }
 }

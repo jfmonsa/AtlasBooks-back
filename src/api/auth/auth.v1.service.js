@@ -4,14 +4,12 @@ import { createAccessToken } from "../../helpers/handleJWT.js";
 
 export default class AuthService {
   #userRepository;
-  #bookListRepository;
 
-  constructor({ userRepository, bookListRepository }) {
+  constructor({ userRepository }) {
     this.#userRepository = userRepository;
-    this.#bookListRepository = bookListRepository;
   }
 
-  async register({ name, email, password, nickname, country }) {
+  async register({ fullName, nickname, email, password, country }) {
     // check if user already exists
     if (
       (await this.#userRepository.getUserByEmail(email)) ||
@@ -21,25 +19,17 @@ export default class AuthService {
     }
 
     const passwordHash = await bycript.hash(password, 10);
-    let newUser;
 
-    // insert data with transaction (safety for multiple insertions)
-    await this.#userRepository.transaction(async client => {
-      newUser = await this.#userRepository.createUser(
-        {
-          name,
-          email,
-          password: passwordHash,
-          nickname,
-          country,
-        },
-        client
-      );
-      await this.#bookListRepository.createDefaultList(newUser.id, client);
+    const newUser = await this.#userRepository.createUserWithDetails({
+      fullName,
+      email,
+      password: passwordHash,
+      nickname,
+      country,
     });
 
-    // 3 - return new user
     const token = createAccessToken(newUser);
+
     return {
       newUser,
       token,

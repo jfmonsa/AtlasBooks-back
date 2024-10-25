@@ -1,4 +1,8 @@
 import { db } from "../config/db.js";
+import {
+  camelToSnake,
+  snakeToCamelObjectDeep,
+} from "../helpers/caseConversions.js";
 
 /**
  * Represents a base model for interacting with a database table.
@@ -22,8 +26,10 @@ export default class BaseRepository {
       params,
       rowCount: result.rowCount,
     });
-
-    return result.rows;
+    const resultTransformed = result.rows.map(row =>
+      snakeToCamelObjectDeep(row)
+    );
+    return resultTransformed;
   }
 
   async findAll() {
@@ -43,7 +49,7 @@ export default class BaseRepository {
     const values = Object.values(conditions);
     const query = `
       SELECT * FROM ${this.tableName}
-      WHERE ${keys.map((key, i) => `${key} = $${i + 1}`).join(" AND ")}`;
+      WHERE ${keys.map((key, i) => `${camelToSnake(key)} = $${i + 1}`).join(" AND ")}`;
 
     const rows = await this.executeQuery(query, values);
     return rows.length > 0 ? rows : null;
@@ -53,7 +59,7 @@ export default class BaseRepository {
     const keys = Object.keys(data);
     const values = Object.values(data);
     const query = `
-      INSERT INTO ${this.tableName} (${keys.join(", ")})
+      INSERT INTO ${this.tableName} (${keys.map(key => camelToSnake(key)).join(", ")})
       VALUES (${keys.map((_, i) => `$${i + 1}`).join(", ")})
       RETURNING *`;
     const rows = await this.executeQuery(query, values, client);
@@ -65,7 +71,7 @@ export default class BaseRepository {
     const values = Object.values(data);
     const query = `
       UPDATE ${this.tableName}
-      SET ${keys.map((key, i) => `${key} = $${i + 1}`).join(", ")}
+      SET ${keys.map((key, i) => `${camelToSnake(key)} = $${i + 1}`).join(", ")}
       WHERE id = $${keys.length + 1} RETURNING *`;
 
     const rows = await this.executeQuery(query, [...values, id], client);
