@@ -1,9 +1,8 @@
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
-import { AppError, ValidationError } from "../../helpers/exeptions.js";
+import { ValidationError } from "../../helpers/exeptions.js";
 
 const COOKIE_SETTINGS = {
-  sameSite: "none",
-  secure: true,
+  secure: process.env.NODE_ENV === "prod",
   httpOnly: true,
 };
 
@@ -16,7 +15,6 @@ export default class AuthController {
     this.login = this.login.bind(this);
     this.register = this.register.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
-    this.verifyTokenEmail = this.verifyTokenEmail.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
   }
 
@@ -42,23 +40,11 @@ export default class AuthController {
    * @returns {Promise<void>} - A promise that resolves when the login process is complete.
    */
   async login(req, res) {
-    // TODO: cambiar userNickname por userNicknameOrEmail
-    const { userNicknameOrEmail, userPassword } = req.body;
-
-    // 1 - req validations
-    if (!userNicknameOrEmail || !userPassword) {
-      throw new AppError("Missing fields", 400);
-    }
-
-    // 2 - pass data to service and get data of user and token
-    const { user, token } = await this.#authService.login(
-      userNicknameOrEmail,
-      userPassword
-    );
+    const { user, token } = await this.#authService.login(req.body);
 
     // 3 - set cookie and response to client
     res.cookie("token", token, COOKIE_SETTINGS);
-    res.status(200).success(user);
+    res.formatResponse({ user }, "User logged in successfully");
   }
 
   /**
@@ -72,27 +58,13 @@ export default class AuthController {
   async verifyToken(req, res) {
     const { token } = req.cookies;
 
-    // 1 - val if token was sent
     if (!token) {
       throw new ValidationError("Token not wasn't sent");
     }
 
-    // 2 - pass data to service and get data of user
     const user = await this.#authService.verifyToken(token);
 
-    // 3 - send response to client
-    res.status(200).success({ user, message: "Token is valid" });
-  }
-
-  // TODO: esto donde se esta usando ??
-  async verifyTokenEmail(req, res) {
-    const { token } = req.body;
-
-    if (!token) {
-      throw new AppError("Not_Token", 401);
-    }
-    const user = await this.#authService.verifyEmail(token);
-    res.status(200).success({ user, message: "Token is valid" });
+    res.formatResponse({ user }, "Token verified successfully");
   }
 
   // not implmented yet

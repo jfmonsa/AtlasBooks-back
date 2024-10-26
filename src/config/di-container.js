@@ -30,8 +30,8 @@ export function setupDIContainer() {
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),
     // other dependencies
-    createAccessToken: asFunction(createAccessToken),
-    verifyToken: asFunction(verifyToken),
+    createAccessToken: asFunction(() => createAccessToken),
+    verifyToken: asFunction(() => verifyToken),
   });
 
   console.log(

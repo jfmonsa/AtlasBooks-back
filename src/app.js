@@ -37,7 +37,7 @@ class Server {
     this.app.use("/storage", express.static("storage"));
 
     // log requests
-    if (process.env.SERVER_ENV === "dev") {
+    if (process.env.NODE_ENV === "dev") {
       this.app.use(morgan("dev"));
     }
 

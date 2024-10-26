@@ -21,14 +21,16 @@ export default class BaseRepository {
     const result = await client.query(queryText, params);
     const endTime = performance.now();
 
+    const resultTransformed = result.rows.map(row =>
+      snakeToCamelObjectDeep(row)
+    );
     console.log(`Query executed in ${endTime - beginTime}ms:`, {
       query: queryText,
       params,
       rowCount: result.rowCount,
+      result: resultTransformed,
     });
-    const resultTransformed = result.rows.map(row =>
-      snakeToCamelObjectDeep(row)
-    );
+
     return resultTransformed;
   }
 

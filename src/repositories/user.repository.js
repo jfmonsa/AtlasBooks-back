@@ -51,4 +51,8 @@ export default class UserRepository extends BaseRepository {
     });
     return newUser;
   }
+
+  async getUserById(userId) {
+    return await super.findById(userId);
+  }
 }

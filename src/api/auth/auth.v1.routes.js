@@ -4,63 +4,15 @@ import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
 import { apiVersionMiddleware } from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 import registerDTO from "./dto/register.v1.dto.js";
+import loginDTO from "./dto/login.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const authController = container.resolve("authController");
 
 /**
  * @swagger
- * /api/v1/auth/register:
- *   post:
- *     summary: Register a new user
- *     tags:
- *       - Auth
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RegisterUser'
- *     responses:
- *       201:
- *         description: User created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/UserResponse'
- *       400:
- *         description: Invalid input, object invalid.
- *       500:
- *         description: Server error.
- *
  * components:
  *   schemas:
- *     RegisterUser:
- *       type: object
- *       properties:
- *         fullName:
- *           type: string
- *           description: Full name of the user.
- *           example: test9
- *         email:
- *           type: string
- *           description: User's email address.
- *           format: email
- *           example: test9@mail.com
- *         password:
- *           type: string
- *           description: Password for the user account.
- *           format: password
- *           example: TesteandoEstoxd32+
- *         nickname:
- *           type: string
- *           description: Nickname of the user.
- *           example: test9
- *         country:
- *           type: string
- *           description: Country of the user.
- *           example: CO
- *
  *     UserResponse:
  *       type: object
  *       properties:
@@ -120,15 +72,146 @@ const authController = container.resolve("authController");
  *                   description: Whether the user is an admin.
  *                   example: false
  */
+/**
+ * @swagger
+ * /api/v1/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/RegisterUser'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       500:
+ *         description: Server error.
+ *
+ * components:
+ *   schemas:
+ *     RegisterUser:
+ *       type: object
+ *       properties:
+ *         fullName:
+ *           type: string
+ *           description: Full name of the user.
+ *           example: test9
+ *         email:
+ *           type: string
+ *           description: User's email address.
+ *           format: email
+ *           example: test9@mail.com
+ *         password:
+ *           type: string
+ *           description: Password for the user account.
+ *           format: password
+ *           example: TesteandoEstoxd32+
+ *         nickname:
+ *           type: string
+ *           description: Nickname of the user.
+ *           example: test9
+ *         country:
+ *           type: string
+ *           description: Country of the user.
+ *           example: CO
+ */
+
 router.post(
   "/register",
   apiVersionMiddleware(1),
   validateDTO(registerDTO),
   asyncErrorHandler(authController.register)
 );
-// router.post("/login", asyncHandler(AuthController.login)); // /api/v1/auth/login
+
+/**
+ * @swagger
+ * /api/v1/auth/login:
+ *   post:
+ *     summary: Log in a user
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/LoginUser'
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       500:
+ *         description: Server error.
+ *
+ * components:
+ *   schemas:
+ *     LoginUser:
+ *       type: object
+ *       properties:
+ *         userNicknameOrEmail:
+ *           type: string
+ *           description: User's nickname or email address.
+ *           example: test10
+ *         userPassword:
+ *           type: string
+ *           description: Password for the user account.
+ *           format: password
+ *           example: TesteandoEstoxd32+
+ */
+router.post(
+  "/login",
+  apiVersionMiddleware(1),
+  validateDTO(loginDTO),
+  asyncErrorHandler(authController.login)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/verifyToken:
+ *   post:
+ *     summary: Verify a user's token
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: cookie
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The JWT token to verify.
+ *     responses:
+ *       200:
+ *         description: Token verified successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UserResponse'
+ *       400:
+ *         description: Invalid token.
+ *       500:
+ *         description: Server error.
+ */
+
+router.post(
+  "/verifyToken",
+  apiVersionMiddleware(1),
+  asyncErrorHandler(authController.verifyToken)
+);
 // router.post("/logout", asyncHandler(AuthController.logout)); // /api/v1/auth/logout
-// router.post("/verifyToken", asyncHandler(AuthController.verifyToken)); //  /api/v1/auth/verifyToken
-// router.post("/verifyTokenEmail", asyncHandler(AuthController.verifyTokenEmail)); //  /api/v1/auth/verifyTokenEmail
 
 export default router;
