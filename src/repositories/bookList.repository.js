@@ -6,7 +6,6 @@ export default class BookList extends BaseRepository {
   }
 
   async createDefaultList(userId, client) {
-    console.log("inicio de createDefaultList");
     await super.create(
       {
         title: "Me Gusta",
@@ -18,6 +17,5 @@ export default class BookList extends BaseRepository {
       },
       client
     );
-    console.log("Fin de createDefaultList");
   }
 }

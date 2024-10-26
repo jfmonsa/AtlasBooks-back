@@ -3,7 +3,7 @@
  * load all services, controllers and repositories  across the whole app
  *
  */
-import { createContainer, asClass } from "awilix";
+import { createContainer, asClass, asFunction } from "awilix";
 
 // import dependencies
 // + repositories
@@ -13,6 +13,8 @@ import BookListRepository from "../repositories/bookList.repository.js";
 import AuthService from "../api/auth/auth.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
+// + other dependencies
+import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 
 const container = createContainer({
   strict: true,
@@ -27,6 +29,9 @@ export function setupDIContainer() {
     // repositories
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),
+    // other dependencies
+    createAccessToken: asFunction(createAccessToken),
+    verifyToken: asFunction(verifyToken),
   });
 
   console.log(

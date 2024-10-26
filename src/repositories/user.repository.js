@@ -28,7 +28,6 @@ export default class UserRepository extends BaseRepository {
   }
 
   async createUser(userData, client) {
-    console.log("inicio de createUser");
     const newUser = await super.create(
       {
         ...userData,
@@ -39,14 +38,12 @@ export default class UserRepository extends BaseRepository {
       },
       client
     );
-    console.log("New user created:", newUser);
     delete newUser.password;
     return newUser;
   }
 
   // insert data with transaction (safety for multiple insertions)
   async createUserWithDetails(userData) {
-    console.log("inicio de createUserWithDetails");
     let newUser;
     await super.transaction(async client => {
       newUser = await this.createUser(userData, client);

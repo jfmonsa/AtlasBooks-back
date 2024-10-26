@@ -11,7 +11,7 @@ export function createAccessToken(payload) {
   }
 }
 
-export const tokenVerify = async token => {
+export const verifyToken = async token => {
   try {
     return jwt.verify(token, JWT_SECRET);
   } catch {

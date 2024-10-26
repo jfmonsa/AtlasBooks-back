@@ -1,24 +1,27 @@
 import { AppError } from "../../helpers/exeptions.js";
-import bycript from "bcryptjs";
-import { createAccessToken } from "../../helpers/handleJWT.js";
+import bcrypt from "bcryptjs";
 
 export default class AuthService {
   #userRepository;
+  #createAccessToken;
+  #verifyToken;
 
-  constructor({ userRepository }) {
+  constructor({ userRepository, createAccessToken, verifyToken }) {
     this.#userRepository = userRepository;
+    this.#createAccessToken = createAccessToken;
+    this.#verifyToken = verifyToken;
   }
 
   async register({ fullName, nickname, email, password, country }) {
-    // check if user already exists
-    if (
+    const userExists =
       (await this.#userRepository.getUserByEmail(email)) ||
-      (await this.#userRepository.getUserByNickname(nickname))
-    ) {
+      (await this.#userRepository.getUserByNickname(nickname));
+
+    if (userExists) {
       throw new AppError("User already exists", 400);
     }
 
-    const passwordHash = await bycript.hash(password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const newUser = await this.#userRepository.createUserWithDetails({
       fullName,
@@ -28,7 +31,7 @@ export default class AuthService {
       country,
     });
 
-    const token = createAccessToken(newUser);
+    const token = this.#createAccessToken(newUser);
 
     return {
       newUser,
@@ -45,28 +48,23 @@ export default class AuthService {
    * @throws {AppError} - Throws a custom error if the user is not registered, not active, or if the password is incorrect.
    */
   async login(userNicknameOrEmail, userPassword) {
-    // 1 - val if user is registered
     const user =
       await this.#userRepository.getUserByNicknameOrEmail(userNicknameOrEmail);
 
     if (!user) {
       throw new AppError("userNickname or password is incorrect", 400);
-    }
-    // 2 - val if user is active
-    else if (!user.statusu) {
+    } else if (!user.status) {
       throw new AppError("user is not active", 400);
     }
-    // 3 - val password is correct
-    const validPassword = await bycript.compare(userPassword, user.passwordu);
 
-    if (!validPassword) {
+    const isValidPassword = await bcrypt.compare(userPassword, user.password);
+
+    if (!isValidPassword) {
       throw new AppError("userNickname or password is incorrect", 400);
     }
 
-    // 4 - the create access token
-    const token = createAccessToken(user);
+    const token = this.#createAccessToken(user);
 
-    // 5 - return the user and access token
     return {
       user,
       token,
