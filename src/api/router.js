@@ -27,6 +27,6 @@ async function loadRoutes() {
     }
   }
   return router;
-};
+}
 
 export default loadRoutes;

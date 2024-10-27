@@ -15,6 +15,7 @@ export default class AuthController {
     this.login = this.login.bind(this);
     this.register = this.register.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
+    this.logout = this.logout.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
   }
 
@@ -65,6 +66,11 @@ export default class AuthController {
     const user = await this.#authService.verifyToken(token);
 
     res.formatResponse({ user }, "Token verified successfully");
+  }
+
+  async logout(_req, res) {
+    res.cookie("token", "", { expires: new Date(0) });
+    res.sendStatus(HTTP_CODES.OK);
   }
 
   // not implmented yet

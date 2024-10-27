@@ -1,7 +1,7 @@
 import { Router } from "express";
 import container from "../../config/di-container.js";
 import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
-import { apiVersionMiddleware } from "../../middlewares/apiVersionMiddleware.js";
+import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 import registerDTO from "./dto/register.v1.dto.js";
 import loginDTO from "./dto/login.v1.dto.js";
@@ -212,6 +212,31 @@ router.post(
   apiVersionMiddleware(1),
   asyncErrorHandler(authController.verifyToken)
 );
-// router.post("/logout", asyncHandler(AuthController.logout)); // /api/v1/auth/logout
+
+/**
+ * @swagger
+ * /api/v1/auth/logout:
+ *   post:
+ *     summary: Logout a user
+ *     tags:
+ *       - Auth
+ *     parameters:
+ *       - in: cookie
+ *         name: token
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The JWT token.
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *       500:
+ *         description: Server error.
+ */
+router.post(
+  "/logout",
+  apiVersionMiddleware(1),
+  asyncErrorHandler(authController.logout)
+);
 
 export default router;

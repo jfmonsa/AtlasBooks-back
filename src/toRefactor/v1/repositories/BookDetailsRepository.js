@@ -1,25 +1,4 @@
-// repositorios??? son consultas que pueden llegar a ser compartidas por varios servicios
 import { pool } from "../../../db.js";
-
-/**
- * get a book based on its id
- */
-export const getBookById = async idBook => {
-  const book = await pool.query(`SELECT * FROM BOOK WHERE id = $1`, [idBook]);
-  return book.rows.length > 0 ? book.rows[0] : null;
-};
-
-/**
- * get the authors of a book based on book id
- */
-export const getBookAuthors = async idBook => {
-  const authors = await pool.query(
-    `SELECT author FROM BOOK_AUTHORS WHERE idBook = $1`,
-    [idBook]
-  );
-  return authors.rows.map(authorObj => authorObj.author);
-};
-
 /**
  * Get the languages of a book based on book id
  */

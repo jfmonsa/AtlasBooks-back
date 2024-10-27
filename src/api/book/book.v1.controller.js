@@ -1,14 +1,34 @@
-import { CustomError } from "../middlewares/errorMiddleware.js";
-import { BookService } from "./books.service.js";
+import { AppError } from "../../helpers/exeptions.js";
+import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
-export class BooksController {
-  static async getById(req, res) {
+export class BookController {
+  #bookService;
+
+  constructor({ bookService }) {
+    this.#bookService = bookService;
+
+    this.getById = this.getById.bind(this);
+    // this.create = this.create.bind(this);
+    // this.update = this.update.bind(this);
+    // this.delete = this.delete.bind(this);
+    // this.download = this.download.bind(this);
+    // this.rate = this.rate.bind(this);
+    // this.getRateOfBookByUserId = this.getRateOfBookByUserId.bind(this);
+  }
+
+  async getById(req, res) {
     const idBook = req.params.id;
 
-    const bookDetails = await BookService.getBookWithDetails(idBook);
+    if (!Number.isInteger(idBook))
+      throw new AppError("Invalid id", HTTP_CODES.BAD_REQUEST);
 
-    if (!bookDetails) throw new CustomError("Book not found", 404);
-    res.status(200).success(bookDetails);
+    const bookDetails = await this.#bookService.getBookWithDetails(idBook);
+
+    if (!bookDetails) {
+      throw new AppError("Book not found", HTTP_CODES.NOT_FOUND);
+    }
+
+    res.formatResponse(bookDetails);
   }
 
   static async create(req, res) {
@@ -53,20 +73,23 @@ export class BooksController {
     // res.status(201).download(filePath);
   }
 
-  static async rate(req, res) {
+  async rate(req, res) {
     const { idbook, rate } = req.body;
     const { id } = req.user;
 
-    await BookService.rateBook(id, idbook, rate);
+    await this.#bookService.rate(id, idbook, rate);
 
-    res.status(200).success({ message: "Rating sent successfully" });
+    res.formatResponse({ message: "Rating sent successfully" });
   }
 
   static async getRateOfBookByUserId(req, res) {
     const idbook = req.params.idbook; // id of book
     const { id: userId } = req.user; // id of user
 
-    const rateValue = await BookService.getRateOfBookByUserId(userId, idbook);
-    res.status(200).success({ rateValue });
+    const rateValue = await this.#bookService.getRateOfBookByUserId(
+      userId,
+      idbook
+    );
+    res.formatResponse({ rate: rateValue });
   }
 }

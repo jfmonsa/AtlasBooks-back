@@ -1,60 +1,23 @@
-// for getBookWithDetails
-import {
-  getBookById,
-  getBookAuthors,
-  getBookLanguages,
-  getBookFileNames,
-  getBookFileTypes,
-  getBookRate,
-  getBookSubcategories,
-} from "../../toRefactor/v1/repositories/BookDetailsRepository.js";
-
 //import { getBookComments } from "../repositories/BookCommentsRepository.js";
 // TODO: revisar esto
 
-// for getRelatedBooks
-import {
-  getRelatedBooksBySubcategory,
-  getRelatedBooksByCategory,
-  getRandomBooks,
-} from "../../toRefactor/v1/repositories/BookRelatedBooksRepository.js";
+export default class BookService {
+  #bookRepository;
 
-// for createBook
-import {
-  uploadCoverImage,
-  insertBookRecord,
-  uploadAndInsertBookFiles,
-  insertBookAuthors,
-  insertBookLanguages,
-  insertBookSubcategories,
-} from "../../toRefactor/v1/repositories/BookCreateRepository.js";
-import { withTransaction } from "../../../utils/withTransaction.js";
+  constructor({ bookRepository }) {
+    this.#bookRepository = bookRepository;
+  }
 
-// for downloadBook
-import {
-  getFileInfo,
-  verifyFileExistsInCloudinary,
-  registerDownload,
-} from "../../toRefactor/v1/repositories/BookDownloadRepository.js";
-
-// for rateBook
-import {
-  getRate,
-  updateRate,
-  insertRate,
-  //getRateOfBookByUserId,
-} from "../../toRefactor/v1/repositories/BookRateRepository.js";
-
-export class BookService {
   /**
    * Retrieves a book with its details.
    *
    * @param {string} id - The ID of the book.
    * @returns {Promise<Object>} The book with its details.
    */
-  static async getBookWithDetails(id) {
+  async getBookWithDetails(id) {
     // validate that book exits
-    const book = await getBookById(id);
+    const book = await this.#bookRepository.getById(id);
+
     if (!book) return null;
 
     // return data
@@ -100,12 +63,7 @@ export class BookService {
    * @returns {Promise<Array>} The array of related books.
    */
   // TODO: modificar para que use solo el id del libro
-  static async getBookRelatedBooks(
-    idBook,
-    subcategoryIds,
-    categoryId,
-    numberOfBooks
-  ) {
+  async getBookRelatedBooks(idBook, subcategoryIds, categoryId, numberOfBooks) {
     // get data
     let relatedBooks = await getRelatedBooksBySubcategory(
       idBook,

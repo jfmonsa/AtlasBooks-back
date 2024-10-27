@@ -3,7 +3,7 @@
  * @param {number} version - The version number to compare against.
  * @returns {Function} - The actual middleware function.
  */
-export function apiVersionMiddleware(version) {
+export default function apiVersionMiddleware(version) {
   return function (req, _res, next) {
     // removes the "v" and turns into a number
     const requestVersion = parseInt(req.params.version.substring(1));

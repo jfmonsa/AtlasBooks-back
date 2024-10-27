@@ -9,10 +9,13 @@ import { createContainer, asClass, asFunction } from "awilix";
 // + repositories
 import UserRepository from "../repositories/user.repository.js";
 import BookListRepository from "../repositories/bookList.repository.js";
+import BookRepository from "../repositories/book.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
+import BookService from "../api/book/book.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
+import { BookController } from "../api/book/book.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 
@@ -24,11 +27,14 @@ export function setupDIContainer() {
   container.register({
     // controllers
     authController: asClass(AuthController),
+    bookController: asClass(BookController),
     // services
     authService: asClass(AuthService),
+    bookService: asClass(BookService),
     // repositories
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),
+    bookRepository: asClass(BookRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),
