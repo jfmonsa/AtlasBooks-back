@@ -19,9 +19,6 @@ export class BookController {
   async getById(req, res) {
     const idBook = req.params.id;
 
-    if (!Number.isInteger(idBook))
-      throw new AppError("Invalid id", HTTP_CODES.BAD_REQUEST);
-
     const bookDetails = await this.#bookService.getBookWithDetails(idBook);
 
     if (!bookDetails) {

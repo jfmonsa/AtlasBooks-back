@@ -25,9 +25,7 @@ export default class BookRepository extends BaseRepository {
       [idBook]
     );
 
-    const authorsList = authors.rows.map(
-      authorRowObject => authorRowObject.author
-    );
+    const authorsList = authors.map(authorRowObject => authorRowObject.author);
     return authorsList;
   }
 
@@ -37,7 +35,7 @@ export default class BookRepository extends BaseRepository {
       [idBook]
     );
 
-    const languagesList = langs.rows.map(langObj => langObj.language);
+    const languagesList = langs.map(langObj => langObj.language);
     return languagesList;
   }
 
@@ -47,8 +45,8 @@ export default class BookRepository extends BaseRepository {
       [idBook]
     );
 
-    return fileNames.rows.length > 0
-      ? fileNames.rows[0].filePath.split(",").map(file => file.trim())
+    return fileNames.length > 0
+      ? fileNames[0].filePath.split(",").map(file => file.trim())
       : [];
   }
 

@@ -7,7 +7,7 @@ export default class BookRateRepository extends BaseRepository {
 
   async getAVGBookRate(idBook) {
     const queryRate = await this.executeQuery(
-      `SELECT ROUND(AVG(ratevalue),1) as rate_avg FROM BOOK_RATE WHERE id_book = $1`,
+      `SELECT ROUND(AVG(rate_value),1) as rate_avg FROM BOOK_RATE WHERE id_book = $1`,
       [idBook]
     );
     return queryRate.rows > 0 ? queryRate.rows[0].rate_avg : 0;

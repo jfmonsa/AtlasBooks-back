@@ -9,7 +9,7 @@ export default class BookCommentsRepository extends BaseRepository {
     const comments = await super.executeQuery(
       `
       SELECT
-        U.nickname, U.profile_img_path, C.id, C.id_user, C.id_book, C.date_commented, C.text_comment
+        U.nickname, U.profile_img_path, C.id, C.id_user, C.id_book, C.date_commented, C.text_commented
       FROM users U
       JOIN book_comment C ON U.id = C.id_user
       WHERE id_book = $1
@@ -18,7 +18,7 @@ export default class BookCommentsRepository extends BaseRepository {
       [idBook]
     );
 
-    return comments.rows.lenght > 0 ? comments.rows : [];
+    return comments.lenght > 0 ? comments : [];
   }
 
   async createComment(idUser, idBook, text) {
@@ -27,7 +27,7 @@ export default class BookCommentsRepository extends BaseRepository {
       [idUser, idBook, "NOW()", text]
     );
 
-    return newComment.rows[0].idcoment;
+    return newComment[0].idcoment;
   }
 
   async updateComment(id, text) {
@@ -36,7 +36,7 @@ export default class BookCommentsRepository extends BaseRepository {
       [text, "NOW()", id]
     );
 
-    return updatedComment.rows[0];
+    return updatedComment[0];
   }
 
   async deleteComment(id) {
