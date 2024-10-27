@@ -80,24 +80,11 @@ export default class BaseRepository {
     return rows[0];
   }
 
-  async delete(id, client = this.pool) {
-    // TODO: Implement this
+  async delete(_id, _client = this.pool) {
     throw new Error("Method not implemented");
   }
 
-  async softDelete(id, client = this.pool) {
-    // TODO: Implement this
-    /*
-    const query = `
-      UPDATE ${this.tableName}
-      SET deleted_at = CURRENT_TIMESTAMP
-      WHERE id = $1 AND deleted_at IS NULL
-      RETURNING *
-    `;
-    
-    const rows = await this.executeQuery(query, [id]);
-    return rows[0];
-    */
+  async softDelete(_id, _client = this.pool) {
     throw new Error("Method not implemented");
   }
 

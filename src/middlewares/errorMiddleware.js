@@ -11,7 +11,7 @@ import { AppError, ValidationError } from "../helpers/exeptions.js";
 export const errorHandler = (err, _req, res, _next) => {
   // log error
   // TODO: use logger like winston
-  console.log(err.stack);
+  console.log(err);
 
   const statusCode = err.statusCode || HTTP_CODES.INTERNAL_SERVER_ERROR;
 

@@ -1,11 +1,21 @@
-//import { getBookComments } from "../repositories/BookCommentsRepository.js";
-// TODO: revisar esto
+import { ValidationError } from "../../helpers/exeptions.js";
 
 export default class BookService {
   #bookRepository;
+  #bookRateRepository;
+  #bookCommentsRepository;
+  #bookCategoriesRepository;
 
-  constructor({ bookRepository }) {
+  constructor({
+    bookRepository,
+    bookRateRepository,
+    bookCommentsRepository,
+    bookCategoriesRepository,
+  }) {
     this.#bookRepository = bookRepository;
+    this.#bookRateRepository = bookRateRepository;
+    this.#bookCommentsRepository = bookCommentsRepository;
+    this.#bookCategoriesRepository = bookCategoriesRepository;
   }
 
   /**
@@ -15,35 +25,46 @@ export default class BookService {
    * @returns {Promise<Object>} The book with its details.
    */
   async getBookWithDetails(id) {
-    // validate that book exits
     const book = await this.#bookRepository.getById(id);
 
+    // check if book exists
     if (!book) return null;
 
-    // return data
-    // TODO: Aquí falta usar getBookFileTypes
     const [authors, languages, files, rate, subcategories, comments] =
       await Promise.all([
-        getBookAuthors(id),
-        getBookLanguages(id),
-        getBookFileNames(id),
-        getBookRate(id),
-        getBookSubcategories(id),
-        // TODO: revisar esto
-        //getBookComments(id),
+        this.#bookRepository.getBookAuthors(id),
+        this.#bookRepository.getBookLanguages(id),
+        this.#bookRepository.getBookFileNames(id),
+        this.#bookRateRepository.getAVGBookRate(id),
+        this.#bookCategoriesRepository.getBookCategories(id),
+        this.#bookCommentsRepository.getBookComments(id),
       ]);
+    const fileExtensions = await this.#bookRepository.getBookFileTypes(files);
 
-    const relatedBooks = await this.getBookRelatedBooks(
+    const relatedBooks = await this.#getBookRelatedBooks(
       id,
       subcategories.subcategoryIds,
       subcategories.categoryId
     );
+
+    console.log({
+      ...book,
+      authors,
+      languages,
+      files,
+      fileExtensions,
+      rate,
+      subcategories,
+      relatedBooks,
+      comments,
+    });
 
     return {
       ...book,
       authors,
       languages,
       files,
+      fileExtensions,
       rate,
       subcategories,
       relatedBooks,
@@ -62,25 +83,30 @@ export default class BookService {
    * @param {string} categoryId - The ID of the category.
    * @returns {Promise<Array>} The array of related books.
    */
-  // TODO: modificar para que use solo el id del libro
-  async getBookRelatedBooks(idBook, subcategoryIds, categoryId, numberOfBooks) {
+  async #getBookRelatedBooks(
+    idBook,
+    subcategoryIds,
+    categoryId,
+    numberOfBooks
+  ) {
     // get data
-    let relatedBooks = await getRelatedBooksBySubcategory(
+    let relatedBooks = await this.#bookRepository.getRelatedBooksBySubcategory(
       idBook,
       subcategoryIds
     );
 
     if (relatedBooks.length < numberOfBooks) {
-      const additionalBooks = await getRelatedBooksByCategory(
-        idBook,
-        categoryId,
-        relatedBooks.length - numberOfBooks
-      );
+      const additionalBooks =
+        await this.#bookRepository.getRelatedBooksByCategory(
+          idBook,
+          categoryId,
+          relatedBooks.length - numberOfBooks
+        );
       relatedBooks.concat(additionalBooks);
     }
 
     if (relatedBooks.length < numberOfBooks) {
-      const randomBooks = await getRandomBooks(
+      const randomBooks = await this.#bookRepository.getRelatedBooksRandomly(
         idBook,
         relatedBooks.length - numberOfBooks
       );
@@ -96,46 +122,34 @@ export default class BookService {
     }));
   }
 
-  /**
-   * Creates a new book (in db) with the provided book data.
-   *
-   * @param {Object} bookData - The data of the book to be created.
-   * @param {Object} req - The request object containing the book cover and files.
-   * @returns {Promise<void>} - A promise that resolves when the book is created.
-   */
-  static async createBook(bookData, req) {
-    const coverUrl = await uploadCoverImage(req.files.cover);
-    console.log(coverUrl);
-
-    await withTransaction(async client => {
-      const bookId = await insertBookRecord(client, { ...bookData, coverUrl });
-      await uploadAndInsertBookFiles(client, bookId, req.files.bookFiles);
-      await insertBookAuthors(client, bookId, bookData.authors);
-      await insertBookLanguages(client, bookId, bookData.languages);
-      await insertBookSubcategories(client, bookId, bookData.subcategoryIds);
-    });
-  }
-
-  static async downloadBook(bookId, userId) {
-    const fileInfo = await getFileInfo(fileId, bookId);
-    await verifyFileExistsInCloudinary(fileInfo.pathF);
-    await registerDownload(userId, bookId);
-    await streamFileToClient(res, fileInfo);
-  }
-
-  static async rateBook(userId, bookId, rate) {
-    //Validate if the user has already rated the book
-    const rated = await getRate(userId, bookId);
-    //If the user has already rated the book -> update the rate
-    if (rated) {
-      await updateRate(userId, bookId, rate);
-    } else {
-      //If the user has not rated the book -> insert the rate
-      await insertRate(userId, bookId, rate);
+  async create(bookData) {
+    // extra validations
+    if (!bookData.authors || bookData.authors.length === 0) {
+      throw new ValidationError("There should be at least one author");
     }
+    if (!bookData.languages || bookData.languages.length === 0) {
+      throw new ValidationError("There should be at least one language");
+    }
+    if (!bookData.subcategoryIds || bookData.subcategoryIds.length === 0) {
+      throw new ValidationError("There should be at least one subcategory");
+    }
+
+    await this.#bookRepository.createBookWithDetails(bookData);
   }
 
-  static async getRateOfBookByUserId(userId, bookId) {
-    return await getRate(userId, bookId);
+  static async downloadBook(_bookId, _userId) {
+    throw new Error("Method not implemented.");
+    // const fileInfo = await getFileInfo(fileId, bookId);
+    // await verifyFileExistsInCloudinary(fileInfo.pathF);
+    // await registerDownload(userId, bookId);
+    // await streamFileToClient(res, fileInfo);
+  }
+
+  async rateBook(userId, bookId, rate) {
+    await this.#bookRateRepository.upsertRate(bookId, userId, rate);
+  }
+
+  async getRateOfBookByUserId(userId, bookId) {
+    return await this.#bookRateRepository.getBookRateByUser(userId, bookId);
   }
 }

@@ -4,13 +4,15 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       "https://atlas-books-back.vercel.app",
       "http://localhost:5173",
       "https://atlasbooks.netlify.app",
+      "*"
     ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    allowedOrigins.includes(origin) || !origin
-      ? callback(null, true)
-      : callback(new Error("Not allowed by CORS").message);
+    callback(null, true);
+    // allowedOrigins.includes(origin) || !origin
+    //   ? callback(null, true)
+    //   : callback(new Error("Not allowed by CORS").message);
   },
   credentials: true,
   SameSite: "None",

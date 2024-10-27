@@ -1,4 +1,4 @@
-import { AppError } from "../../helpers/exeptions.js";
+import { AppError, ValidationError } from "../../helpers/exeptions.js";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
 export class BookController {
@@ -8,12 +8,12 @@ export class BookController {
     this.#bookService = bookService;
 
     this.getById = this.getById.bind(this);
-    // this.create = this.create.bind(this);
-    // this.update = this.update.bind(this);
-    // this.delete = this.delete.bind(this);
-    // this.download = this.download.bind(this);
-    // this.rate = this.rate.bind(this);
-    // this.getRateOfBookByUserId = this.getRateOfBookByUserId.bind(this);
+    this.create = this.create.bind(this);
+    this.update = this.update.bind(this);
+    this.delete = this.delete.bind(this);
+    this.download = this.download.bind(this);
+    this.rate = this.rate.bind(this);
+    this.getRateOfBookByUserId = this.getRateOfBookByUserId.bind(this);
   }
 
   async getById(req, res) {
@@ -31,33 +31,45 @@ export class BookController {
     res.formatResponse(bookDetails);
   }
 
-  static async create(req, res) {
-    // TODO: use express validator as middleware
-    // isbn, title, yearReleased, authors, languages
+  async create(req, res) {
+    const { authors, languages, subcategoryIds } = req.body;
+    const { cover: coverBookFile, bookFiles } = req.files;
+
+    if (!bookFiles) {
+      throw new ValidationError(
+        "There should be at least one book file, pdf or epub"
+      );
+    }
+
     const bookData = req.body;
-    await BookService.createBook({
+    await this.#bookService.create({
       ...bookData,
       authors: Array.isArray(authors) ? authors : JSON.parse(authors),
       languages: Array.isArray(languages) ? languages : JSON.parse(languages),
       subcategoryIds: Array.isArray(subcategoryIds)
         ? subcategoryIds
         : JSON.parse(subcategoryIds),
+      coverBookFile,
+      bookFiles,
     });
 
-    res.status(201).success({
-      message: "Book created successfully",
-    });
+    res.formatResponse(null, "Book created successfully", HTTP_CODES.CREATED);
   }
 
-  static async update(req, res) {}
+  async update(_req, _res) {
+    throw new Error("Method not implemented.");
+  }
 
-  static async delete(req, res) {}
+  async delete(_req, _res) {
+    throw new Error("Method not implemented.");
+  }
 
-  static async download(req, res) {
-    const { fileName } = req.params;
-    const { userId, bookId } = req.body;
+  async download(_req, _res) {
+    // const { fileName } = req.params;
+    // const { userId, bookId } = req.body;
 
-    const fileInfo = await BookService.getFileInfo(fileName, bookId);
+    // const fileInfo = await BookService.getFileInfo(fileName, bookId);
+    throw new Error("Method not implemented.");
     // stream file to client
     /**
      * const streamFileToClient = async (res, fileInfo) => {
@@ -74,21 +86,20 @@ export class BookController {
   }
 
   async rate(req, res) {
-    const { idbook, rate } = req.body;
-    const { id } = req.user;
+    const { idBook, rate } = req.body;
+    const { id: userId } = req.user;
 
-    await this.#bookService.rate(id, idbook, rate);
-
-    res.formatResponse({ message: "Rating sent successfully" });
+    await this.#bookService.rate(userId, idBook, rate);
+    res.formatResponse(null, "Book rated successfully", HTTP_CODES.CREATED);
   }
 
-  static async getRateOfBookByUserId(req, res) {
-    const idbook = req.params.idbook; // id of book
-    const { id: userId } = req.user; // id of user
+  async getRateOfBookByUserId(req, res) {
+    const idBook = req.params.idBook;
+    const { id: userId } = req.user;
 
     const rateValue = await this.#bookService.getRateOfBookByUserId(
       userId,
-      idbook
+      idBook
     );
     res.formatResponse({ rate: rateValue });
   }

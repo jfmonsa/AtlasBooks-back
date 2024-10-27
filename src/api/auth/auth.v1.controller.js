@@ -20,10 +20,8 @@ export default class AuthController {
   }
 
   async register(req, res) {
-    // pass data to service and get data of new user and token
     const { newUser, token } = await this.#authService.register(req.body);
 
-    // set cookie and send response to client
     res
       .cookie("token", token, COOKIE_SETTINGS)
       .formatResponse(
@@ -43,7 +41,6 @@ export default class AuthController {
   async login(req, res) {
     const { user, token } = await this.#authService.login(req.body);
 
-    // 3 - set cookie and response to client
     res.cookie("token", token, COOKIE_SETTINGS);
     res.formatResponse({ user }, "User logged in successfully");
   }
@@ -73,6 +70,7 @@ export default class AuthController {
     res.sendStatus(HTTP_CODES.OK);
   }
 
-  // not implmented yet
-  async forgotPassword(req, res) {}
+  async forgotPassword(_req, _res) {
+    throw new Error("Not implemented yet");
+  }
 }

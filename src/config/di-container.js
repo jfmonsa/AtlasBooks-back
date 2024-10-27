@@ -10,6 +10,9 @@ import { createContainer, asClass, asFunction } from "awilix";
 import UserRepository from "../repositories/user.repository.js";
 import BookListRepository from "../repositories/bookList.repository.js";
 import BookRepository from "../repositories/book.repository.js";
+import BookRateRepository from "../repositories/bookRate.repository.js";
+import BookCommentsRepository from "../repositories/bookComments.repository.js";
+import BookCategoriesRepository from "../repositories/bookCategories.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
@@ -35,6 +38,9 @@ export function setupDIContainer() {
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),
     bookRepository: asClass(BookRepository),
+    bookRateRepository: asClass(BookRateRepository),
+    bookCommentsRepository: asClass(BookCommentsRepository),
+    bookCategoriesRepository: asClass(BookCategoriesRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),

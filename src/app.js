@@ -29,7 +29,7 @@ class Server {
     this.app.use(cors(corsOptions));
     // support post requests
     this.app.use(express.json());
-    // converts form data in objects, extended false = accept only simple data, not matrices and so on
+    // for form data
     this.app.use(express.urlencoded({ extended: false }));
     // support cookies
     this.app.use(cookieParser());
