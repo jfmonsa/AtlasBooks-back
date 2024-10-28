@@ -1,16 +1,100 @@
 import BaseRepository from "./base.repository.js";
 import cloudinary from "../config/cloudinary.js";
+import { getFileExtension } from "../helpers/fileExtension.js";
+
+const CLOUDINARY_FOLDERS = {
+  COVER: "bookCoverPics",
+  FILES: "books",
+};
+
+const DEFAULT_COVER =
+  "https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg";
 
 export default class BookFilesRepository extends BaseRepository {
   constructor() {
     super("BOOK_FILES");
   }
+  // For Uploading
+  async uploadCoverImage(coverFile) {
+    if (!coverFile || coverFile.length === 0) {
+      const result = await cloudinary.api.resource(DEFAULT_COVER);
+      return result.secure_url;
+    }
 
+    // Upload the file buffer directly to Cloudinary
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          folder: CLOUDINARY_FOLDERS.COVER,
+          resource_type: "image",
+        },
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+      // Write the buffer to the stream
+      uploadStream.end(coverFile[0].buffer);
+    });
+    return uploadResult.secure_url;
+  }
+
+  /**
+   * Uploads and inserts the book files into the database.
+   * @param {number} bookId - The ID of the book.
+   * @param {Array} files - The book files to be uploaded and inserted.
+   * @param {Object} client - The database client.
+   */
+  async uploadAndInsertBookFiles(bookId, files, client) {
+    const uploadPromises = files.map(async file => {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: CLOUDINARY_FOLDERS.FILES,
+            resource_type: "auto", // It allows to upload PDFs
+          },
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+        uploadStream.end(file.buffer);
+      });
+
+      if (!uploadResult || uploadResult.error) {
+        throw new Error(
+          `Failed to upload book file: ${uploadResult?.error?.message || "Unknown error"}`
+        );
+      }
+
+      await super.create(
+        {
+          idBook: bookId,
+          filePath: uploadResult.secure_url,
+          originalName: file.originalname,
+        },
+        client
+      );
+
+      return uploadResult;
+    });
+
+    await Promise.all(uploadPromises);
+  }
+
+  // For Downloading
   async getFileCloudUrl(fileName, bookId) {
-    const result = await super.executeQuery(
-      `SELECT file_path FROM ${this.tableName} WHERE original_name = $1 AND id_book = $2`,
-      [fileName, bookId]
-    );
+    const result = await super.findWhere({
+      originalName: fileName,
+      idBook: bookId,
+    });
+
     return result.length > 0 ? result[0].filePath : null;
   }
 
@@ -32,5 +116,22 @@ export default class BookFilesRepository extends BaseRepository {
        DO UPDATE SET date_downloaded = EXCLUDED.date_downloaded`,
       [userId, bookId]
     );
+  }
+
+  async getBookFileNames(idBook) {
+    const result = await super.executeQuery(
+      `SELECT original_name FROM BOOK_FILES WHERE id_book = $1`,
+      [idBook]
+    );
+
+    return result.length > 0
+      ? result[0].originalName.split(",").map(file => file.trim())
+      : [];
+  }
+
+  async getBookFileTypes(bookFiles) {
+    return [
+      ...new Set(bookFiles.map(file => getFileExtension(file).toUpperCase())),
+    ];
   }
 }

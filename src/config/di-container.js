@@ -14,6 +14,8 @@ import BookRateRepository from "../repositories/bookRate.repository.js";
 import BookCommentsRepository from "../repositories/bookComments.repository.js";
 import BookCategoriesRepository from "../repositories/bookCategories.repository.js";
 import BookFilesRepository from "../repositories/bookFiles.repository.js";
+import BookAuthorsRepository from "../repositories/bookAuthors.repository.js";
+import BookLanguagesRepository from "../repositories/bookLanguages.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
@@ -44,6 +46,8 @@ export function setupDIContainer() {
     bookCommentsRepository: asClass(BookCommentsRepository),
     bookCategoriesRepository: asClass(BookCategoriesRepository),
     bookFilesRepository: asClass(BookFilesRepository),
+    bookAuthorsRepository: asClass(BookAuthorsRepository),
+    bookLanguagesRepository: asClass(BookLanguagesRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),

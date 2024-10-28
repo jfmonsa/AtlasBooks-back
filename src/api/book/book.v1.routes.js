@@ -15,7 +15,7 @@ const authRequired = container.resolve("authRequired");
 
 /**
  * @swagger
- * /api/v1/books/{id}:
+ * /api/v1/book/{id}:
  *   get:
  *     summary: Get a book by ID
  *     tags:
@@ -158,7 +158,7 @@ router.get(
 );
 /**
  * @swagger
- * /api/v1/books:
+ * /api/v1/book:
  *   post:
  *     summary: Create a new book
  *     tags:
@@ -268,7 +268,7 @@ router.post(
 
 /**
  * @swagger
- * /api/v1/books/download:
+ * /api/v1/book/download:
  *   post:
  *     summary: Download a book
  *     tags:
@@ -294,25 +294,10 @@ router.post(
  *       200:
  *         description: Book downloaded successfully
  *         content:
- *           application/json:
+ *           application/octet-stream:
  *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   description: Whether the operation was successful.
- *                   example: true
- *                 statusCode:
- *                   type: integer
- *                   description: The status code of the response.
- *                   example: 200
- *                 data:
- *                   type: object
- *                   properties:
- *                     fileCloudUrl:
- *                       type: string
- *                       description: The URL of the downloaded file in the cloud.
- *                       example: "http://res.cloudinary.com/dmsfqvzjq/image/upload/v1730087425/books/m5fnvhfcy7dsxeeoyumy.pdf"
+ *               type: string
+ *               format: binary
  *       400:
  *         description: Invalid input, object invalid.
  *       401:
@@ -330,7 +315,7 @@ router.post(
 
 /**
  * @swagger
- * /api/v1/books/rate/{idBook}:
+ * /api/v1/book/rate/{idBook}:
  *   get:
  *     summary: Get the rate of a book by book ID
  *     tags:
@@ -383,7 +368,7 @@ router.get(
 
 /**
  * @swagger
- * /api/v1/books/rate:
+ * /api/v1/book/rate:
  *   post:
  *     summary: Rate a book
  *     tags:

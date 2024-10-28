@@ -2,7 +2,7 @@ import BaseRepository from "./base.repository.js";
 
 export default class BookCategories extends BaseRepository {
   constructor() {
-    super("book_category");
+    super("category");
   }
 
   async getBookCategories(idBook) {
@@ -25,18 +25,30 @@ export default class BookCategories extends BaseRepository {
     // get category father of the first subcategory
     const { idCategoryFather } = subCategoriesRows[0];
 
-    const categoryRows = await super.executeQuery(
-      `SELECT id, name as categoryName 
-            FROM CATEGORY 
-            WHERE id = $1`,
-      [idCategoryFather]
-    );
+    const categoryRows = await super.findById(idCategoryFather);
 
     return {
       subcategories: subCategoriesRows.map(subObj => subObj.name),
       subcategoriesIds: subCategoriesRows.map(subObj => subObj.subcategoryid),
-      category: categoryRows.length > 0 ? categoryRows[0].categoryName : null,
+      category: categoryRows.length > 0 ? categoryRows[0].name : null,
       categoryId: categoryRows.length > 0 ? categoryRows[0].id : null,
     };
+  }
+
+  // book creation
+
+  /**
+   * Inserts the book subcategories into the database.
+   * @param {number} bookId - The ID of the book.
+   * @param {Array} subcategoryIds - The IDs of the subcategories.
+   */
+  async insertBookSubcategories(bookId, subcategoryIds, client) {
+    if (subcategoryIds && subcategoryIds.length > 0) {
+      const query = `
+        INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
+        VALUES ${subcategoryIds.map((_, index) => `($1, $${index + 2})`).join(", ")}
+      `;
+      await super.executeQuery(query, [bookId, ...subcategoryIds], client);
+    }
   }
 }

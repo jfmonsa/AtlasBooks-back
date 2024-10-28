@@ -6,6 +6,8 @@ export default class BookService {
   #bookCommentsRepository;
   #bookCategoriesRepository;
   #bookFilesRepository;
+  #bookAuthorsRepository;
+  #bookLanguagesRepository;
 
   constructor({
     bookRepository,
@@ -13,12 +15,16 @@ export default class BookService {
     bookCommentsRepository,
     bookCategoriesRepository,
     bookFilesRepository,
+    bookAuthorsRepository,
+    bookLanguagesRepository,
   }) {
     this.#bookRepository = bookRepository;
     this.#bookRateRepository = bookRateRepository;
     this.#bookCommentsRepository = bookCommentsRepository;
     this.#bookCategoriesRepository = bookCategoriesRepository;
     this.#bookFilesRepository = bookFilesRepository;
+    this.#bookAuthorsRepository = bookAuthorsRepository;
+    this.#bookLanguagesRepository = bookLanguagesRepository;
   }
 
   /**
@@ -35,14 +41,15 @@ export default class BookService {
 
     const [authors, languages, files, rate, subcategories, comments] =
       await Promise.all([
-        this.#bookRepository.getBookAuthors(id),
-        this.#bookRepository.getBookLanguages(id),
-        this.#bookRepository.getBookFileNames(id),
+        this.#bookAuthorsRepository.getBookAuthors(id),
+        this.#bookLanguagesRepository.getBookLanguages(id),
+        this.#bookFilesRepository.getBookFileNames(id),
         this.#bookRateRepository.getAVGBookRate(id),
         this.#bookCategoriesRepository.getBookCategories(id),
         this.#bookCommentsRepository.getBookComments(id),
       ]);
-    const fileExtensions = await this.#bookRepository.getBookFileTypes(files);
+    const fileExtensions =
+      await this.#bookFilesRepository.getBookFileTypes(files);
 
     const relatedBooks = await this.#getBookRelatedBooks(
       id,
