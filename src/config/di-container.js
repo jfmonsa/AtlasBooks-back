@@ -21,6 +21,7 @@ import AuthController from "../api/auth/auth.v1.controller.js";
 import { BookController } from "../api/book/book.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
+import authRequired from "../middlewares/authRequired.js";
 
 const container = createContainer({
   strict: true,
@@ -44,6 +45,9 @@ export function setupDIContainer() {
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),
+    authRequired: asFunction(({ authService }) =>
+      authRequired({ authService })
+    ),
   });
 
   console.log(

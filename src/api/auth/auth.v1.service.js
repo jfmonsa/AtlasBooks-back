@@ -87,7 +87,6 @@ export default class AuthService {
     }
 
     const user = await this.#userRepository.getUserById(dataToken.id);
-    console.log(user);
 
     if (!user) {
       throw new AppError("User not found", HTTP_CODES.BAD_REQUEST);

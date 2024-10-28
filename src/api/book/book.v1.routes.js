@@ -4,13 +4,13 @@ import container from "../../config/di-container.js";
 import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
-//import { authRequired } from "../middlewares/authRequired.js";
 // dtos
 import rateBookDTO from "./dto/rate-book.v1.dto.js";
 import createBookDTO from "./dto/create-book.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const bookController = container.resolve("bookController");
+const authRequired = container.resolve("authRequired");
 
 /**
  * @swagger
@@ -162,6 +162,8 @@ router.get(
  *     summary: Create a new book
  *     tags:
  *       - Books
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -253,7 +255,7 @@ router.get(
  */
 router.post(
   "/",
-  //authRequired,
+  authRequired,
   uploadMiddleware.fields([
     { name: "cover", maxCount: 1 },
     { name: "bookFiles", maxCount: 10 },
@@ -273,14 +275,14 @@ router.post(
 
 router.get(
   "/:idBook",
-  //authRequired,
+  authRequired,
   apiVersionMiddleware(1),
   bookController.getRateOfBookByUserId
 );
 
 router.post(
   "/rate",
-  //authRequired,
+  authRequired,
   apiVersionMiddleware(1),
   validateDTO(rateBookDTO),
   bookController.rate

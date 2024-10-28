@@ -8,7 +8,15 @@ import loginDTO from "./dto/login.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const authController = container.resolve("authController");
-
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     cookieAuth:
+ *       type: apiKey
+ *       in: cookie
+ *       name: token
+ */
 /**
  * @swagger
  * components:
@@ -206,7 +214,6 @@ router.post(
  *       500:
  *         description: Server error.
  */
-
 router.post(
   "/verifyToken",
   apiVersionMiddleware(1),
