@@ -273,13 +273,109 @@ router.post(
 //   asyncErrorHandler(bookController.download)
 // );
 
+/**
+ * @swagger
+ * /api/v1/books/rate/{idBook}:
+ *   get:
+ *     summary: Get the rate of a book by book ID
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: path
+ *         name: idBook
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: The ID of the book to retrieve the rate for.
+ *     responses:
+ *       200:
+ *         description: Book rate retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     rate:
+ *                       type: integer
+ *                       description: The rate of the book.
+ *                       example: 5
+ *       400:
+ *         description: Invalid ID supplied.
+ *       404:
+ *         description: Book not found.
+ *       500:
+ *         description: Server error.
+ */
 router.get(
-  "/:idBook",
+  "/rate/:idBook",
   authRequired,
   apiVersionMiddleware(1),
   bookController.getRateOfBookByUserId
 );
 
+/**
+ * @swagger
+ * /api/v1/books/rate:
+ *   post:
+ *     summary: Rate a book
+ *     tags:
+ *       - Books
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idBook:
+ *                 type: integer
+ *                 description: The ID of the book to rate.
+ *                 example: 17
+ *               rate:
+ *                 type: integer
+ *                 description: The rating of the book.
+ *                 example: 5
+ *     responses:
+ *       201:
+ *         description: Book rated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Book rated successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       500:
+ *         description: Server error.
+ */
 router.post(
   "/rate",
   authRequired,

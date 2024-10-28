@@ -47,18 +47,6 @@ export default class BookService {
       subcategories.categoryId
     );
 
-    console.log({
-      ...book,
-      authors,
-      languages,
-      files,
-      fileExtensions,
-      rate,
-      subcategories,
-      relatedBooks,
-      comments,
-    });
-
     return {
       ...book,
       authors,
@@ -145,11 +133,11 @@ export default class BookService {
     // await streamFileToClient(res, fileInfo);
   }
 
-  async rateBook(userId, bookId, rate) {
+  async rate(userId, bookId, rate) {
     await this.#bookRateRepository.upsertRate(bookId, userId, rate);
   }
 
-  async getRateOfBookByUserId(userId, bookId) {
+  async getRateOfBookByUserId(bookId, userId) {
     return await this.#bookRateRepository.getBookRateByUser(userId, bookId);
   }
 }
