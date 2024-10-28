@@ -7,6 +7,7 @@ import validateDTO from "../../middlewares/validateDTO.js";
 // dtos
 import rateBookDTO from "./dto/rate-book.v1.dto.js";
 import createBookDTO from "./dto/create-book.v1.dto.js";
+import downloadBookDTO from "./dto/download-book.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const bookController = container.resolve("bookController");
@@ -100,8 +101,8 @@ const authRequired = container.resolve("authRequired");
  *                       type: array
  *                       items:
  *                         type: string
- *                       description: The URLs of the book files.
- *                       example: ["https://res.cloudinary.com/dmsfqvzjq/image/upload/v1730067151/books/ydi59fyprwmozdwky3sz.pdf"]
+ *                       description: The file names of the book.
+ *                       example: ["MobyDick.pdf"]
  *                     fileExtensions:
  *                       type: array
  *                       items:
@@ -265,13 +266,67 @@ router.post(
   asyncErrorHandler(bookController.create)
 );
 
-// /api/v1/books/:fileName
-// router.post(
-//   "/:fileName",
-//   //authRequired,
-//   apiVersionMiddleware(1),
-//   asyncErrorHandler(bookController.download)
-// );
+/**
+ * @swagger
+ * /api/v1/books/download:
+ *   post:
+ *     summary: Download a book
+ *     tags:
+ *       - Books
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               bookId:
+ *                 type: integer
+ *                 description: The ID of the book to download.
+ *                 example: 22
+ *               fileName:
+ *                 type: string
+ *                 description: The name of the file to download.
+ *                 example: "6.PreParcial1.pdf"
+ *     responses:
+ *       200:
+ *         description: Book downloaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     fileCloudUrl:
+ *                       type: string
+ *                       description: The URL of the downloaded file in the cloud.
+ *                       example: "http://res.cloudinary.com/dmsfqvzjq/image/upload/v1730087425/books/m5fnvhfcy7dsxeeoyumy.pdf"
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       401:
+ *         description: Unauthorized.
+ *       500:
+ *         description: Server error.
+ */
+router.post(
+  "/download",
+  authRequired,
+  apiVersionMiddleware(1),
+  validateDTO(downloadBookDTO),
+  asyncErrorHandler(bookController.download)
+);
 
 /**
  * @swagger
@@ -280,6 +335,8 @@ router.post(
  *     summary: Get the rate of a book by book ID
  *     tags:
  *       - Books
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: path
  *         name: idBook
@@ -331,6 +388,8 @@ router.get(
  *     summary: Rate a book
  *     tags:
  *       - Books
+ *     security:
+ *       - cookieAuth: []
  *     requestBody:
  *       required: true
  *       content:

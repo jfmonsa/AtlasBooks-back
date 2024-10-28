@@ -39,6 +39,7 @@ export class BookController {
     }
 
     const bookData = req.body;
+
     await this.#bookService.create({
       ...bookData,
       authors: Array.isArray(authors) ? authors : JSON.parse(authors),
@@ -61,25 +62,18 @@ export class BookController {
     throw new Error("Method not implemented.");
   }
 
-  async download(_req, _res) {
-    // const { fileName } = req.params;
-    // const { userId, bookId } = req.body;
+  async download(req, res) {
+    const { bookId, fileName } = req.body;
+    const { id: userId } = req.user;
 
-    // const fileInfo = await BookService.getFileInfo(fileName, bookId);
-    throw new Error("Method not implemented.");
-    // stream file to client
-    /**
-     * const streamFileToClient = async (res, fileInfo) => {
-        const { data } = await axios.get(fileInfo.pathF, { responseType: "stream" });
-        res.setHeader(
-          "Content-Disposition",
-          `attachment; filename="${fileInfo.originalFileName}"`
-        );
-        await pipeline(data, res);
-     */
+    const fileCloudUrl = await this.#bookService.downloadBook(
+      userId,
+      bookId,
+      fileName
+    );
 
-    // Envía el archivo al cliente
-    // res.status(201).download(filePath);
+    // fronted will trigger the download
+    res.formatResponse({ fileCloudUrl });
   }
 
   async rate(req, res) {

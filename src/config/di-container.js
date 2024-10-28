@@ -13,6 +13,7 @@ import BookRepository from "../repositories/book.repository.js";
 import BookRateRepository from "../repositories/bookRate.repository.js";
 import BookCommentsRepository from "../repositories/bookComments.repository.js";
 import BookCategoriesRepository from "../repositories/bookCategories.repository.js";
+import BookFilesRepository from "../repositories/bookFiles.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
@@ -42,6 +43,7 @@ export function setupDIContainer() {
     bookRateRepository: asClass(BookRateRepository),
     bookCommentsRepository: asClass(BookCommentsRepository),
     bookCategoriesRepository: asClass(BookCategoriesRepository),
+    bookFilesRepository: asClass(BookFilesRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),

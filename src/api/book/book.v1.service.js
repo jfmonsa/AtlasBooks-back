@@ -1,21 +1,24 @@
-import { ValidationError } from "../../helpers/exeptions.js";
+import { NotFoundError, ValidationError } from "../../helpers/exeptions.js";
 
 export default class BookService {
   #bookRepository;
   #bookRateRepository;
   #bookCommentsRepository;
   #bookCategoriesRepository;
+  #bookFilesRepository;
 
   constructor({
     bookRepository,
     bookRateRepository,
     bookCommentsRepository,
     bookCategoriesRepository,
+    bookFilesRepository,
   }) {
     this.#bookRepository = bookRepository;
     this.#bookRateRepository = bookRateRepository;
     this.#bookCommentsRepository = bookCommentsRepository;
     this.#bookCategoriesRepository = bookCategoriesRepository;
+    this.#bookFilesRepository = bookFilesRepository;
   }
 
   /**
@@ -125,12 +128,26 @@ export default class BookService {
     await this.#bookRepository.createBookWithDetails(bookData);
   }
 
-  static async downloadBook(_bookId, _userId) {
-    throw new Error("Method not implemented.");
-    // const fileInfo = await getFileInfo(fileId, bookId);
-    // await verifyFileExistsInCloudinary(fileInfo.pathF);
-    // await registerDownload(userId, bookId);
-    // await streamFileToClient(res, fileInfo);
+  async downloadBook(userId, bookId, fileName) {
+    const fileCloudUrl = await this.#bookFilesRepository.getFileCloudUrl(
+      fileName,
+      bookId
+    );
+    if (!fileCloudUrl) {
+      throw new NotFoundError("File not exits");
+    }
+
+    try {
+      await this.#bookFilesRepository.verifyFileExistsInCloudinary(
+        fileCloudUrl
+      );
+    } catch (err) {
+      console.log(err);
+      throw new ValidationError("File not exists");
+    }
+
+    await this.#bookFilesRepository.registerDownload(userId, bookId);
+    return fileCloudUrl;
   }
 
   async rate(userId, bookId, rate) {

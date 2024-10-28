@@ -40,13 +40,13 @@ export default class BookRepository extends BaseRepository {
   }
 
   async getBookFileNames(idBook) {
-    const fileNames = await super.executeQuery(
-      `SELECT file_path FROM BOOK_FILES WHERE id_book = $1`,
+    const result = await super.executeQuery(
+      `SELECT original_name FROM BOOK_FILES WHERE id_book = $1`,
       [idBook]
     );
 
-    return fileNames.length > 0
-      ? fileNames[0].filePath.split(",").map(file => file.trim())
+    return result.length > 0
+      ? result[0].originalName.split(",").map(file => file.trim())
       : [];
   }
 
@@ -208,8 +208,8 @@ export default class BookRepository extends BaseRepository {
       }
 
       await super.executeQuery(
-        "INSERT INTO BOOK_FILES (id_book, file_path) VALUES ($1, $2)",
-        [bookId, uploadResult.secure_url],
+        "INSERT INTO BOOK_FILES (id_book, file_path, original_name) VALUES ($1, $2, $3)",
+        [bookId, uploadResult.secure_url, file.originalname],
         client
       );
 

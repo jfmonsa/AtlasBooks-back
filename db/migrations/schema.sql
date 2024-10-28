@@ -19,6 +19,7 @@ CREATE TABLE BOOK_FILES (
     id SERIAL,
     id_book INTEGER,
     file_path VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
 
     PRIMARY KEY(id),
     CONSTRAINT fk_id_book_book_files FOREIGN KEY (id_book) REFERENCES BOOK(id) ON DELETE CASCADE ON UPDATE CASCADE
