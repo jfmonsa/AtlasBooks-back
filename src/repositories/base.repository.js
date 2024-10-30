@@ -17,6 +17,8 @@ export default class BaseRepository {
   }
 
   async executeQuery(queryText, params, client = this.pool) {
+    console.log("Executing query:", { query: queryText, params });
+
     const beginTime = performance.now();
     const result = await client.query(queryText, params);
     const endTime = performance.now();

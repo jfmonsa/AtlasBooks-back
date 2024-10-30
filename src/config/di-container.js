@@ -16,14 +16,17 @@ import BookCategoriesRepository from "../repositories/bookCategories.repository.
 import BookFilesRepository from "../repositories/bookFiles.repository.js";
 import BookAuthorsRepository from "../repositories/bookAuthors.repository.js";
 import BookLanguagesRepository from "../repositories/bookLanguages.repository.js";
+import FeedRecommendedRepository from "../repositories/feedRecommended.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
 import BookCommentsService from "../api/book-comments/book-comments.v1.service.js";
+import FeedRecommenedService from "../api/feed-recommended/feed-recommended.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
 import BookController from "../api/book/book.v1.controller.js";
 import BookCommentsController from "../api/book-comments/book-comments.v1.controller.js";
+import FeedRecommendedController from "../api/feed-recommended/feed-recommended.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 import authRequired from "../middlewares/authRequired.js";
@@ -38,10 +41,12 @@ export function setupDIContainer() {
     authController: asClass(AuthController),
     bookController: asClass(BookController),
     bookCommentsController: asClass(BookCommentsController),
+    feedRecommendedController: asClass(FeedRecommendedController),
     // services
     authService: asClass(AuthService),
     bookService: asClass(BookService),
     bookCommentsService: asClass(BookCommentsService),
+    feedRecommendedService: asClass(FeedRecommenedService),
     // repositories
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),
@@ -52,6 +57,7 @@ export function setupDIContainer() {
     bookFilesRepository: asClass(BookFilesRepository),
     bookAuthorsRepository: asClass(BookAuthorsRepository),
     bookLanguagesRepository: asClass(BookLanguagesRepository),
+    feedRecommendedRepository: asClass(FeedRecommendedRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),
