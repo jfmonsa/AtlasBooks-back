@@ -1,13 +1,14 @@
 import { Router } from "express";
 import uploadMiddleware from "../../config/multer.js";
 import container from "../../config/di-container.js";
-import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
+import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 // dtos
 import rateBookDTO from "./dto/rate-book.v1.dto.js";
 import createBookDTO from "./dto/create-book.v1.dto.js";
 import downloadBookDTO from "./dto/download-book.v1.dto.js";
+import getBookDataV1DTO from "./dto/get-book-data.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const bookController = container.resolve("bookController");
@@ -154,7 +155,8 @@ const authRequired = container.resolve("authRequired");
 router.get(
   "/:id",
   apiVersionMiddleware(1),
-  asyncErrorHandler(bookController.getById)
+  validateDTO(getBookDataV1DTO),
+  errorHandler(bookController.getById)
 );
 /**
  * @swagger
@@ -256,14 +258,14 @@ router.get(
  */
 router.post(
   "/",
+  apiVersionMiddleware(1),
   authRequired,
   uploadMiddleware.fields([
     { name: "cover", maxCount: 1 },
     { name: "bookFiles", maxCount: 10 },
   ]),
-  apiVersionMiddleware(1),
   validateDTO(createBookDTO),
-  asyncErrorHandler(bookController.create)
+  errorHandler(bookController.create)
 );
 
 /**
@@ -302,15 +304,17 @@ router.post(
  *         description: Invalid input, object invalid.
  *       401:
  *         description: Unauthorized.
+ *       404:
+ *         description: File not found or book not exits.
  *       500:
  *         description: Server error.
  */
 router.post(
   "/download",
-  authRequired,
   apiVersionMiddleware(1),
+  authRequired,
   validateDTO(downloadBookDTO),
-  asyncErrorHandler(bookController.download)
+  errorHandler(bookController.download)
 );
 
 /**
@@ -361,9 +365,9 @@ router.post(
  */
 router.get(
   "/rate/:idBook",
-  authRequired,
   apiVersionMiddleware(1),
-  bookController.getRateOfBookByUserId
+  authRequired,
+  errorHandler(bookController.getRateOfBookByUserId)
 );
 
 /**
@@ -422,10 +426,10 @@ router.get(
  */
 router.post(
   "/rate",
-  authRequired,
   apiVersionMiddleware(1),
+  authRequired,
   validateDTO(rateBookDTO),
-  bookController.rate
+  errorHandler(bookController.rate)
 );
 
 export default router;

@@ -2,7 +2,7 @@ import axios from "axios";
 import { AppError, ValidationError } from "../../helpers/exeptions.js";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
-export class BookController {
+export default class BookController {
   #bookService;
 
   constructor({ bookService }) {
@@ -30,15 +30,24 @@ export class BookController {
   }
 
   async create(req, res) {
-    const { authors, languages, subcategoryIds } = req.body;
-    const { cover: coverBookFile, bookFiles } = req.files;
-
-    if (!bookFiles) {
+    // file validation
+    if (!bookFiles || !Array.isArray(bookFiles) || bookFiles.length === 0) {
       throw new ValidationError(
         "There should be at least one book file, pdf or epub"
       );
     }
 
+    const validMimeTypes = ["application/pdf", "application/epub+zip"];
+    for (const file of bookFiles) {
+      if (!validMimeTypes.includes(file.mimetype)) {
+        throw new ValidationError(
+          `Invalid file type: ${file.mimetype}. Only PDF and EPUB files are allowed.`
+        );
+      }
+    }
+
+    const { authors, languages, subcategoryIds } = req.body;
+    const { cover: coverBookFile, bookFiles } = req.files;
     const bookData = req.body;
 
     await this.#bookService.create({

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import container from "../../config/di-container.js";
-import asyncErrorHandler from "../../middlewares/asyncErrorHandler.js";
+import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 import registerDTO from "./dto/register.v1.dto.js";
@@ -138,7 +138,7 @@ router.post(
   "/register",
   apiVersionMiddleware(1),
   validateDTO(registerDTO),
-  asyncErrorHandler(authController.register)
+  errorHandler(authController.register)
 );
 
 /**
@@ -185,7 +185,7 @@ router.post(
   "/login",
   apiVersionMiddleware(1),
   validateDTO(loginDTO),
-  asyncErrorHandler(authController.login)
+  errorHandler(authController.login)
 );
 
 /**
@@ -217,7 +217,7 @@ router.post(
 router.post(
   "/verifyToken",
   apiVersionMiddleware(1),
-  asyncErrorHandler(authController.verifyToken)
+  errorHandler(authController.verifyToken)
 );
 
 /**
@@ -243,7 +243,7 @@ router.post(
 router.post(
   "/logout",
   apiVersionMiddleware(1),
-  asyncErrorHandler(authController.logout)
+  errorHandler(authController.logout)
 );
 
 export default router;

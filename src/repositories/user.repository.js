@@ -38,7 +38,6 @@ export default class UserRepository extends BaseRepository {
       },
       client
     );
-    delete newUser.password;
     return newUser;
   }
 

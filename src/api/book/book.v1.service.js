@@ -1,4 +1,4 @@
-import { NotFoundError, ValidationError } from "../../helpers/exeptions.js";
+import { NotFoundError } from "../../helpers/exeptions.js";
 
 export default class BookService {
   #bookRepository;
@@ -29,15 +29,13 @@ export default class BookService {
 
   /**
    * Retrieves a book with its details.
-   *
    * @param {string} id - The ID of the book.
    * @returns {Promise<Object>} The book with its details.
    */
   async getBookWithDetails(id) {
-    const book = await this.#bookRepository.getById(id);
+    await this.verifyBookExists(id);
 
-    // check if book exists
-    if (!book) return null;
+    const book = await this.#bookRepository.getById(id);
 
     const [authors, languages, files, rate, subcategories, comments] =
       await Promise.all([
@@ -121,36 +119,23 @@ export default class BookService {
   }
 
   async create(bookData) {
-    // extra validations
-    if (!bookData.authors || bookData.authors.length === 0) {
-      throw new ValidationError("There should be at least one author");
-    }
-    if (!bookData.languages || bookData.languages.length === 0) {
-      throw new ValidationError("There should be at least one language");
-    }
-    if (!bookData.subcategoryIds || bookData.subcategoryIds.length === 0) {
-      throw new ValidationError("There should be at least one subcategory");
-    }
-
     await this.#bookRepository.createBookWithDetails(bookData);
   }
 
   async downloadBook(userId, bookId, fileName) {
+    await this.verifyBookExists(bookId);
+
     const fileCloudUrl = await this.#bookFilesRepository.getFileCloudUrl(
       fileName,
       bookId
     );
-    if (!fileCloudUrl) {
-      throw new NotFoundError("File not exits");
-    }
 
     try {
       await this.#bookFilesRepository.verifyFileExistsInCloudinary(
         fileCloudUrl
       );
-    } catch (err) {
-      console.log(err);
-      throw new ValidationError("File not exists");
+    } catch {
+      throw new NotFoundError("File not exists");
     }
 
     await this.#bookFilesRepository.registerDownload(userId, bookId);
@@ -158,10 +143,27 @@ export default class BookService {
   }
 
   async rate(userId, bookId, rate) {
+    await this.verifyBookExists(bookId);
     await this.#bookRateRepository.upsertRate(bookId, userId, rate);
   }
 
   async getRateOfBookByUserId(bookId, userId) {
+    await this.verifyBookExists(bookId);
     return await this.#bookRateRepository.getBookRateByUser(userId, bookId);
+  }
+
+  /**
+   * Verifies if a book exists in the repository by its ID.
+   *
+   * @param {string} bookId - The ID of the book to verify.
+   * @returns {Promise<Object>} - The book object if found.
+   * @throws {NotFoundError} - If the book is not found.
+   */
+  async verifyBookExists(bookId) {
+    const book = await this.#bookRepository.getById(bookId);
+    if (!book) {
+      throw new NotFoundError("Book not found");
+    }
+    return book;
   }
 }

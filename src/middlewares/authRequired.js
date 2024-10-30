@@ -1,10 +1,11 @@
-import asyncErrorHandler from "../middlewares/asyncErrorHandler.js";
+import errorHandler from "./errorHandler.js";
 
 /**
- *  HoF which return a middleware that verify if the user is authenticated
+ * @function authRequired
+ * HoF which return a middleware that verify if the user is authenticated
  */
 export default function authRequired({ authService }) {
-  return asyncErrorHandler(async (req, _res, next) => {
+  return errorHandler(async function (req, _res, next) {
     const user = await authService.verifyToken(req.cookies.token);
 
     req.user = user;

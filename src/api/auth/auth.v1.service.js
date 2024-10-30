@@ -1,4 +1,4 @@
-import { AppError } from "../../helpers/exeptions.js";
+import { AppError, UnauthorizedError } from "../../helpers/exeptions.js";
 import bcrypt from "bcryptjs";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
@@ -32,6 +32,7 @@ export default class AuthService {
       country,
     });
 
+    delete newUser.password;
     const token = this.#createAccessToken(newUser);
 
     return {
@@ -80,23 +81,15 @@ export default class AuthService {
   }
 
   async verifyToken(token) {
-    const dataToken = await this.#verifyTokenDep(token);
+    const user = await this.#verifyTokenDep(token);
 
-    if (!dataToken?.id) {
-      throw new AppError("Invalid token", HTTP_CODES.BAD_REQUEST);
-    }
-
-    const user = await this.#userRepository.getUserById(dataToken.id);
-
-    if (!user) {
-      throw new AppError("User not found", HTTP_CODES.BAD_REQUEST);
-    }
-
+    // TODO: validar los roles: admin, user premium, user basic
+    // TODO: implement refresh + access token strategy
+    // @see https://stackabuse.com/authentication-and-authorization-with-jwts-in-express-js/
     if (!user.isActive) {
-      throw new AppError("User is not active", HTTP_CODES.BAD_REQUEST);
+      throw new UnauthorizedError("User is not active");
     }
 
-    delete user.password;
     return user;
   }
 }

@@ -21,22 +21,28 @@ export default class BookCommentsRepository extends BaseRepository {
     return comments.lenght > 0 ? comments : [];
   }
 
-  async createComment(idUser, idBook, text) {
-    const newComment = await super.executeQuery(
-      `INSERT INTO book_comment (id_user, id_book, date_commented, text_commented) VALUES ($1, $2, $3, $4) RETURNING *`,
-      [idUser, idBook, "NOW()", text]
-    );
+  async getCommentById(idComment) {
+    return await super.findById(idComment);
+  }
 
-    return newComment[0].idcoment;
+  async createComment(text, idBook, idUser) {
+    const newComment = await super.create({
+      idUser,
+      idBook,
+      dateCommented: "NOW()",
+      textCommented: text,
+    });
+
+    return newComment;
   }
 
   async updateComment(id, text) {
-    const updatedComment = await super.executeQuery(
-      `UPDATE book_comment SET text_commented = $1, date_commented = $2 WHERE id = $3 RETURNING *`,
-      [text, "NOW()", id]
-    );
+    const updatedComment = await super.update(id, {
+      textCommented: text,
+      dateCommented: "NOW()",
+    });
 
-    return updatedComment[0];
+    return updatedComment;
   }
 
   async deleteComment(id) {

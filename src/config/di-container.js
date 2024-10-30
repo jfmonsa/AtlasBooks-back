@@ -19,9 +19,11 @@ import BookLanguagesRepository from "../repositories/bookLanguages.repository.js
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
+import BookCommentsService from "../api/book-comments/book-comments.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
-import { BookController } from "../api/book/book.v1.controller.js";
+import BookController from "../api/book/book.v1.controller.js";
+import BookCommentsController from "../api/book-comments/book-comments.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 import authRequired from "../middlewares/authRequired.js";
@@ -35,9 +37,11 @@ export function setupDIContainer() {
     // controllers
     authController: asClass(AuthController),
     bookController: asClass(BookController),
+    bookCommentsController: asClass(BookCommentsController),
     // services
     authService: asClass(AuthService),
     bookService: asClass(BookService),
+    bookCommentsService: asClass(BookCommentsService),
     // repositories
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),

@@ -21,3 +21,9 @@ export class ValidationError extends AppError {
     super(message, HTTP_CODES.BAD_REQUEST);
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = "No autorizado") {
+    super(message, HTTP_CODES.UNAUTHORIZED);
+  }
+}
