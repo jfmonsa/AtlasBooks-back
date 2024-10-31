@@ -90,7 +90,7 @@ export default class BookFilesRepository extends BaseRepository {
       idBook: bookId,
     });
 
-    return result.length > 0 ? result[0].filePath : null;
+    return result ? result[0].filePath : null;
   }
 
   async verifyFileExistsInCloudinary(cloudinaryUrl) {

@@ -63,4 +63,33 @@ export default class UserRepository extends BaseRepository {
   async deleteUser(userId) {
     return await super.update(userId, { isActive: false });
   }
+
+  async getDownloadHistory(userId) {
+    const query = `
+    SELECT 
+        dh.id_user,
+        dh.date_downloaded,
+        b.id AS book_id,
+        b.isbn,
+        b.title,
+        b.description,
+        b.year_released,
+        b.volume,
+        b.number_of_pages,
+        b.publisher,
+        b.cover_img_path,
+        a.author
+    FROM 
+       book_download dh
+    JOIN 
+        book b ON dh.id_book = b.id
+    JOIN 
+        book_authors a ON b.id = a.id_book
+    WHERE 
+        dh.id_user = $1
+    ORDER BY 
+        dh.date_downloaded DESC;`;
+    const downloads = await super.executeQuery(query, [userId]);
+    return downloads;
+  }
 }

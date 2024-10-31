@@ -8,4 +8,8 @@ export default class UserService {
   async deleteUser(userId) {
     await this.#userRepository.deleteUser(userId);
   }
+
+  async getDownloadHistory(userId) {
+    return await this.#userRepository.getDownloadHistory(userId);
+  }
 }

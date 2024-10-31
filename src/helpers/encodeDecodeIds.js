@@ -26,7 +26,7 @@ function decodeId(encodedId) {
  */
 function transformIdsInObject(data, transformFn) {
   return iterateObjectDeep(data, (value, key) => {
-    const isIdKey = key.includes("Id") || key === "id";
+    const isIdKey = key.includes("Id") || key.startsWith("id");
     if (isIdKey) {
       if (typeof value === "string" || typeof value === "number") {
         return { convertedKey: key, convertedValue: transformFn(value) };
