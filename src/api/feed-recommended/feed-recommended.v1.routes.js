@@ -47,9 +47,9 @@ const feedRecommendedController = container.resolve(
  *                         description: The title of the book.
  *                         example: "Los siete maridos de Evelyn Hugo"
  *                       bookId:
- *                         type: integer
+ *                         type: string
  *                         description: The ID of the book.
- *                         example: 55
+ *                         example: hfjt
  *       404:
  *         description: Not found. The requested resource could not be found.
  *       500:

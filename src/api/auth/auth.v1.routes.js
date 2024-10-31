@@ -47,7 +47,7 @@ const authController = container.resolve("authController");
  *                 id:
  *                   type: integer
  *                   description: The user ID.
- *                   example: 17
+ *                   example: wpyx
  *                 fullName:
  *                   type: string
  *                   description: The full name of the user.
@@ -72,7 +72,7 @@ const authController = container.resolve("authController");
  *                 profileImgPath:
  *                   type: string
  *                   description: The path to the user's profile picture.
- *                   example: ../storage/usersProfilePic/default.webp
+ *                   example: https://res.cloudinary.com/dlja4vnrd/image/upload/v1730346383/default_f2wovz.png
  *                 isActive:
  *                   type: boolean
  *                   description: The status of the user.

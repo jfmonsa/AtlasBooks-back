@@ -1,4 +1,5 @@
 import BaseRepository from "./base.repository.js";
+import { DEFAULT_PROFILE_PIC } from "../config/cloudinary.js";
 
 /** Represents a repository for interacting with the users table. */
 export default class UserRepository extends BaseRepository {
@@ -34,7 +35,7 @@ export default class UserRepository extends BaseRepository {
         registerDate: "NOW()",
         isActive: true,
         isAdmin: false,
-        profileImgPath: "../storage/usersProfilePic/default.webp",
+        profileImgPath: DEFAULT_PROFILE_PIC,
       },
       client
     );

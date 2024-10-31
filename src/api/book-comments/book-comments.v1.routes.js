@@ -30,9 +30,9 @@ const authRequired = container.resolve("authRequired");
  *             type: object
  *             properties:
  *               bookId:
- *                 type: integer
+ *                 type: string
  *                 description: The ID of the book to comment on.
- *                 example: 33
+ *                 example: wpyx
  *               text:
  *                 type: string
  *                 description: The text of the comment.
@@ -61,17 +61,17 @@ const authRequired = container.resolve("authRequired");
  *                   type: object
  *                   properties:
  *                     id:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the comment.
- *                       example: 2
+ *                       example: wpyx
  *                     idUser:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the user who commented.
- *                       example: 18
+ *                       example: wezd
  *                     idBook:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the book being commented on.
- *                       example: 33
+ *                       example: erwq
  *                     dateCommented:
  *                       type: string
  *                       format: date-time
@@ -119,9 +119,9 @@ router.post(
  *                 description: The updated text of the comment.
  *                 example: "Fixed comment, nice book mate!"
  *               commentId:
- *                 type: integer
+ *                 type: string
  *                 description: The ID of the comment to update.
- *                 example: 1
+ *                 example: wpyx
  *     responses:
  *       200:
  *         description: Comment updated successfully
@@ -146,17 +146,17 @@ router.post(
  *                   type: object
  *                   properties:
  *                     id:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the comment.
- *                       example: 1
+ *                       example: wpyx
  *                     idUser:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the user who commented.
- *                       example: 18
+ *                       example: wlgda
  *                     idBook:
- *                       type: integer
+ *                       type: string
  *                       description: The ID of the book being commented on.
- *                       example: 33
+ *                       example: wqer
  *                     dateCommented:
  *                       type: string
  *                       format: date-time
@@ -202,7 +202,7 @@ router.put(
  *               commentId:
  *                 type: integer
  *                 description: The ID of the comment to delete.
- *                 example: 1
+ *                 example: wpyx
  *     responses:
  *       200:
  *         description: Comment deleted successfully

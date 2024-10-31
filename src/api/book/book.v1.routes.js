@@ -25,7 +25,7 @@ const authRequired = container.resolve("authRequired");
  *       - in: path
  *         name: id
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ID of the book to retrieve.
  *     responses:
@@ -48,9 +48,9 @@ const authRequired = container.resolve("authRequired");
  *                   type: object
  *                   properties:
  *                     id:
- *                       type: integer
+ *                       type: string
  *                       description: The book ID.
- *                       example: 17
+ *                       example: wldf
  *                     isbn:
  *                       type: string
  *                       description: The ISBN of the book.
@@ -126,13 +126,13 @@ const authRequired = container.resolve("authRequired");
  *                         subcategoriesIds:
  *                           type: array
  *                           items:
- *                             type: integer
+ *                             type: string
  *                           description: The IDs of the subcategories.
- *                           example: [1, 2]
+ *                           example: [wpyx, gaxc]
  *                         categoryId:
- *                           type: integer
+ *                           type: string
  *                           description: The ID of the category.
- *                           example: 1
+ *                           example: hvvc
  *                     relatedBooks:
  *                       type: array
  *                       items:
@@ -223,9 +223,9 @@ router.get(
  *               subcategoryIds:
  *                 type: array
  *                 items:
- *                   type: number
+ *                   type: string
  *                 description: The subcategory IDs of the book.
- *                 example: [1, 2, 3]
+ *                 example: [wpyx, vdwer, jpaf]
  *     responses:
  *       201:
  *         description: Book created successfully
@@ -285,9 +285,9 @@ router.post(
  *             type: object
  *             properties:
  *               bookId:
- *                 type: integer
+ *                 type: string
  *                 description: The ID of the book to download.
- *                 example: 22
+ *                 example: wpyx
  *               fileName:
  *                 type: string
  *                 description: The name of the file to download.
@@ -330,7 +330,7 @@ router.post(
  *       - in: path
  *         name: idBook
  *         schema:
- *           type: integer
+ *           type: string
  *         required: true
  *         description: The ID of the book to retrieve the rate for.
  *     responses:
@@ -389,7 +389,7 @@ router.get(
  *               idBook:
  *                 type: integer
  *                 description: The ID of the book to rate.
- *                 example: 17
+ *                 example: wpyx
  *               rate:
  *                 type: integer
  *                 description: The rating of the book.

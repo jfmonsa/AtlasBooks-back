@@ -28,7 +28,7 @@ function transformIdsInObject(data, transformFn) {
   return iterateObjectDeep(data, (value, key) => {
     const isIdKey = key.includes("Id") || key === "id";
     if (isIdKey) {
-      if (typeof value === "string") {
+      if (typeof value === "string" || typeof value === "number") {
         return { convertedKey: key, convertedValue: transformFn(value) };
       } else if (Array.isArray(value)) {
         return {

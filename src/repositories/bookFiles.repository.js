@@ -1,6 +1,6 @@
 import BaseRepository from "./base.repository.js";
 import cloudinary, {
-  DEFAULT_COVER,
+  DEFAULT_BOOK_COVER,
   CLOUDINARY_FOLDERS,
 } from "../config/cloudinary.js";
 import { getFileExtension } from "../helpers/fileExtension.js";
@@ -12,7 +12,7 @@ export default class BookFilesRepository extends BaseRepository {
   // For Uploading
   async uploadCoverImage(coverFile) {
     if (!coverFile || coverFile.length === 0) {
-      const result = await cloudinary.api.resource(DEFAULT_COVER);
+      const result = await cloudinary.api.resource(DEFAULT_BOOK_COVER);
       return result.secure_url;
     }
 

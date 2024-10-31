@@ -5,6 +5,38 @@ export default class BookCategories extends BaseRepository {
     super("category");
   }
 
+  async getAllCategories() {
+    return await super.findAll();
+  }
+
+  async getSubCategoriesOfCategory(categoryId) {
+    return await super.executeQuery(
+      `select id, name AS subcategory_name
+      from subcategory 
+      where id_category_father = $1`,
+      [categoryId]
+    );
+  }
+
+  async getCategoriesAndSubcategoriesGrouped() {
+    const categories = await this.getAllCategories();
+    const categoriesAndSubcategories = await Promise.all(
+      categories.map(async category => {
+        const subcategories = await this.getSubCategoriesOfCategory(
+          category.id
+        );
+        return {
+          category: category.name,
+          subcategories: subcategories.map(
+            subcategory => subcategory.subcategoryName
+          ),
+        };
+      })
+    );
+    return categoriesAndSubcategories;
+  }
+
+  // for book related with categories
   async getBookCategories(idBook) {
     const subCategoriesRows = await super.executeQuery(
       `SELECT id_category_father, sub.name, sub.id as subcategoryId 
