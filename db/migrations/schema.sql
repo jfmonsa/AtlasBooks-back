@@ -1,4 +1,5 @@
 
+
 -- Creación de tablas
 CREATE TABLE BOOK (
     id SERIAL,
@@ -13,7 +14,6 @@ CREATE TABLE BOOK (
 
     PRIMARY KEY(id)
 ) ;
-
 
 CREATE TABLE BOOK_FILES (
     id SERIAL,
@@ -46,6 +46,8 @@ CREATE TABLE BOOK_LANG (
 ) ;
 
 
+CREATE TYPE user_role AS ENUM ('ADMIN', 'USER_BASIC', 'USER_PREMIUM');
+
 CREATE TABLE USERS (
     id SERIAL,
     full_name VARCHAR(255) NOT NULL,
@@ -56,7 +58,7 @@ CREATE TABLE USERS (
     password VARCHAR(255) NOT NULL,
     profile_img_path VARCHAR(255),
     is_active BOOLEAN NOT NULL, -- is not banned?
-    is_admin BOOLEAN NOT NULL,
+    role user_role NOT NULL,
 
     PRIMARY KEY(id)
 ) ;
@@ -80,7 +82,7 @@ CREATE TABLE BOOK_RATE (
     rate_value INTEGER NOT NULL,
 
     PRIMARY KEY (id_user, id_book),
-    CONSTRAINT fk_id_user_book_rate FOREIGN KEY (id_user) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_id_user_book_rate FOREIGN KEY (id_user) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_id_book_book_rate FOREIGN KEY (id_book) REFERENCES BOOK(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
@@ -91,7 +93,7 @@ CREATE TABLE BOOK_UPLOAD (
     date_uploaded TIMESTAMP NOT NULL,
 
     PRIMARY KEY (id_user, id_book),
-    CONSTRAINT fk_id_user_book_upload FOREIGN KEY (id_user) REFERENCES USERS(id) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_id_user_book_upload FOREIGN KEY (id_user) REFERENCES USERS(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_id_book_book_upload FOREIGN KEY (id_book) REFERENCES BOOK(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 

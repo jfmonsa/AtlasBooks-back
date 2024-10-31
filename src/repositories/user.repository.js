@@ -1,3 +1,4 @@
+import { ROLES } from "../helpers/roles.js";
 import BaseRepository from "./base.repository.js";
 import { DEFAULT_PROFILE_PIC } from "../config/cloudinary.js";
 
@@ -34,7 +35,7 @@ export default class UserRepository extends BaseRepository {
         ...userData,
         registerDate: "NOW()",
         isActive: true,
-        isAdmin: false,
+        role: ROLES.USER_BASIC,
         profileImgPath: DEFAULT_PROFILE_PIC,
       },
       client

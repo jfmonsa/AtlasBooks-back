@@ -27,7 +27,7 @@ export default class AuthService {
       throw new ValidationError("User already exists");
     }
 
-    const passwordHash = this.#hashPassword(password);
+    const passwordHash = await this.#hashPassword(password);
 
     const newUser = await this.#userRepository.createUserWithDetails({
       fullName,

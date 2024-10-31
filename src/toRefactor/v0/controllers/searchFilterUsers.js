@@ -31,7 +31,7 @@ export const searchFilterUsers = async (req, res) => {
       return res.status(404).json({ error: true, message: "No users found" });
     }
 
-    const databook = result.rows.map((row) => ({
+    const databook = result.rows.map(row => ({
       id: row.id,
       nameu: row.nameu,
       nickname: row.nickname,

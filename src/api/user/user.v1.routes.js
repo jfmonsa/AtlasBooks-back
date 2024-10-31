@@ -150,4 +150,25 @@ router.get(
   errorHandler(userController.getDownloadHistory)
 );
 
+router.put(
+  "/change-email",
+  apiVersionMiddleware(1),
+  authRequired
+  //errorHandler(userController.changeEmailSend)
+);
+
+router.put(
+  "/ban-user",
+  apiVersionMiddleware(1),
+  authRequired,
+  errorHandler(userController.banUser)
+);
+
+router.put(
+  "/unban-user",
+  apiVersionMiddleware(1),
+  authRequired,
+  errorHandler(userController.unbanUser)
+);
+
 export default router;

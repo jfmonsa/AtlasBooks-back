@@ -6,6 +6,8 @@ export default class UserController {
 
     this.deleteUser = this.deleteUser.bind(this);
     this.getDownloadHistory = this.getDownloadHistory.bind(this);
+    this.banUser = this.banUser.bind(this);
+    this.unbanUser = this.unbanUser.bind(this);
   }
 
   async deleteUser(req, res) {
@@ -18,5 +20,19 @@ export default class UserController {
       req.user.id
     );
     res.formatResponse(downloadHistory);
+  }
+
+  async banUser(req, res) {
+    const { userIdToBan } = req.body;
+
+    await this.#userService.banUser(userIdToBan);
+    res.formatResponse({}, "User banned successfully");
+  }
+
+  async unbanUser(req, res) {
+    const { userIdToUnban } = req.body;
+
+    await this.#userService.unbanUser(userIdToUnban);
+    res.formatResponse({}, "User unbanned successfully");
   }
 }

@@ -44,7 +44,7 @@ describe("AuthService class", () => {
       registerDate: new Date(),
       profileImgPath: "../storage/usersProfilePic/default.webp",
       isActive: true,
-      isAdmin: false,
+      //isAdmin: false, probar esto
     };
 
     delete expectedCreatedUser.password;

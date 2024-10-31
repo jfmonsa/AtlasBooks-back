@@ -79,9 +79,9 @@ const authRequired = container.resolve("authRequired");
  *                   type: boolean
  *                   description: The status of the user.
  *                   example: true
- *                 isAdmin:
- *                   type: boolean
- *                   description: Whether the user is an admin.
+ *                 rol:
+ *                   type: string
+ *                   description: role of the user "admin", "user_basic" or "user_premium".
  *                   example: false
  */
 /**

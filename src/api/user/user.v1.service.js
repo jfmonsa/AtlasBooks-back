@@ -12,4 +12,12 @@ export default class UserService {
   async getDownloadHistory(userId) {
     return await this.#userRepository.getDownloadHistory(userId);
   }
+
+  async userIdToBan(userIdToBan) {
+    await this.#userRepository.banUser(userIdToBan);
+  }
+
+  async userIdToUnban(userIdToUnban) {
+    await this.#userRepository.unbanUser(userIdToUnban);
+  }
 }
