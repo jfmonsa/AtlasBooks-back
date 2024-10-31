@@ -31,12 +31,6 @@ export default [
     rules: {
       ...jestPlugin.configs.recommended.rules,
       "jest/expect-expect": "error",
-      "jest/lowercase-name": [
-        "error",
-        {
-          ignore: ["describe"],
-        },
-      ],
       "jest/no-disabled-tests": "error",
       "jest/no-done-callback": "error",
       "jest/no-duplicate-hooks": "error",
@@ -46,12 +40,10 @@ export default [
       "jest/no-identical-title": "error",
       "jest/no-interpolation-in-snapshots": "error",
       "jest/no-jasmine-globals": "error",
-      "jest/no-jest-import": "error",
       "jest/no-large-snapshots": "error",
       "jest/no-mocks-import": "error",
       "jest/no-standalone-expect": "error",
       "jest/no-test-prefixes": "error",
-      "jest/valid-describe": "error",
       "jest/valid-expect-in-promise": "error",
       "jest/prefer-to-have-length": "warn",
       "jest/valid-expect": "error",

@@ -4,7 +4,6 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
       "https://atlas-books-back.vercel.app",
       "http://localhost:5173",
       "https://atlasbooks.netlify.app",
-      "*"
     ];
 
 const corsOptions = {

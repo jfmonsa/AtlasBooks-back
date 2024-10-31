@@ -76,6 +76,7 @@ export default class BookRepository extends BaseRepository {
       subcategoryIds,
       bookFiles,
       coverBookFile,
+      userIdWhoUploadBook,
       ...bookDetails
     } = bookData;
 
@@ -84,6 +85,11 @@ export default class BookRepository extends BaseRepository {
         await this.#bookFilesRepository.uploadCoverImage(coverBookFile);
       const { id: bookId } = await super.create(
         { ...bookDetails, coverImgPath: coverUrl },
+        client
+      );
+      await this.#bookFilesRepository.registerBookUpload(
+        userIdWhoUploadBook,
+        bookId,
         client
       );
       await this.#bookFilesRepository.uploadAndInsertBookFiles(

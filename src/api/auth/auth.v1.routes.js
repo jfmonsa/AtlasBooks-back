@@ -1,8 +1,10 @@
 import { Router } from "express";
 import container from "../../config/di-container.js";
+// middlewares
 import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
+// dto
 import registerDTO from "./dto/register.v1.dto.js";
 import loginDTO from "./dto/login.v1.dto.js";
 

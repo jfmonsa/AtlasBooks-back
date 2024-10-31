@@ -1,14 +1,9 @@
 import BaseRepository from "./base.repository.js";
-import cloudinary from "../config/cloudinary.js";
+import cloudinary, {
+  DEFAULT_COVER,
+  CLOUDINARY_FOLDERS,
+} from "../config/cloudinary.js";
 import { getFileExtension } from "../helpers/fileExtension.js";
-
-const CLOUDINARY_FOLDERS = {
-  COVER: "bookCoverPics",
-  FILES: "books",
-};
-
-const DEFAULT_COVER =
-  "https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg";
 
 export default class BookFilesRepository extends BaseRepository {
   constructor() {
@@ -106,6 +101,15 @@ export default class BookFilesRepository extends BaseRepository {
       .split(".")[0]; // remove file extention
 
     await cloudinary.api.resource(publicId);
+  }
+
+  async registerBookUpload(userId, bookId, client) {
+    await super.executeQuery(
+      `INSERT INTO BOOK_UPLOAD (id_user, id_book, date_uploaded) 
+       VALUES ($1, $2, NOW());`,
+      [userId, bookId],
+      client
+    );
   }
 
   async registerDownload(userId, bookId) {

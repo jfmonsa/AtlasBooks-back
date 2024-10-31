@@ -30,6 +30,11 @@ export default class BookController {
   }
 
   async create(req, res) {
+    const { authors, languages, subcategoryIds } = req.body;
+    const { cover: coverBookFile, bookFiles } = req.files;
+    const { id: userIdWhoUploadBook } = req.user;
+    const bookData = req.body;
+
     // file validation
     if (!bookFiles || !Array.isArray(bookFiles) || bookFiles.length === 0) {
       throw new ValidationError(
@@ -46,10 +51,6 @@ export default class BookController {
       }
     }
 
-    const { authors, languages, subcategoryIds } = req.body;
-    const { cover: coverBookFile, bookFiles } = req.files;
-    const bookData = req.body;
-
     await this.#bookService.create({
       ...bookData,
       authors: Array.isArray(authors) ? authors : JSON.parse(authors),
@@ -59,6 +60,7 @@ export default class BookController {
         : JSON.parse(subcategoryIds),
       coverBookFile,
       bookFiles,
+      userIdWhoUploadBook,
     });
 
     res.formatResponse(null, "Book created successfully", HTTP_CODES.CREATED);

@@ -2,8 +2,8 @@ import Joi from "joi";
 
 const rateBookDTO = {
   body: {
-    idBook: Joi.number().required(),
-    rate: Joi.number().required(),
+    idBook: Joi.string().required().trim(),
+    rate: Joi.number().min(1).max(5).required(),
   },
 };
 

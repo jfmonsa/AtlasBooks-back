@@ -2,8 +2,8 @@ import Joi from "joi";
 
 const createCommentV1DTO = {
   body: {
-    bookId: Joi.number().required(),
-    text: Joi.string().required(),
+    bookId: Joi.string().required().trim(),
+    text: Joi.string().required().trim(),
   },
 };
 

@@ -2,8 +2,8 @@ import Joi from "joi";
 
 const downloadBookV1Dto = {
   body: {
-    fileName: Joi.string().required(),
-    bookId: Joi.number().required(),
+    fileName: Joi.string().required().trim(),
+    bookId: Joi.string().required().trim(),
   },
 };
 

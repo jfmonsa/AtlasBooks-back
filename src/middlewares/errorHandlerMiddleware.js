@@ -8,7 +8,7 @@ import { AppError, ValidationError } from "../helpers/exeptions.js";
  * @param {Function} _next
  * @description Format response to client
  */
-export const errorHandler = (err, _req, res, _next) => {
+export const errorHandlerMiddleware = (err, _req, res, _next) => {
   // log error
   // TODO: use logger like winston
   console.log(err);

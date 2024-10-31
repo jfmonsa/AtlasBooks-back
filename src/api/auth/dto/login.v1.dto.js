@@ -2,8 +2,8 @@ import Joi from "joi";
 
 const loginDTO = {
   body: {
-    userNicknameOrEmail: Joi.string().required(),
-    userPassword: Joi.string().required(),
+    userNicknameOrEmail: Joi.string().required().trim(),
+    userPassword: Joi.string().required().trim(),
   },
 };
 

@@ -1,18 +1,19 @@
 import { HTTP_CODES } from "../helpers/httpCodes.js";
+import { encodeIdsInObject } from "../helpers/encodeDecodeIds.js";
 
 /** Middleware to format responses
  *
  * define custom functions to res object, this functions will
  * be used in controllers and in error middleware
  */
-export const formatResponse = (req, res, next) => {
+export const formatResponse = (_req, res, next) => {
   // for success responses
   res.formatResponse = (data, message, statusCode = HTTP_CODES.OK) => {
     res.status(statusCode).json({
       success: true,
       statusCode,
       message,
-      data,
+      data: encodeIdsInObject(data),
     });
   };
 
@@ -22,10 +23,6 @@ export const formatResponse = (req, res, next) => {
       success: false,
       statusCode,
       error,
-      metadata: {
-        date: new Date().toISOString(),
-        path: req.originalUrl,
-      },
     });
   };
   next();

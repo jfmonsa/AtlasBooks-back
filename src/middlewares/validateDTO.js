@@ -1,5 +1,6 @@
 import { ValidationError } from "../helpers/exeptions.js";
 import { Joi } from "../helpers/validations.js";
+import { decodeIdsOfRequest } from "../helpers/encodeDecodeIds.js";
 
 /**
  * @function validateDTO
@@ -28,6 +29,8 @@ export default function validateDTO(dto) {
     req.query = value.query || req.query;
     req.params = value.params || req.params;
 
+    // decode ids
+    req = decodeIdsOfRequest(req);
     next();
   };
 }

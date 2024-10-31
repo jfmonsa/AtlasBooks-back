@@ -7,7 +7,7 @@ import corsOptions from "./config/cors.js";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { formatResponse } from "./middlewares/formatResponse.js";
-import { errorHandler } from "./middlewares/errorMiddleware.js";
+import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 
 // api
 import { swaggerDocs as swaggerDocsV1 } from "./config/swagger.js";
@@ -40,7 +40,6 @@ class Server {
     if (process.env.NODE_ENV === "dev") {
       this.app.use(morgan("dev"));
     }
-
     // format response
     this.app.use(formatResponse);
 
@@ -48,7 +47,7 @@ class Server {
     this.app.use("/api/:version", await loadRoutes());
 
     // handling errors
-    this.app.use(errorHandler);
+    this.app.use(errorHandlerMiddleware);
   }
 
   #run() {

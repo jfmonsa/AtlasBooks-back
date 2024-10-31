@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const getBookDataV1DTO = {
   params: {
-    id: Joi.number().required(),
+    id: Joi.string().required().trim(),
   },
 };
 
