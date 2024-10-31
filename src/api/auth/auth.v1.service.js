@@ -1,4 +1,9 @@
-import { AppError, UnauthorizedError } from "../../helpers/exeptions.js";
+import {
+  ForbiddenError,
+  NotFoundError,
+  UnauthorizedError,
+  ValidationError,
+} from "../../helpers/exeptions.js";
 import bcrypt from "bcryptjs";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
@@ -19,10 +24,10 @@ export default class AuthService {
       (await this.#userRepository.getUserByNickname(nickname));
 
     if (userExists) {
-      throw new AppError("User already exists", 400);
+      throw new ValidationError("User already exists");
     }
 
-    const passwordHash = await bcrypt.hash(password, 10);
+    const passwordHash = this.#hashPassword(password);
 
     const newUser = await this.#userRepository.createUserWithDetails({
       fullName,
@@ -54,21 +59,15 @@ export default class AuthService {
       await this.#userRepository.getUserByNicknameOrEmail(userNicknameOrEmail);
 
     if (!user) {
-      throw new AppError(
-        "nickname, email or password is incorrect",
-        HTTP_CODES.BAD_REQUEST
-      );
+      throw new UnauthorizedError("nickname, email or password is incorrect");
     } else if (!user.isActive) {
-      throw new AppError("user is not active", HTTP_CODES.BAD_REQUEST);
+      throw new ForbiddenError("user is not active", HTTP_CODES.BAD_REQUEST);
     }
 
     const isValidPassword = await bcrypt.compare(userPassword, user.password);
 
     if (!isValidPassword) {
-      throw new AppError(
-        "userNickname or password is incorrect",
-        HTTP_CODES.BAD_REQUEST
-      );
+      throw new UnauthorizedError("nickname, email or password is incorrect");
     }
 
     delete user.password;
@@ -87,9 +86,35 @@ export default class AuthService {
     // TODO: implement refresh + access token strategy
     // @see https://stackabuse.com/authentication-and-authorization-with-jwts-in-express-js/
     if (!user.isActive) {
-      throw new UnauthorizedError("User is not active");
+      throw new ForbiddenError("User is not active");
     }
 
     return user;
+  }
+
+  async changePassword(userId, currentPassword, newPassword) {
+    const user = await this.#userRepository.getUserById(userId);
+
+    if (!user) {
+      throw new NotFoundError("User not exists", HTTP_CODES.NOT_FOUND);
+    }
+
+    const isValidPassword = await bcrypt.compare(
+      user.password,
+      currentPassword
+    );
+
+    if (isValidPassword) {
+      throw new UnauthorizedError("Current password is incorrect");
+    }
+
+    const newPasswordHashed = await this.#hashPassword(newPassword);
+
+    await this.#userRepository.updateUserPassword(userId, newPasswordHashed);
+  }
+
+  #hashPassword(password) {
+    const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS);
+    return bcrypt.hash(password, saltRounds);
   }
 }

@@ -55,4 +55,8 @@ export default class UserRepository extends BaseRepository {
   async getUserById(userId) {
     return await super.findById(userId);
   }
+
+  async updateUserPassword(userId, password) {
+    return await super.update(userId, { password });
+  }
 }

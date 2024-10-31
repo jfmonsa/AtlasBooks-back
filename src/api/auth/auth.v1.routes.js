@@ -7,9 +7,11 @@ import validateDTO from "../../middlewares/validateDTO.js";
 // dto
 import registerDTO from "./dto/register.v1.dto.js";
 import loginDTO from "./dto/login.v1.dto.js";
+import changePasswordV1DTO from "./dto/change-password.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const authController = container.resolve("authController");
+const authRequired = container.resolve("authRequired");
 /**
  * @swagger
  * components:
@@ -229,6 +231,8 @@ router.post(
  *     summary: Logout a user
  *     tags:
  *       - Auth
+ *     security:
+ *       - cookieAuth: []
  *     parameters:
  *       - in: cookie
  *         name: token
@@ -245,7 +249,73 @@ router.post(
 router.post(
   "/logout",
   apiVersionMiddleware(1),
+  authRequired,
   errorHandler(authController.logout)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/change-password:
+ *   post:
+ *     summary: Change user password
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - cookieAuth: []
+ *     description: Change the password of the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 description: The current password of the user.
+ *                 example: "TesteandoEstoxd32+"
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password for the user.
+ *                 example: "TesteandoEstoxd32+"
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Password changed successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       401:
+ *         description: Unauthorized. The current password is incorrect.
+ *       404:
+ *         description: Not found. The user does not exist.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.post(
+  "/change-password",
+  apiVersionMiddleware(1),
+  authRequired,
+  validateDTO(changePasswordV1DTO),
+  errorHandler(authController.changePassword)
 );
 
 export default router;

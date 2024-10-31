@@ -27,3 +27,9 @@ export class UnauthorizedError extends AppError {
     super(message, HTTP_CODES.UNAUTHORIZED);
   }
 }
+
+export class ForbiddenError extends AppError {
+  constructor(message = "No tienes permisos para realizar esta acción") {
+    super(message, HTTP_CODES.FORBIDDEN);
+  }
+}

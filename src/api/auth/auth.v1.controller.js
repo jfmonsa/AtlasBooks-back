@@ -17,6 +17,7 @@ export default class AuthController {
     this.verifyToken = this.verifyToken.bind(this);
     this.logout = this.logout.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
+    this.changePassword = this.changePassword.bind(this);
   }
 
   async register(req, res) {
@@ -51,7 +52,6 @@ export default class AuthController {
    * @param {Object} req - The request object.
    * @param {Object} res - The response object.
    * @returns {Promise<void>} - A promise that resolves when the response is sent.
-   * @throws {CustomError} - If the token is not sent.
    */
   async verifyToken(req, res) {
     const { token } = req.cookies;
@@ -72,5 +72,18 @@ export default class AuthController {
 
   async forgotPassword(_req, _res) {
     throw new Error("Not implemented yet");
+  }
+
+  async changePassword(req, res) {
+    const { id: userId } = req.user;
+    const { currentPassword, newPassword } = req.body;
+
+    await this.#authService.changePassword(
+      userId,
+      currentPassword,
+      newPassword
+    );
+
+    res.formatResponse(null, "Password changed successfully");
   }
 }
