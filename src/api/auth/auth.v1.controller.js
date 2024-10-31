@@ -18,6 +18,7 @@ export default class AuthController {
     this.logout = this.logout.bind(this);
     this.forgotPassword = this.forgotPassword.bind(this);
     this.changePassword = this.changePassword.bind(this);
+    this.confirmPassword = this.confirmPassword.bind(this);
   }
 
   async register(req, res) {
@@ -85,5 +86,9 @@ export default class AuthController {
     );
 
     res.formatResponse(null, "Password changed successfully");
+  }
+
+  async confirmPassword(_req, _res) {
+    throw new Error("Not implemented yet");
   }
 }

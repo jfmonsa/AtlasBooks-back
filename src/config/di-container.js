@@ -23,12 +23,14 @@ import BookService from "../api/book/book.v1.service.js";
 import BookCommentsService from "../api/book-comments/book-comments.v1.service.js";
 import FeedRecommenedService from "../api/feed-recommended/feed-recommended.v1.service.js";
 import BookCategoriesService from "../api/book-categories/book-categories.v1.service.js";
+import UserService from "../api/user/user.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
 import BookController from "../api/book/book.v1.controller.js";
 import BookCommentsController from "../api/book-comments/book-comments.v1.controller.js";
 import FeedRecommendedController from "../api/feed-recommended/feed-recommended.v1.controller.js";
 import BookCategoriesController from "../api/book-categories/book-categories.v1.controller.js";
+import UserController from "../api/user/user.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 import authRequired from "../middlewares/authRequired.js";
@@ -45,12 +47,14 @@ export function setupDIContainer() {
     bookCommentsController: asClass(BookCommentsController),
     feedRecommendedController: asClass(FeedRecommendedController),
     bookCategoriesController: asClass(BookCategoriesController),
+    userController: asClass(UserController),
     // services
     authService: asClass(AuthService),
     bookService: asClass(BookService),
     bookCommentsService: asClass(BookCommentsService),
     feedRecommendedService: asClass(FeedRecommenedService),
     bookCategoriesService: asClass(BookCategoriesService),
+    userService: asClass(UserService),
     // repositories
     userRepository: asClass(UserRepository),
     bookListRepository: asClass(BookListRepository),

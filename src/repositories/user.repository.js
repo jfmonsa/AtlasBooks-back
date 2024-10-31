@@ -59,4 +59,8 @@ export default class UserRepository extends BaseRepository {
   async updateUserPassword(userId, password) {
     return await super.update(userId, { password });
   }
+
+  async deleteUser(userId) {
+    return await super.update(userId, { isActive: false });
+  }
 }
