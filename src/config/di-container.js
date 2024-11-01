@@ -18,6 +18,7 @@ import BookAuthorsRepository from "../repositories/bookAuthors.repository.js";
 import BookLanguagesRepository from "../repositories/bookLanguages.repository.js";
 import FeedRecommendedRepository from "../repositories/feedRecommended.repository.js";
 import SearchFiltersRepository from "../repositories/searchFilters.repository.js";
+import BookReportsRepository from "../repositories/bookReports.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 import BookService from "../api/book/book.v1.service.js";
@@ -27,6 +28,7 @@ import BookCategoriesService from "../api/book-categories/book-categories.v1.ser
 import UserService from "../api/user/user.v1.service.js";
 import BookListsService from "../api/book-lists/book-lists.v1.service.js";
 import SearchFiltersService from "../api/search-filters/search-filters.service.js";
+import ReportsService from "../api/reports/reports.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
 import BookController from "../api/book/book.v1.controller.js";
@@ -36,6 +38,7 @@ import BookCategoriesController from "../api/book-categories/book-categories.v1.
 import UserController from "../api/user/user.v1.controller.js";
 import BookListsController from "../api/book-lists/book-lists.v1.controller.js";
 import SearchFiltersController from "../api/search-filters/search-filters.controller.js";
+import ReportsController from "../api/reports/reports.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 import authRequired from "../middlewares/authRequired.js";
@@ -54,6 +57,7 @@ export function setupDIContainer() {
     userController: asClass(UserController),
     bookListsController: asClass(BookListsController),
     searchFiltersController: asClass(SearchFiltersController),
+    reportsController: asClass(ReportsController),
     // services
     authService: asClass(AuthService),
     bookService: asClass(BookService),
@@ -63,6 +67,7 @@ export function setupDIContainer() {
     userService: asClass(UserService),
     bookListsService: asClass(BookListsService),
     searchFiltersService: asClass(SearchFiltersService),
+    reportsService: asClass(ReportsService),
     // repositories
     userRepository: asClass(UserRepository),
     bookListsRepository: asClass(BookListsRepository),
@@ -75,6 +80,7 @@ export function setupDIContainer() {
     bookLanguagesRepository: asClass(BookLanguagesRepository),
     feedRecommendedRepository: asClass(FeedRecommendedRepository),
     searchFiltersRepository: asClass(SearchFiltersRepository),
+    bookReportsRepository: asClass(BookReportsRepository),
     // other dependencies
     createAccessToken: asFunction(() => createAccessToken),
     verifyToken: asFunction(() => verifyToken),
