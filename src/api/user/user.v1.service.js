@@ -1,3 +1,5 @@
+import { ForbiddenError } from "../../helpers/exeptions.js";
+
 export default class UserService {
   #userRepository;
 
@@ -13,11 +15,15 @@ export default class UserService {
     return await this.#userRepository.getDownloadHistory(userId);
   }
 
-  async userIdToBan(userIdToBan) {
-    await this.#userRepository.banUser(userIdToBan);
+  async banUser(userIdToBan, adminWhoBannedId) {
+    if (adminWhoBannedId === userIdToBan) {
+      throw new ForbiddenError("You can't ban yourself");
+    }
+
+    await this.#userRepository.banUser(userIdToBan, adminWhoBannedId);
   }
 
-  async userIdToUnban(userIdToUnban) {
+  async unbanUser(userIdToUnban) {
     await this.#userRepository.unbanUser(userIdToUnban);
   }
 }

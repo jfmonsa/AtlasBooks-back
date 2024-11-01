@@ -93,4 +93,24 @@ export default class UserRepository extends BaseRepository {
     const downloads = await super.executeQuery(query, [userId]);
     return downloads;
   }
+
+  async banUser(userId, adminWhoBannedId) {
+    await this.executeQuery(
+      `INSERT INTO user_ban 
+        (id_user_banned, id_admin_who_banned, motivation, date_banned_at)
+        VALUES ($1, $2, $3, $4)`,
+
+      [userId, adminWhoBannedId, "No Reason", "NOW()"]
+    );
+
+    return await super.update(userId, { isActive: false });
+  }
+
+  async unbanUser(userId) {
+    await this.executeQuery(`DELETE FROM user_ban WHERE id_user_banned = $1`, [
+      userId,
+    ]);
+
+    return await super.update(userId, { isActive: true });
+  }
 }

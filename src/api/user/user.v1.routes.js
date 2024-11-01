@@ -3,8 +3,13 @@ import container from "../../config/di-container.js";
 // middlewares
 import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
+import { ROLES } from "../../helpers/roles.js";
+import authRole from "../../middlewares/authRole.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 // dto
+import banUserV1DTO from "./dto/ban-user.v1.dto.js";
+import unbanUserV1DTO from "./dto/unban-user.v1.dto.js";
+
 const router = Router({ mergeParams: true });
 const userController = container.resolve("userController");
 const authRequired = container.resolve("authRequired");
@@ -150,24 +155,125 @@ router.get(
   errorHandler(userController.getDownloadHistory)
 );
 
-router.put(
-  "/change-email",
-  apiVersionMiddleware(1),
-  authRequired
-  //errorHandler(userController.changeEmailSend)
-);
-
-router.put(
-  "/ban-user",
+/**
+ * @swagger
+ * /api/v1/user/ban:
+ *   patch:
+ *     summary: Ban a user
+ *     tags:
+ *       - User
+ *     description: Ban a user by changing their status to "banned". Requires admin role.
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userIdToBan:
+ *                 type: string
+ *                 description: The ID of the user to ban.
+ *                 example: "MyA1"
+ *     responses:
+ *       200:
+ *         description: User banned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "User banned successfully"
+ *                 data:
+ *                   type: object
+ *                   description: The data returned by the operation.
+ *                   example: {}
+ *       401:
+ *         description: Unauthorized. The user is not authenticated.
+ *       403:
+ *         description: Forbidden. The user does not have the required role.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.patch(
+  "/ban",
   apiVersionMiddleware(1),
   authRequired,
+  authRole(ROLES.ADMIN),
+  validateDTO(banUserV1DTO),
   errorHandler(userController.banUser)
 );
 
-router.put(
-  "/unban-user",
+/**
+ * @swagger
+ * /api/v1/user/unban:
+ *   patch:
+ *     summary: Unban a user
+ *     tags:
+ *       - User
+ *     description: Unban a user by changing their status to "active". Requires admin role.
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               userIdToUnban:
+ *                 type: string
+ *                 description: The ID of the user to unban.
+ *                 example: "MyA1"
+ *     responses:
+ *       200:
+ *         description: User unbanned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "User unbanned successfully"
+ *                 data:
+ *                   type: object
+ *                   description: The data returned by the operation.
+ *                   example: {}
+ *       401:
+ *         description: Unauthorized. The user is not authenticated.
+ *       403:
+ *         description: Forbidden. The user does not have the required role.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.patch(
+  "/unban",
   apiVersionMiddleware(1),
   authRequired,
+  authRole(ROLES.ADMIN),
+  validateDTO(unbanUserV1DTO),
   errorHandler(userController.unbanUser)
 );
 

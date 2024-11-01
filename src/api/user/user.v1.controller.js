@@ -24,8 +24,9 @@ export default class UserController {
 
   async banUser(req, res) {
     const { userIdToBan } = req.body;
+    const adminWhoBannedId = req.user.id;
 
-    await this.#userService.banUser(userIdToBan);
+    await this.#userService.banUser(userIdToBan, adminWhoBannedId);
     res.formatResponse({}, "User banned successfully");
   }
 

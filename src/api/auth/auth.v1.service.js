@@ -86,7 +86,7 @@ export default class AuthService {
     // TODO: implement refresh + access token strategy
     // @see https://stackabuse.com/authentication-and-authorization-with-jwts-in-express-js/
     if (!user.isActive) {
-      throw new ForbiddenError("User is not active");
+      throw new ForbiddenError("User is not active or banned");
     }
 
     return user;

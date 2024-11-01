@@ -1,4 +1,4 @@
-import { ForbiddenError } from "../helpers/exeptions";
+import { ForbiddenError } from "../helpers/exeptions.js";
 
 export default function authRole(role) {
   return function (req, _res, next) {
