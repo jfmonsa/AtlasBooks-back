@@ -4,11 +4,11 @@ import { DEFAULT_PROFILE_PIC } from "../config/cloudinary.js";
 
 /** Represents a repository for interacting with the users table. */
 export default class UserRepository extends BaseRepository {
-  #bookListRepository;
+  #bookListsRepository;
 
-  constructor({ bookListRepository }) {
+  constructor({ bookListsRepository }) {
     super("users");
-    this.#bookListRepository = bookListRepository;
+    this.#bookListsRepository = bookListsRepository;
   }
 
   async getUserByEmail(email) {
@@ -48,7 +48,7 @@ export default class UserRepository extends BaseRepository {
     let newUser;
     await super.transaction(async client => {
       newUser = await this.createUser(userData, client);
-      await this.#bookListRepository.createDefaultList(newUser.id, client);
+      await this.#bookListsRepository.createDefaultList(newUser.id, client);
     });
     return newUser;
   }

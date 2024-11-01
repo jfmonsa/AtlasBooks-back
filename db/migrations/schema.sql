@@ -1,6 +1,3 @@
-
-
--- Creación de tablas
 CREATE TABLE BOOK (
     id SERIAL,
     isbn VARCHAR(50),

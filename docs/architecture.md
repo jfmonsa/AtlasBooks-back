@@ -236,11 +236,11 @@ router.post(
 ```js
 export default class AuthService {
   #userRepository;
-  #bookListRepository;
+  #bookListsRepository;
 
-  constructor({ userRepository, bookListRepository }) {
+  constructor({ userRepository, bookListsRepository }) {
     this.#userRepository = userRepository;
-    this.#bookListRepository = bookListRepository;
+    this.#bookListsRepository = bookListsRepository;
   }
 
   async register({ name, email, password, nickname, country }) {
@@ -267,7 +267,7 @@ export default class AuthService {
         },
         client
       );
-      await this.#bookListRepository.createDefaultList(newUser.id, client);
+      await this.#bookListsRepository.createDefaultList(newUser.id, client);
     });
 
     // 3 - return new user
@@ -297,7 +297,7 @@ En `config/di-container.js`
 // import dependencies
 // + repositories
 import UserRepository from "../repositories/user.repository.js";
-import BookListRepository from "../repositories/bookList.repository.js";
+import bookListsRepository from "../repositories/bookList.repository.js";
 // + services
 import AuthService from "../api/auth/auth.v1.service.js";
 // + controllers
@@ -315,7 +315,7 @@ export function setupDIContainer() {
     authService: asClass(AuthService),
     // repositories
     userRepository: asClass(UserRepository),
-    bookListRepository: asClass(BookListRepository),
+    bookListsRepository: asClass(bookListsRepository),
   });
 }
 ```

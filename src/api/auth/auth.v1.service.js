@@ -5,7 +5,6 @@ import {
   ValidationError,
 } from "../../helpers/exeptions.js";
 import bcrypt from "bcryptjs";
-import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
 export default class AuthService {
   #userRepository;
@@ -61,7 +60,7 @@ export default class AuthService {
     if (!user) {
       throw new UnauthorizedError("nickname, email or password is incorrect");
     } else if (!user.isActive) {
-      throw new ForbiddenError("user is not active", HTTP_CODES.BAD_REQUEST);
+      throw new ForbiddenError("user is not active");
     }
 
     const isValidPassword = await bcrypt.compare(userPassword, user.password);
@@ -96,7 +95,7 @@ export default class AuthService {
     const user = await this.#userRepository.getUserById(userId);
 
     if (!user) {
-      throw new NotFoundError("User not exists", HTTP_CODES.NOT_FOUND);
+      throw new NotFoundError("User not exists");
     }
 
     const isValidPassword = await bcrypt.compare(

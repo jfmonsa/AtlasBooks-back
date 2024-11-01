@@ -8,7 +8,7 @@ import { createContainer, asClass, asFunction } from "awilix";
 // import dependencies
 // + repositories
 import UserRepository from "../repositories/user.repository.js";
-import BookListRepository from "../repositories/bookList.repository.js";
+import BookListsRepository from "../repositories/bookLists.repository.js";
 import BookRepository from "../repositories/book.repository.js";
 import BookRateRepository from "../repositories/bookRate.repository.js";
 import BookCommentsRepository from "../repositories/bookComments.repository.js";
@@ -24,6 +24,7 @@ import BookCommentsService from "../api/book-comments/book-comments.v1.service.j
 import FeedRecommenedService from "../api/feed-recommended/feed-recommended.v1.service.js";
 import BookCategoriesService from "../api/book-categories/book-categories.v1.service.js";
 import UserService from "../api/user/user.v1.service.js";
+import BookListsService from "../api/book-lists/book-lists.v1.service.js";
 // + controllers
 import AuthController from "../api/auth/auth.v1.controller.js";
 import BookController from "../api/book/book.v1.controller.js";
@@ -31,10 +32,10 @@ import BookCommentsController from "../api/book-comments/book-comments.v1.contro
 import FeedRecommendedController from "../api/feed-recommended/feed-recommended.v1.controller.js";
 import BookCategoriesController from "../api/book-categories/book-categories.v1.controller.js";
 import UserController from "../api/user/user.v1.controller.js";
+import BookListsController from "../api/book-lists/book-lists.v1.controller.js";
 // + other dependencies
 import { createAccessToken, verifyToken } from "../helpers/handleJWT.js";
 import authRequired from "../middlewares/authRequired.js";
-
 const container = createContainer({
   strict: true,
 });
@@ -48,6 +49,7 @@ export function setupDIContainer() {
     feedRecommendedController: asClass(FeedRecommendedController),
     bookCategoriesController: asClass(BookCategoriesController),
     userController: asClass(UserController),
+    bookListsController: asClass(BookListsController),
     // services
     authService: asClass(AuthService),
     bookService: asClass(BookService),
@@ -55,9 +57,10 @@ export function setupDIContainer() {
     feedRecommendedService: asClass(FeedRecommenedService),
     bookCategoriesService: asClass(BookCategoriesService),
     userService: asClass(UserService),
+    bookListsService: asClass(BookListsService),
     // repositories
     userRepository: asClass(UserRepository),
-    bookListRepository: asClass(BookListRepository),
+    bookListsRepository: asClass(BookListsRepository),
     bookRepository: asClass(BookRepository),
     bookRateRepository: asClass(BookRateRepository),
     bookCommentsRepository: asClass(BookCommentsRepository),

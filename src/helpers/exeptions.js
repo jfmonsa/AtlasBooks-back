@@ -33,3 +33,9 @@ export class ForbiddenError extends AppError {
     super(message, HTTP_CODES.FORBIDDEN);
   }
 }
+
+export class ConflictError extends AppError {
+  constructor(message = "Conflicto") {
+    super(message, HTTP_CODES.CONFLICT);
+  }
+}
