@@ -8,6 +8,10 @@ import validateDTO from "../../middlewares/validateDTO.js";
 import registerDTO from "./dto/register.v1.dto.js";
 import loginDTO from "./dto/login.v1.dto.js";
 import changePasswordV1DTO from "./dto/change-password.v1.dto.js";
+import changeEmailV1DTO from "./dto/change-email.v1.dto.js";
+import changeEmailConfirmedDTO from "./dto/change-email-confirmed.dto.js";
+import forgotPasswordV1DTO from "./dto/forgot-password.v1.dto.js";
+import changePasswordConfirmedV1DTO from "./dto/forgot-password-confirmed.v1.dto.js";
 
 const router = Router({ mergeParams: true });
 const authController = container.resolve("authController");
@@ -316,6 +320,262 @@ router.post(
   authRequired,
   validateDTO(changePasswordV1DTO),
   errorHandler(authController.changePassword)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/change-email:
+ *   post:
+ *     summary: Change user email
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - cookieAuth: []
+ *     description: Change the email of the authenticated user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               currentEmail:
+ *                 type: string
+ *                 description: The current email of the user.
+ *                 example: "Uriel_Feest76@yahoo.com"
+ *               newEmail:
+ *                 type: string
+ *                 description: The new email for the user.
+ *                 example: "nijoj52035@aleitar.com"
+ *     responses:
+ *       200:
+ *         description: Email change request successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Revise su correo electronico, enviamos un mensaje para confirmar el cambio de correo"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       401:
+ *         description: Unauthorized. The current email is incorrect.
+ *       403:
+ *         description: Forbidden. The user is not active.
+ *       409:
+ *         description: Conflict. The new email is already in use.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.post(
+  "/change-email",
+  apiVersionMiddleware(1),
+  authRequired,
+  validateDTO(changeEmailV1DTO),
+  errorHandler(authController.changeEmail)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/change-email-confirmed:
+ *   post:
+ *     summary: Confirm email change
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - cookieAuth: []
+ *     description: Confirm the email change for the authenticated user using a token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: The token sent to the new email address.
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *     responses:
+ *       200:
+ *         description: Email change confirmed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Email changed successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       401:
+ *         description: Unauthorized. The token is invalid or expired.
+ *       403:
+ *         description: Forbidden. The user is not active.
+ *       409:
+ *         description: Conflict. The new email is already in use.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.post(
+  "/change-email-confirmed",
+  apiVersionMiddleware(1),
+  authRequired,
+  validateDTO(changeEmailConfirmedDTO),
+  errorHandler(authController.changeEmailConfirmed)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/forgot-password:
+ *   post:
+ *     summary: Request password recovery
+ *     tags:
+ *       - Auth
+ *     description: Request a password recovery email to be sent.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The email of the user requesting password recovery.
+ *                 example: "nijoj52035@aleitar.com"
+ *     responses:
+ *       200:
+ *         description: Recovery email sent successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Revise su correo electronico, enviamos un mensaje para cambiar su contraseña"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.post(
+  "/forgot-password",
+  apiVersionMiddleware(1),
+  validateDTO(forgotPasswordV1DTO),
+  errorHandler(authController.forgotPassword)
+);
+
+/**
+ * @swagger
+ * /api/v1/auth/forgot-password-email-confirmed:
+ *   post:
+ *     summary: Confirm password change
+ *     tags:
+ *       - Auth
+ *     description: Confirm the password change for the authenticated user using a token.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password for the user.
+ *                 example: "ProbandoEstaCosa32+"
+ *               token:
+ *                 type: string
+ *                 description: The token received in the recovery email.
+ *                 example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Password changed successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       401:
+ *         description: Unauthorized. The token is invalid or expired.
+ *       403:
+ *         description: Forbidden. The user is not active.
+ *       500:
+ *         description: Internal server error. An error occurred on the server.
+ */
+router.post(
+  "/forgot-password-email-confirmed",
+  apiVersionMiddleware(1),
+  validateDTO(changePasswordConfirmedV1DTO),
+  errorHandler(authController.forgotPasswordEmailConfirmed)
 );
 
 export default router;

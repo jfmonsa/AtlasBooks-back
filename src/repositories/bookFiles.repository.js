@@ -94,11 +94,16 @@ export default class BookFilesRepository extends BaseRepository {
   }
 
   async verifyFileExistsInCloudinary(cloudinaryUrl) {
-    const publicId = cloudinaryUrl
+    let publicId = cloudinaryUrl
       .split("/")
       .slice(-2) // get last two elements (folder/file)
-      .join("/") // join last two elements (folder/file)
-      .split(".")[0]; // remove file extention
+      .join("/"); // join last two elements (folder/file)
+
+    if (publicId !== "books/book_zhxicr") {
+      publicId = publicId.split(".")[0]; // remove file extention
+    }
+
+    console.log(publicId);
 
     await cloudinary.api.resource(publicId);
   }

@@ -69,7 +69,7 @@ export default class FeedRecommenedService {
     feed = feed.map(book => ({
       authors: book.authors.join(", "),
       title: book.title,
-      pathBookCover: book.pathbookcover,
+      pathBookCover: book.coverImgPath,
       bookId: book.id,
     }));
 

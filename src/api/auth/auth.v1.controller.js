@@ -16,9 +16,13 @@ export default class AuthController {
     this.register = this.register.bind(this);
     this.verifyToken = this.verifyToken.bind(this);
     this.logout = this.logout.bind(this);
-    this.forgotPassword = this.forgotPassword.bind(this);
     this.changePassword = this.changePassword.bind(this);
     this.confirmPassword = this.confirmPassword.bind(this);
+    this.changeEmail = this.changeEmail.bind(this);
+    this.changeEmailConfirmed = this.changeEmailConfirmed.bind(this);
+    this.forgotPassword = this.forgotPassword.bind(this);
+    this.forgotPasswordEmailConfirmed =
+      this.forgotPasswordEmailConfirmed.bind(this);
   }
 
   async register(req, res) {
@@ -71,10 +75,6 @@ export default class AuthController {
     res.sendStatus(HTTP_CODES.OK);
   }
 
-  async forgotPassword(_req, _res) {
-    throw new Error("Not implemented yet");
-  }
-
   async changePassword(req, res) {
     const { id: userId } = req.user;
     const { currentPassword, newPassword } = req.body;
@@ -90,5 +90,53 @@ export default class AuthController {
 
   async confirmPassword(_req, _res) {
     throw new Error("Not implemented yet");
+  }
+
+  async changeEmail(req, res) {
+    const { currentEmail, newEmail } = req.body;
+
+    if (currentEmail === newEmail) {
+      throw new ValidationError(
+        "The new email is the same as the current email"
+      );
+    }
+
+    if (currentEmail !== req.user.email) {
+      throw new ValidationError("The current email is incorrect");
+    }
+
+    await this.#authService.changeEmail(req.user, newEmail);
+
+    res.formatResponse(
+      null,
+      "Revise su correo electronico, enviamos un mensaje para confirmar el cambio de correo"
+    );
+  }
+
+  async changeEmailConfirmed(req, res) {
+    const { token } = req.body;
+
+    await this.#authService.changeEmailConfirmed(token);
+
+    res.formatResponse(null, "Email changed successfully");
+  }
+
+  async forgotPassword(req, res) {
+    const { email } = req.body;
+
+    await this.#authService.forgotPassword(email);
+
+    res.formatResponse(
+      null,
+      "Revise su correo electronico, enviamos un mensaje para cambiar su contraseña "
+    );
+  }
+
+  async forgotPasswordEmailConfirmed(req, res) {
+    const { newPassword, token } = req.body;
+
+    await this.#authService.forgotPasswordEmailConfirmed(newPassword, token);
+
+    res.formatResponse(null, "Password changed successfully");
   }
 }

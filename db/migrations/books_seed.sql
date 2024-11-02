@@ -4,8 +4,8 @@
     '1988', '157', 
     'Sudamericana',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155525/bookCoverPics/dphn1j4dqdguilabxpfp.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Gabriel Garcia Marquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -16,8 +16,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2008', '137', 
     'Tusquets',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155529/bookCoverPics/gwnymjoqlclrulrnhxow.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Milan  Kundera');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -28,8 +28,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2006', '93', 
     'Catedra',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155533/bookCoverPics/wee7hrs7lyo77z6hfalf.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Paz');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 
@@ -38,8 +38,8 @@ INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spani
     NULL, '64', 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Saint');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 
@@ -48,8 +48,8 @@ INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spani
     '2008', '1050', 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Cervantes Saavedra');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -60,8 +60,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     NULL, '105', 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Paulo Coelho');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -72,8 +72,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2015', '672', 
     'Ediciones Destino',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Miguel de Cervantes Saavedra');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -84,8 +84,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2009', NULL, 
     'Indépendant',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155548/bookCoverPics/io13mcoz0rpzvpmzfsyf.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Gabriel');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -96,8 +96,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1924', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155551/bookCoverPics/rwkun4nziimuc1kraggp.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Fitzgerald');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -108,8 +108,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2003', NULL, 
     'Mondarori',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155555/bookCoverPics/s2ywtxmtlzbg76ozm2fp.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -120,8 +120,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1943', NULL, 
     'Salamandra',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155560/bookCoverPics/rmlkgntsjpy5t2hpimyy.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'de Saint-Exupéry');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -132,8 +132,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2010', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155563/bookCoverPics/f4klgjtwkwfxasgmessd.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Shakespeare William');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -144,8 +144,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2009', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155567/bookCoverPics/jxdlxausjadargei0b4h.png');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -156,8 +156,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2009', NULL, 
     'Sudamericana',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155571/bookCoverPics/y1duhabiqki6wshbvrow.png');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -168,8 +168,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2011', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155574/bookCoverPics/hezwrkktszlp6cwpvdrj.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Shakespeare William');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -180,8 +180,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1967', NULL, 
     'Le Libros',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155577/bookCoverPics/txw3zdpamxerffsdsrvr.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -192,8 +192,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1844', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155581/bookCoverPics/gtkmg7iliriwe2w83wod.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Alexandre Dumas');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -204,8 +204,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1812', NULL, 
     'Alba Editorial',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155584/bookCoverPics/ocywzqiawwkgtgpgql7l.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Jane Austen');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -216,8 +216,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2018', NULL, 
     'Crítica',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Stephen Hawking [Hawking');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 
@@ -226,8 +226,8 @@ INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spani
     '1988', NULL, 
     'Editorial Diana S.A. De C.V.',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Gabriel García Márquez [Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -238,8 +238,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2017', NULL, 
     'Literatura Random House',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Gabriel García Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -250,8 +250,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     NULL, NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'John Green');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -262,8 +262,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2020', '256', 
     'Grupo Planeta 2020',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Won-Pyung Sohn');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -274,8 +274,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2015', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Hanya Yanagihara');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -286,8 +286,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     NULL, NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Taylor Jenkins Reid');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -298,8 +298,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2012', NULL, 
     'Grupo Planeta',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Brockman');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -310,8 +310,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2012', NULL, 
     NULL,
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Madeline Miller');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -322,8 +322,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2018', NULL, 
     'ALFAGUARA',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'André Aciman');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -334,8 +334,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '2019', NULL, 
     '13insurgentes',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'David del Rosario');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 
@@ -346,8 +346,8 @@ INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory)
     '1967', NULL, 
     'Le Libros',
     'https://res.cloudinary.com/dlja4vnrd/image/upload/v1723489266/bookCoverPics/di2bbfam1c7ncljxnfw8.jpg');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730140399/Documento_sin_t%C3%ADtulo_mf50ar.pdf');
-INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730140399/Documento_sin_t%C3%ADtulo_awm8cq.epub');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.pdf', 'https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf');
+INSERT INTO BOOK_FILES (id_book, original_name, file_path) VALUES (CURRVAL('BOOK_id_seq'), 'book.epub', 'https://res.cloudinary.com/dlja4vnrd/raw/upload/v1730513614/books/book_zhxicr');
 INSERT INTO BOOK_AUTHORS (id_book, author) VALUES (CURRVAL('BOOK_id_seq'), 'Gabriel García Márquez');
 INSERT INTO BOOK_LANG (id_book, language) VALUES (CURRVAL('BOOK_id_seq'), 'spanish');
 INSERT INTO BOOK_IN_SUBCATEGORY (id_book, id_subcategory) 

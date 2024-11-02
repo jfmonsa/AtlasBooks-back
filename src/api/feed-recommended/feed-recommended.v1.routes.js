@@ -50,6 +50,10 @@ const feedRecommendedController = container.resolve(
  *                         type: string
  *                         description: The ID of the book.
  *                         example: hfjt
+ *                       pathBookCover:
+ *                         type: string
+ *                         description: The path to the book cover.
+ *                         example: "https://res.cloudinary.com/dlja4vnrd/image/upload/v1730155548/bookCoverPics/io13mcoz0rpzvpmzfsyf.jpg"
  *       404:
  *         description: Not found. The requested resource could not be found.
  *       500:

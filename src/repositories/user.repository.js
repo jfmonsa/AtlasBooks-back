@@ -113,4 +113,12 @@ export default class UserRepository extends BaseRepository {
 
     return await super.update(userId, { isActive: true });
   }
+
+  async changeEmail(userId, newEmail) {
+    return await super.update(userId, { email: newEmail });
+  }
+
+  async updateUserEmail(idUser, newEmail) {
+    await super.update(idUser, { email: newEmail });
+  }
 }

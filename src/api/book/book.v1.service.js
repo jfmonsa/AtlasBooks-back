@@ -135,7 +135,9 @@ export default class BookService {
         fileCloudUrl
       );
     } catch {
-      throw new NotFoundError("File not exists");
+      throw new NotFoundError(
+        `Error descargando el enlace, vaya manualmente a ${fileCloudUrl}`
+      );
     }
 
     await this.#bookFilesRepository.registerDownload(userId, bookId);
