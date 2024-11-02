@@ -1,6 +1,9 @@
 node_modules
 .env
 
+# jest
+coverage
+
 # files uploaded by users on the server 
 storage/*
 !storage/books/book.epub
