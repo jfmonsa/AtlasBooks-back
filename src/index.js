@@ -3,7 +3,7 @@ import Server from "./app.js";
 const server = new Server();
 let app;
 
-// Initialize the app only once
+// Inicializamos la app una sola vez
 const getApp = async () => {
   if (!app) {
     app = await server.create();
@@ -11,19 +11,15 @@ const getApp = async () => {
   return app;
 };
 
-let handler;
-
-if (process.env.NODE_ENV === "production") {
-  // Handler for Vercel
-  handler = async function (req, res) {
-    const app = await getApp();
-    return app(req, res);
-  };
-} else {
-  // For local development
-  getApp().then(() => {
+// Para desarrollo local
+if (process.env.NODE_ENV !== "production") {
+  server.create().then(() => {
     server.start();
   });
 }
 
-export default handler;
+// Handler para Vercel
+export default async function (req, res) {
+  const app = await getApp();
+  return app(req, res);
+}
