@@ -1,5 +1,6 @@
 node_modules
 .env
+.env.prod
 
 # jest
 coverage
@@ -10,3 +11,4 @@ storage/*
 !storage/books/book.pdf
 !storage/books/default.jpg
 !storage/usersProfilePic/default.webp
+.vercel

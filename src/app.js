@@ -21,7 +21,7 @@ class Server {
   async create() {
     setupDIContainer();
     await this.#setupMiddlewares();
-    this.#run();
+    return this.app;
   }
 
   async #setupMiddlewares() {
@@ -33,8 +33,6 @@ class Server {
     this.app.use(express.urlencoded({ extended: false }));
     // support cookies
     this.app.use(cookieParser());
-    // support serving static files
-    this.app.use("/storage", express.static("storage"));
 
     // log requests
     if (process.env.NODE_ENV === "dev") {
@@ -50,7 +48,8 @@ class Server {
     this.app.use(errorHandlerMiddleware);
   }
 
-  #run() {
+  // for local devlopment
+  async start() {
     const port = process.env.PORT;
 
     this.app.listen(port, () => {
@@ -60,5 +59,4 @@ class Server {
   }
 }
 
-const server = new Server();
-await server.create();
+export default Server;

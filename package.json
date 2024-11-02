@@ -2,13 +2,16 @@
   "name": "atlasbooks-back",
   "version": "1.0.0",
   "description": "Atlas Bugs backend",
-  "main": "app.js",
+  "main": "src/index.js",
   "type": "module",
   "directories": {
     "doc": "docs"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
-    "dev": "node --watch --env-file .env src/app.js",
+    "dev": "node --watch --env-file .env src/index.js",
     "start": "node --env-file .env src/app.js",
     "lint": "npx eslint",
     "lint:fix": "npx eslint . --fix ",
