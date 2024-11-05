@@ -7,12 +7,9 @@
   "directories": {
     "doc": "docs"
   },
-  "engines": {
-    "node": "20.x"
-  },
   "scripts": {
-    "dev": "node --watch --env-file .env src/index.js",
-    "start": "node --env-file .env src/app.js",
+    "dev": "node --watch --env-file .env  src/index.js",
+    "start": "node  src/index.js",
     "lint": "npx eslint",
     "lint:fix": "npx eslint . --fix ",
     "format": "prettier --write .",
