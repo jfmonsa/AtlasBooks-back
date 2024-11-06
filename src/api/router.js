@@ -1,6 +1,6 @@
 import { Router } from "express";
 import fs from "fs";
-import { fileURLToPath } from "url";
+import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
 const router = Router({ mergeParams: true });
@@ -19,9 +19,11 @@ async function loadRoutes() {
     // Search for .routes.js files in each module directory
     for (const file of moduleFiles) {
       if (file.endsWith(".routes.js")) {
-        // Dynamic importing of the route file
-        let routeModule = await import(path.join(__dirname, module, file));
-        // Use the module name as the base route
+        // Convertimos a URL antes de importar
+        const routeModulePath = pathToFileURL(
+          path.join(__dirname, module, file)
+        ).href;
+        let routeModule = await import(routeModulePath);
         router.use(`/${module}`, routeModule.default);
       }
     }
