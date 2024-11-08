@@ -53,7 +53,6 @@ router.get(
   apiVersionMiddleware(1),
   errorHandler(categoriesController.getAllCategories)
 );
-
 /**
  * @swagger
  * /api/v1/book-categories/groupped:
@@ -87,12 +86,23 @@ router.get(
  *                         type: string
  *                         description: The name of the category.
  *                         example: "Arts"
+ *                       categoryId:
+ *                         type: string
+ *                         description: The ID of the category.
+ *                         example: "wpyx"
  *                       subcategories:
  *                         type: array
  *                         items:
- *                           type: string
- *                           description: The name of the subcategory.
- *                           example: "Architecture"
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: string
+ *                               description: The ID of the subcategory.
+ *                               example: "wpyx"
+ *                             name:
+ *                               type: string
+ *                               description: The name of the subcategory.
+ *                               example: "Architecture"
  *       500:
  *         description: Internal server error. An error occurred on the server.
  */

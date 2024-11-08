@@ -27,9 +27,11 @@ export default class BookCategories extends BaseRepository {
         );
         return {
           category: category.name,
-          subcategories: subcategories.map(
-            subcategory => subcategory.subcategoryName
-          ),
+          categoryId: category.id,
+          subcategories: subcategories.map(subcategory => ({
+            id: subcategory.id,
+            name: subcategory.subcategoryName,
+          })),
         };
       })
     );
