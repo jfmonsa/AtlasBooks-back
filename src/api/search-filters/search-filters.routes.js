@@ -28,7 +28,6 @@ const authRequired = container.resolve("authRequired");
  *         name: search
  *         schema:
  *           type: string
- *         required: true
  *         description: The search query.
  *         example: "Gatsby"
  *       - in: query
