@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const searchBooksV1Dto = {
   query: {
-    search: Joi.string().required().trim(),
+    search: Joi.string().trim(),
     language: Joi.string().trim(),
     yearFrom: Joi.number().integer(),
     yearTo: Joi.number().integer(),
