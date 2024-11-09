@@ -84,12 +84,13 @@ export default class BookCategories extends BaseRepository {
 
     const categoryRows = await super.findById(idCategoryFather);
 
-    return {
+    const result = {
       subcategories: subCategoriesRows.map(subObj => subObj.name),
       subcategoriesIds: subCategoriesRows.map(subObj => subObj.subcategoryid),
-      category: categoryRows.length > 0 ? categoryRows[0].name : null,
-      categoryId: categoryRows.length > 0 ? categoryRows[0].id : null,
+      category: categoryRows ? categoryRows.name : null,
+      categoryId: categoryRows ? categoryRows.id : null,
     };
+    return result;
   }
 
   // book creation

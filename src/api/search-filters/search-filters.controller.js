@@ -12,7 +12,6 @@ export default class SearchFiltersController {
   async searchBooks(req, res) {
     req.query;
     const books = await this.#searchFiltersService.searchBooks(req.query);
-    console.log("controller", books);
     return res.formatResponse(books);
   }
 

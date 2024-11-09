@@ -63,8 +63,6 @@ export default class FeedRecommenedService {
       )
     );
 
-    console.log(feed);
-
     // format data
     feed = feed.map(book => ({
       authors: book.authors.join(", "),

@@ -51,8 +51,9 @@ export default class BookService {
 
     const relatedBooks = await this.#getBookRelatedBooks(
       id,
-      subcategories.subcategoryIds,
-      subcategories.categoryId
+      subcategories.subcategoriesIds,
+      subcategories.categoryId,
+      10
     );
 
     return {
@@ -96,24 +97,24 @@ export default class BookService {
         await this.#bookRepository.getRelatedBooksByCategory(
           idBook,
           categoryId,
-          relatedBooks.length - numberOfBooks
+          numberOfBooks - relatedBooks.length
         );
-      relatedBooks.concat(additionalBooks);
+      relatedBooks = relatedBooks.concat(additionalBooks);
     }
 
     if (relatedBooks.length < numberOfBooks) {
       const randomBooks = await this.#bookRepository.getRelatedBooksRandomly(
         idBook,
-        relatedBooks.length - numberOfBooks
+        numberOfBooks - relatedBooks.length
       );
-      relatedBooks.concat(randomBooks);
+      relatedBooks = relatedBooks.concat(randomBooks);
     }
 
     // format data
     return relatedBooks.map(book => ({
       authors: book.authors.join(", "),
       title: book.title,
-      pathBookCover: book.pathbookcover,
+      pathBookCover: book.cover_img_path,
       bookId: book.id,
     }));
   }

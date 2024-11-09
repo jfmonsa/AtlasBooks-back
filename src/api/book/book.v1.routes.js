@@ -138,8 +138,27 @@ const authRequired = container.resolve("authRequired");
  *                       type: array
  *                       items:
  *                         type: object
+ *                         properties:
+ *                           authors:
+ *                             type: string
+ *                             description: The authors of the related book.
+ *                             example: "Won-Pyung Sohn"
+ *                           title:
+ *                             type: string
+ *                             description: The title of the related book.
+ *                             example: "Almendra"
+ *                           bookId:
+ *                             type: string
+ *                             description: The ID of the related book.
+ *                             example: "zUbm"
  *                       description: The related books.
- *                       example: []
+ *                       example: [
+ *                         {
+ *                           "authors": "Won-Pyung Sohn",
+ *                           "title": "Almendra",
+ *                           "bookId": "zUbm"
+ *                         }
+ *                       ]
  *                     comments:
  *                       type: array
  *                       items:
@@ -159,6 +178,7 @@ router.get(
   validateDTO(getBookDataV1DTO),
   errorHandler(bookController.getById)
 );
+
 /**
  * @swagger
  * /api/v1/book:
