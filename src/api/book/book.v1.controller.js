@@ -109,7 +109,7 @@ export default class BookController {
 
     console.log(userId, idBook);
     if (!userId) {
-      res.formatResponse({ rate: 0 });
+      return res.formatResponse({ rate: 0 });
     }
 
     const rateValue = await this.#bookService.getRateOfBookByUserId(
