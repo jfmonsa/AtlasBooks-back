@@ -12,8 +12,8 @@ export default class SearchFiltersRepository extends BaseRepository {
     language,
     yearFrom,
     yearTo,
-    category,
-    subCategory,
+    categoryId,
+    subCategoryId,
   }) {
     let baseQuery = `
         SELECT 
@@ -35,13 +35,16 @@ export default class SearchFiltersRepository extends BaseRepository {
             book_rate ON book.id = book_rate.id_book`;
 
     let conditions = [];
-    let params = [`%${search}%`];
+    let params = [];
 
-    conditions.push(`(
-        book.title ILIKE $${conditions.length + 1}
-        OR book_authors.author ILIKE $${conditions.length + 1}
-        OR book.isbn ILIKE $${conditions.length + 1}
-        )`);
+    if (search) {
+      conditions.push(`(
+                  book.title ILIKE $${conditions.length + 1}
+                  OR book_authors.author ILIKE $${conditions.length + 1}
+                  OR book.isbn ILIKE $${conditions.length + 1}
+                  )`);
+      params.push(`%${search}%`);
+    }
 
     if (yearFrom) {
       conditions.push(`book.year_released >= $${conditions.length + 1}`);
@@ -58,28 +61,30 @@ export default class SearchFiltersRepository extends BaseRepository {
       params.push(language);
     }
 
-    if (category) {
+    if (categoryId) {
       baseQuery += `
             INNER JOIN book_in_subcategory bis ON book.id = bis.id_book
             INNER JOIN subcategory sc ON bis.id_subcategory = sc.id
             INNER JOIN category c ON sc.id_category_father = c.id
           `;
       conditions.push(`c.id = $${conditions.length + 1}`);
-      params.push(category);
+      params.push(categoryId);
     }
 
-    if (subCategory) {
-      if (!category) {
+    if (subCategoryId) {
+      if (!categoryId) {
         baseQuery += `
             INNER JOIN book_in_subcategory bis ON book.id = bis.id_book
             INNER JOIN subcategory sc ON bis.id_subcategory = sc.id
           `;
       }
       conditions.push(`sc.id = $${conditions.length + 1}`);
-      params.push(subCategory);
+      params.push(subCategoryId);
     }
 
-    baseQuery += ` WHERE ${conditions.join(" AND ")}`;
+    if (conditions.length > 0) {
+      baseQuery += ` WHERE ${conditions.join(" AND ")}`;
+    }
 
     const result = await this.executeQuery(baseQuery, params);
 
