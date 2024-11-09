@@ -6,8 +6,8 @@ const searchBooksV1Dto = {
     language: Joi.string().trim(),
     yearFrom: Joi.number().integer(),
     yearTo: Joi.number().integer(),
-    category: Joi.number().integer(),
-    subCategory: Joi.number().integer(),
+    categoryId: Joi.string().trim(),
+    subCategoryId: Joi.string().trim(),
   },
 };
 

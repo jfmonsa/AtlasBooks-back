@@ -49,17 +49,17 @@ const authRequired = container.resolve("authRequired");
  *         description: The ending year for the book release date.
  *         example: 2000
  *       - in: query
- *         name: category
+ *         name: categoryId
  *         schema:
- *           type: integer
+ *           type: string
  *         description: The category ID of the books.
- *         example: 1
+ *         example: "wpyx"
  *       - in: query
- *         name: subCategory
+ *         name: subCategoryId
  *         schema:
- *           type: integer
+ *           type: string
  *         description: The subcategory ID of the books.
- *         example: 2
+ *         example: "wpyx"
  *     responses:
  *       200:
  *         description: A list of books matching the search filters
