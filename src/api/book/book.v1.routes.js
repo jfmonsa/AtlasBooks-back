@@ -17,6 +17,126 @@ const authRequired = container.resolve("authRequired");
 
 /**
  * @swagger
+ * /api/v1/book/rate:
+ *   get:
+ *     summary: Get the rate of a book by book ID and user ID
+ *     tags:
+ *       - Books
+ *     parameters:
+ *       - in: query
+ *         name: idBook
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the book to retrieve the rate for.
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: false
+ *         description: The ID of the user to retrieve the rate for. If not provided, the rate will be 0.
+ *     responses:
+ *       200:
+ *         description: Book rate retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     rate:
+ *                       type: integer
+ *                       description: The rate of the book.
+ *                       example: 5
+ *                       default: 0
+ *       400:
+ *         description: Invalid ID supplied.
+ *       404:
+ *         description: Book not found.
+ *       500:
+ *         description: Server error.
+ */
+router.get(
+  "/rate",
+  apiVersionMiddleware(1),
+  validateDTO(getRateV1DTO),
+  errorHandler(bookController.getRateOfBookByUserId)
+);
+
+/**
+ * @swagger
+ * /api/v1/book/rate:
+ *   post:
+ *     summary: Rate a book
+ *     tags:
+ *       - Books
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idBook:
+ *                 type: integer
+ *                 description: The ID of the book to rate.
+ *                 example: wpyx
+ *               rate:
+ *                 type: integer
+ *                 description: The rating of the book.
+ *                 example: 5
+ *     responses:
+ *       201:
+ *         description: Book rated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 201
+ *                 message:
+ *                   type: string
+ *                   description: A success message.
+ *                   example: "Book rated successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   description: The data returned by the operation.
+ *                   example: null
+ *       400:
+ *         description: Invalid input, object invalid.
+ *       500:
+ *         description: Server error.
+ */
+router.post(
+  "/rate",
+  apiVersionMiddleware(1),
+  authRequired,
+  validateDTO(rateBookDTO),
+  errorHandler(bookController.rate)
+);
+
+/**
+ * @swagger
  * /api/v1/book/{id}:
  *   get:
  *     summary: Get a book by ID
@@ -340,127 +460,6 @@ router.post(
   authRequired,
   validateDTO(downloadBookDTO),
   errorHandler(bookController.download)
-);
-
-/**
- * @swagger
- * /api/v1/book/rate/{idBook}/{userId}:
- *   get:
- *     summary: Get the rate of a book by book ID and user ID
- *     tags:
- *       - Books
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: idBook
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the book to retrieve the rate for.
- *       - in: path
- *         name: userId
- *         schema:
- *           type: string
- *         required: true
- *         description: The ID of the user to retrieve the rate for. If is not logged in, send empty string ("").
- *     responses:
- *       200:
- *         description: Book rate retrieved successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   description: Whether the operation was successful.
- *                   example: true
- *                 statusCode:
- *                   type: integer
- *                   description: The status code of the response.
- *                   example: 200
- *                 data:
- *                   type: object
- *                   properties:
- *                     rate:
- *                       type: integer
- *                       description: The rate of the book.
- *                       example: 5
- *       400:
- *         description: Invalid ID supplied.
- *       404:
- *         description: Book not found.
- *       500:
- *         description: Server error.
- */
-router.get(
-  "/rate/:idBook/:userId",
-  apiVersionMiddleware(1),
-  validateDTO(getRateV1DTO),
-  errorHandler(bookController.getRateOfBookByUserId)
-);
-
-/**
- * @swagger
- * /api/v1/book/rate:
- *   post:
- *     summary: Rate a book
- *     tags:
- *       - Books
- *     security:
- *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               idBook:
- *                 type: integer
- *                 description: The ID of the book to rate.
- *                 example: wpyx
- *               rate:
- *                 type: integer
- *                 description: The rating of the book.
- *                 example: 5
- *     responses:
- *       201:
- *         description: Book rated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   description: Whether the operation was successful.
- *                   example: true
- *                 statusCode:
- *                   type: integer
- *                   description: The status code of the response.
- *                   example: 201
- *                 message:
- *                   type: string
- *                   description: A success message.
- *                   example: "Book rated successfully"
- *                 data:
- *                   type: object
- *                   nullable: true
- *                   description: The data returned by the operation.
- *                   example: null
- *       400:
- *         description: Invalid input, object invalid.
- *       500:
- *         description: Server error.
- */
-router.post(
-  "/rate",
-  apiVersionMiddleware(1),
-  authRequired,
-  validateDTO(rateBookDTO),
-  errorHandler(bookController.rate)
 );
 
 export default router;
