@@ -5,6 +5,7 @@ import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 //dto
+import getCommentsV1DTO from "./dto/get-comments.v1.dto.js";
 import createCommentV1DTO from "./dto/create-comment.v1.dto.js";
 import updateCommentV1DTO from "./dto/update-comment.v1.dto.js";
 import deleteCommentV1DTO from "./dto/delete-comment.v1.dto.js";
@@ -12,6 +13,62 @@ import deleteCommentV1DTO from "./dto/delete-comment.v1.dto.js";
 const router = Router({ mergeParams: true });
 const bookCommentsController = container.resolve("bookCommentsController");
 const authRequired = container.resolve("authRequired");
+
+/**
+ * @swagger
+ * /api/v1/book-comments/{bookId}:
+ *   get:
+ *     summary: Get comments of a book
+ *     tags:
+ *       - Book Comments
+ *     description: Retrieve a list of comments for a specific book.
+ *     parameters:
+ *       - in: path
+ *         name: bookId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the book
+ *     responses:
+ *       200:
+ *         description: A list of comments for the specified book
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The ID of the comment
+ *                     example: "12345"
+ *                   text:
+ *                     type: string
+ *                     description: The text of the comment
+ *                     example: "Great book!"
+ *                   userId:
+ *                     type: string
+ *                     description: The ID of the user who made the comment
+ *                     example: "67890"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     description: The date and time when the comment was created
+ *                     example: "2023-01-01T12:00:00Z"
+ *       400:
+ *         description: Invalid book ID
+ *       404:
+ *         description: Book not found
+ *       500:
+ *         description: Internal server error
+ */
+router.get(
+  "/:bookId",
+  apiVersionMiddleware(1),
+  validateDTO(getCommentsV1DTO),
+  errorHandler(bookCommentsController.getCommentsOfBook)
+);
 
 /**
  * @swagger

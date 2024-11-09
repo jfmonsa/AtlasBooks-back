@@ -6,6 +6,7 @@ import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
 // dtos
 import rateBookDTO from "./dto/rate-book.v1.dto.js";
+import getRateV1DTO from "./dto/get-rate.v1.dto.js";
 import createBookDTO from "./dto/create-book.v1.dto.js";
 import downloadBookDTO from "./dto/download-book.v1.dto.js";
 import getBookDataV1DTO from "./dto/get-book-data.v1.dto.js";
@@ -364,9 +365,9 @@ router.post(
  *         description: Server error.
  */
 router.get(
-  "/rate/:idBook",
+  "/rate/:idBook/:userNickname",
   apiVersionMiddleware(1),
-  authRequired,
+  validateDTO(getRateV1DTO),
   errorHandler(bookController.getRateOfBookByUserId)
 );
 

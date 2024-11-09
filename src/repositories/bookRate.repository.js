@@ -13,11 +13,15 @@ export default class BookRateRepository extends BaseRepository {
     return queryRate.lenght > 0 ? queryRate[0].rate_avg : 0;
   }
 
-  async getBookRateByUser(idBook, idUser) {
-    const result = await this.findWhere({
-      idUser,
-      idBook,
-    });
+  async getBookRateByUser(idBook, userNickname) {
+    const result = await super.executeQuery(
+      "SELECT rate_value FROM book_rate WHERE id_book = $1 AND id_user = (SELECT id FROM users WHERE nickname = $2)",
+      [idBook, userNickname]
+    );
+    // const result = await this.findWhere({
+    //   nickname: userNickname,
+    //   idBook,
+    // });
     return result ? result[0].rateValue : 0;
   }
 

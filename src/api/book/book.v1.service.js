@@ -149,9 +149,12 @@ export default class BookService {
     await this.#bookRateRepository.upsertRate(bookId, userId, rate);
   }
 
-  async getRateOfBookByUserId(bookId, userId) {
+  async getRateOfBookByUserId(bookId, userNickname) {
     await this.verifyBookExists(bookId);
-    return await this.#bookRateRepository.getBookRateByUser(userId, bookId);
+    return await this.#bookRateRepository.getBookRateByUser(
+      userNickname,
+      bookId
+    );
   }
 
   /**

@@ -9,6 +9,13 @@ export default class BookCommentsService {
     this.#bookService = bookService;
   }
 
+  async getCommentsOfBook(bookId) {
+    await this.#bookService.verifyBookExists(bookId);
+    const comments = await this.#bookCommentsRepository.getBookComments(bookId);
+    console.log("comments", comments);
+    return comments;
+  }
+
   async createCommentOfBook(text, bookId, userId) {
     await this.#bookService.verifyBookExists(bookId);
     const newComment = await this.#bookCommentsRepository.createComment(

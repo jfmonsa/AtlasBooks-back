@@ -18,7 +18,7 @@ export default class BookCommentsRepository extends BaseRepository {
       [idBook]
     );
 
-    return comments.lenght > 0 ? comments : [];
+    return comments.length > 0 ? comments : [];
   }
 
   async getCommentById(idComment) {

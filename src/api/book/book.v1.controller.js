@@ -105,11 +105,10 @@ export default class BookController {
   }
 
   async getRateOfBookByUserId(req, res) {
-    const idBook = req.params.idBook;
-    const { id: userId } = req.user;
+    const { userNickname, idBook } = req.params;
 
     const rateValue = await this.#bookService.getRateOfBookByUserId(
-      userId,
+      userNickname,
       idBook
     );
     res.formatResponse({ rate: rateValue });

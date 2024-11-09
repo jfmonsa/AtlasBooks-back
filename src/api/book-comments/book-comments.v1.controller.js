@@ -6,9 +6,18 @@ export default class BookCommentsController {
   constructor({ bookCommentsService }) {
     this.#bookCommentsService = bookCommentsService;
 
+    this.getCommentsOfBook = this.getCommentsOfBook.bind(this);
     this.createCommentOfBook = this.createCommentOfBook.bind(this);
     this.updateComment = this.updateComment.bind(this);
     this.deleteComment = this.deleteComment.bind(this);
+  }
+
+  async getCommentsOfBook(req, res) {
+    const { bookId } = req.params;
+
+    const comments = await this.#bookCommentsService.getCommentsOfBook(bookId);
+
+    res.formatResponse(comments);
   }
 
   async createCommentOfBook(req, res) {
