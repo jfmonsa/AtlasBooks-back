@@ -18,24 +18,47 @@ export default class BookCategories extends BaseRepository {
     );
   }
 
+  /**
+   * Retrieves a list of categories with their subcategories grouped.
+   * Only categories and subcategories that have an associated book are included.
+   *
+   * @returns {Promise<Array>} A promise that resolves to an array of categories with their subcategories.
+   */
   async getCategoriesAndSubcategoriesGrouped() {
-    const categories = await this.getAllCategories();
-    const categoriesAndSubcategories = await Promise.all(
-      categories.map(async category => {
-        const subcategories = await this.getSubCategoriesOfCategory(
-          category.id
-        );
-        return {
-          category: category.name,
-          categoryId: category.id,
-          subcategories: subcategories.map(subcategory => ({
-            id: subcategory.id,
-            name: subcategory.subcategoryName,
-          })),
-        };
-      })
+    const rows = await super.executeQuery(
+      `SELECT c.id AS categoryId, c.name AS categoryName, 
+              s.id AS subcategoryId, s.name AS subcategoryName
+       FROM category c
+       JOIN subcategory s ON s.id_category_father = c.id
+       JOIN book_in_subcategory bis ON bis.id_subcategory = s.id
+       GROUP BY c.id, c.name, s.id, s.name`
     );
-    return categoriesAndSubcategories;
+
+    // Group categories and subcategories from the result
+    const groupedCategories = rows.reduce((acc, row) => {
+      // Check if the category is already in the accumulator
+      let category = acc.find(cat => cat.categoryId === row.categoryid);
+
+      // If it doesn't exist, add it with an empty list of subcategories
+      if (!category) {
+        category = {
+          category: row.categoryname,
+          categoryId: row.categoryid,
+          subcategories: [],
+        };
+        acc.push(category);
+      }
+
+      // Add the current subcategory to the category's subcategory list
+      category.subcategories.push({
+        id: row.subcategoryid,
+        name: row.subcategoryname,
+      });
+
+      return acc;
+    }, []);
+
+    return groupedCategories;
   }
 
   // for book related with categories
