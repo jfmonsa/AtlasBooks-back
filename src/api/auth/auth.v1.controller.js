@@ -1,5 +1,5 @@
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
-import { ValidationError } from "../../helpers/exeptions.js";
+import { ValidationError, ConflictError } from "../../helpers/exeptions.js";
 
 const COOKIE_SETTINGS = {
   secure: process.env.NODE_ENV === "prod",
@@ -96,13 +96,11 @@ export default class AuthController {
     const { currentEmail, newEmail } = req.body;
 
     if (currentEmail === newEmail) {
-      throw new ValidationError(
-        "The new email is the same as the current email"
-      );
+      throw new ConflictError("The new email is the same as the current email");
     }
 
     if (currentEmail !== req.user.email) {
-      throw new ValidationError("The current email is incorrect");
+      throw new Error("The current email is incorrect");
     }
 
     await this.#authService.changeEmail(req.user, newEmail);
