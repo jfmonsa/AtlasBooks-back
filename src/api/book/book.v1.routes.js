@@ -344,9 +344,9 @@ router.post(
 
 /**
  * @swagger
- * /api/v1/book/rate/{idBook}:
+ * /api/v1/book/rate/{idBook}/{userId}:
  *   get:
- *     summary: Get the rate of a book by book ID
+ *     summary: Get the rate of a book by book ID and user ID
  *     tags:
  *       - Books
  *     security:
@@ -358,6 +358,12 @@ router.post(
  *           type: string
  *         required: true
  *         description: The ID of the book to retrieve the rate for.
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the user to retrieve the rate for. If is not logged in, send empty string ("").
  *     responses:
  *       200:
  *         description: Book rate retrieved successfully
@@ -389,7 +395,7 @@ router.post(
  *         description: Server error.
  */
 router.get(
-  "/rate/:idBook/:userNickname",
+  "/rate/:idBook/:userId",
   apiVersionMiddleware(1),
   validateDTO(getRateV1DTO),
   errorHandler(bookController.getRateOfBookByUserId)
