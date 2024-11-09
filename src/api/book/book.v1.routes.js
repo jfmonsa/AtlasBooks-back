@@ -151,6 +151,10 @@ const authRequired = container.resolve("authRequired");
  *                             type: string
  *                             description: The ID of the related book.
  *                             example: "zUbm"
+ *                           pathBookCover:
+ *                             type: string
+ *                             description: The URL of the cover image of the related book.
+ *                             example: "https://res.cloudinary.com/dmsfqvzjq/image/upload/v1730067150/bookCoverPics/ew0hcli1bg989qgpxbb4.jpg"
  *                       description: The related books.
  *                       example: [
  *                         {

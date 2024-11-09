@@ -114,7 +114,7 @@ export default class BookService {
     return relatedBooks.map(book => ({
       authors: book.authors.join(", "),
       title: book.title,
-      pathBookCover: book.cover_img_path,
+      pathBookCover: book.coverImgPath,
       bookId: book.id,
     }));
   }
