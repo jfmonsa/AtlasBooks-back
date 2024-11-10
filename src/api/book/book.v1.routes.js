@@ -441,16 +441,31 @@ router.post(
  *       200:
  *         description: Book downloaded successfully
  *         content:
- *           application/octet-stream:
+ *           application/json:
  *             schema:
- *               type: string
- *               format: binary
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   description: Whether the operation was successful.
+ *                   example: true
+ *                 statusCode:
+ *                   type: integer
+ *                   description: The status code of the response.
+ *                   example: 200
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     fileCloudUrl:
+ *                       type: string
+ *                       description: The URL of the downloaded file.
+ *                       example: "https://res.cloudinary.com/dlja4vnrd/image/upload/v1730513614/books/book_k8yjgg.pdf"
  *       400:
  *         description: Invalid input, object invalid.
  *       401:
  *         description: Unauthorized.
  *       404:
- *         description: File not found or book not exits.
+ *         description: File not found or book not exists.
  *       500:
  *         description: Server error.
  */

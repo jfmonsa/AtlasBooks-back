@@ -131,15 +131,18 @@ export default class BookService {
       bookId
     );
 
-    try {
-      await this.#bookFilesRepository.verifyFileExistsInCloudinary(
-        fileCloudUrl
-      );
-    } catch {
-      throw new NotFoundError(
-        `Error descargando el enlace, vaya manualmente a ${fileCloudUrl}`
-      );
-    }
+    // TODO: review this, reading cloudinary docs
+    // -> by commenting this we are trusting that the file exists in cloudinary from urls
+    //    stored in the database
+    // try {
+    //   await this.#bookFilesRepository.verifyFileExistsInCloudinary(
+    //     fileCloudUrl
+    //   );
+    // } catch {
+    //   throw new NotFoundError(
+    //     "File not found, try downloading it manually:" + fileCloudUrl
+    //   );
+    // }
 
     await this.#bookFilesRepository.registerDownload(userId, bookId);
     return fileCloudUrl;

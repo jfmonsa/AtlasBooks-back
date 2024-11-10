@@ -1,4 +1,3 @@
-import axios from "axios";
 import { AppError, ValidationError } from "../../helpers/exeptions.js";
 import { HTTP_CODES } from "../../helpers/httpCodes.js";
 
@@ -84,16 +83,7 @@ export default class BookController {
       fileName
     );
 
-    const response = await axios.get(fileCloudUrl, {
-      responseType: "stream",
-    });
-
-    // set header for download and sent stream to client
-    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
-    response.data.pipe(res);
-
-    // Old version: fronted will trigger the download
-    // -> res.formatResponse({ fileCloudUrl });
+    res.formatResponse({ fileCloudUrl });
   }
 
   async rate(req, res) {
