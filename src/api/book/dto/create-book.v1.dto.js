@@ -3,7 +3,7 @@ import Joi from "joi";
 const createBookDTO = {
   body: {
     title: Joi.string().required().trim(),
-    description: Joi.string().trim(),
+    description: Joi.string().required().trim(),
     isbn: Joi.string().required().trim(),
     publisher: Joi.string().trim(),
     volume: Joi.number(),
