@@ -1,21 +1,18 @@
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map(origin => origin.trim())
-  : [
-      "https://atlas-books-back.vercel.app",
-      "http://localhost:5173",
-      "https://atlasbooks.netlify.app",
-    ];
+import { AppError } from "../helpers/exeptions.js";
+
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",").map(origin =>
+  origin.trim()
+);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    callback(null, true);
-    // allowedOrigins.includes(origin) || !origin
-    //   ? callback(null, true)
-    //   : callback(new Error("Not allowed by CORS").message);
+    allowedOrigins.includes(origin) || !origin
+      ? callback(null, true)
+      : callback(new AppError("Not allowed by CORS").message);
   },
   credentials: true,
-  SameSite: "None",
-  secure: true,
+  SameSite: "None", // since frontend is on a different domain use "None"
+  secure: process.env.NODE_ENV === "prod",
 };
 
 export default corsOptions;
