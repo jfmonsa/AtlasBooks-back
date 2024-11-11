@@ -242,24 +242,20 @@ router.put(
 
 /**
  * @swagger
- * /api/v1/book-comments:
+ * /api/v1/book-comments/{commentId}:
  *   delete:
  *     summary: Delete a comment for a book
  *     tags:
  *       - Book Comments
  *     security:
  *       - cookieAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               commentId:
- *                 type: integer
- *                 description: The ID of the comment to delete.
- *                 example: wpyx
+ *     parameters:
+ *       - in: path
+ *         name: commentId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the comment to delete.
  *     responses:
  *       200:
  *         description: Comment deleted successfully
@@ -295,7 +291,7 @@ router.put(
  *         description: Internal server error. An error occurred on the server.
  */
 router.delete(
-  "/",
+  "/:commentId",
   apiVersionMiddleware(1),
   authRequired,
   validateDTO(deleteCommentV1DTO),

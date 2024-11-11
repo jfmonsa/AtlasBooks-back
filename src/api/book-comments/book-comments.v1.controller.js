@@ -51,8 +51,8 @@ export default class BookCommentsController {
   }
 
   async deleteComment(req, res) {
-    const { commentId } = req.body;
-    const { id: userId } = req.user;
+    const commentId = req.params.commentId;
+    const userId = req.user.id;
 
     await this.#bookCommentsService.deleteComment(commentId, userId);
 

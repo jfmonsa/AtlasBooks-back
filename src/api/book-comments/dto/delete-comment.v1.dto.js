@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const deleteCommentV1Dto = {
-  body: {
+  params: {
     commentId: Joi.string().required().trim(),
   },
 };
