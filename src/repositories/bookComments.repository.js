@@ -25,15 +25,17 @@ export default class BookCommentsRepository extends BaseRepository {
     return await super.findById(idComment);
   }
 
-  async createComment(text, idBook, idUser) {
-    const newComment = await super.create({
-      idUser,
-      idBook,
-      dateCommented: "NOW()",
-      textCommented: text,
-    });
-
-    return newComment;
+  async createComment(text, bookId, userId) {
+    const query = `
+      INSERT INTO book_comment (id_user, id_book, date_commented, text_commented)
+      VALUES ($1, $2, NOW(), $3)
+      RETURNING *,
+                (SELECT nickname FROM users WHERE id = $1) AS nickname,
+                (SELECT full_name FROM users WHERE id = $1) AS fullName
+    `;
+    const values = [userId, bookId, text];
+    const result = await this.executeQuery(query, values);
+    return result;
   }
 
   async updateComment(id, text) {

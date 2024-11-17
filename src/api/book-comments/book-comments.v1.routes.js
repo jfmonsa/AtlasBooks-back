@@ -89,7 +89,7 @@ router.get(
  *               bookId:
  *                 type: string
  *                 description: The ID of the book to comment on.
- *                 example: wpyx
+ *                 example: VOxg
  *               text:
  *                 type: string
  *                 description: The text of the comment.
@@ -115,29 +115,39 @@ router.get(
  *                   description: A success message.
  *                   example: "Comment created successfully"
  *                 data:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       description: The ID of the comment.
- *                       example: wpyx
- *                     idUser:
- *                       type: string
- *                       description: The ID of the user who commented.
- *                       example: wezd
- *                     idBook:
- *                       type: string
- *                       description: The ID of the book being commented on.
- *                       example: erwq
- *                     dateCommented:
- *                       type: string
- *                       format: date-time
- *                       description: The date and time when the comment was made.
- *                       example: "2024-10-29T17:16:48.894Z"
- *                     textCommented:
- *                       type: string
- *                       description: The text of the comment.
- *                       example: "Nice book!"
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                         description: The ID of the comment.
+ *                         example: Fwzy
+ *                       idUser:
+ *                         type: string
+ *                         description: The ID of the user who commented.
+ *                         example: qkcE
+ *                       idBook:
+ *                         type: string
+ *                         description: The ID of the book being commented on.
+ *                         example: VOxg
+ *                       dateCommented:
+ *                         type: string
+ *                         format: date-time
+ *                         description: The date and time when the comment was made.
+ *                         example: "2024-11-17T21:30:07.264Z"
+ *                       textCommented:
+ *                         type: string
+ *                         description: The text of the comment.
+ *                         example: "Nice book!"
+ *                       nickname:
+ *                         type: string
+ *                         description: The nickname of the user who commented.
+ *                         example: "test1"
+ *                       fullname:
+ *                         type: string
+ *                         description: The full name of the user who commented.
+ *                         example: "test1"
  *       400:
  *         description: Bad request
  *       401:
