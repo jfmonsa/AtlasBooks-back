@@ -33,13 +33,12 @@ export default class BookService {
    * @returns {Promise<Object>} The book with its details.
    */
   async getBookWithDetails(id) {
-    await this.verifyBookExists(id);
+    const book = await this.verifyBookExists(id);
 
     const NUMBER_OF_RELATED_BOOKS = 10;
 
-    const [book, authors, languages, files, rate, subcategories, comments] =
+    const [authors, languages, files, rate, subcategories, comments] =
       await Promise.all([
-        this.#bookRepository.getById(id),
         this.#bookAuthorsRepository.getBookAuthors(id),
         this.#bookLanguagesRepository.getBookLanguages(id),
         this.#bookFilesRepository.getBookFileNames(id),

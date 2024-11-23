@@ -1,9 +1,11 @@
 import { Router } from "express";
+import apicache from "apicache";
 import uploadMiddleware from "../../config/multer.js";
 import container from "../../config/di-container.js";
 import errorHandler from "../../middlewares/errorHandler.js";
 import apiVersionMiddleware from "../../middlewares/apiVersionMiddleware.js";
 import validateDTO from "../../middlewares/validateDTO.js";
+
 // dtos
 import rateBookDTO from "./dto/rate-book.v1.dto.js";
 import getRateV1DTO from "./dto/get-rate.v1.dto.js";
@@ -12,6 +14,7 @@ import downloadBookDTO from "./dto/download-book.v1.dto.js";
 import getBookDataV1DTO from "./dto/get-book-data.v1.dto.js";
 
 const router = Router({ mergeParams: true });
+const cache = apicache.middleware;
 const bookController = container.resolve("bookController");
 const authRequired = container.resolve("authRequired");
 
@@ -70,6 +73,7 @@ router.get(
   "/rate",
   apiVersionMiddleware(1),
   validateDTO(getRateV1DTO),
+  cache('5 minutes'),
   errorHandler(bookController.getRateOfBookByUserId)
 );
 
@@ -300,6 +304,7 @@ router.get(
   "/:id",
   apiVersionMiddleware(1),
   validateDTO(getBookDataV1DTO),
+  cache('5 minutes'),
   errorHandler(bookController.getById)
 );
 
