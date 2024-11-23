@@ -35,10 +35,11 @@ export default class BookService {
   async getBookWithDetails(id) {
     await this.verifyBookExists(id);
 
-    const book = await this.#bookRepository.getById(id);
+    const NUMBER_OF_RELATED_BOOKS = 10;
 
-    const [authors, languages, files, rate, subcategories, comments] =
+    const [book, authors, languages, files, rate, subcategories, comments] =
       await Promise.all([
+        this.#bookRepository.getById(id),
         this.#bookAuthorsRepository.getBookAuthors(id),
         this.#bookLanguagesRepository.getBookLanguages(id),
         this.#bookFilesRepository.getBookFileNames(id),
@@ -46,15 +47,16 @@ export default class BookService {
         this.#bookCategoriesRepository.getBookCategories(id),
         this.#bookCommentsRepository.getBookComments(id),
       ]);
-    const fileExtensions =
-      await this.#bookFilesRepository.getBookFileTypes(files);
 
-    const relatedBooks = await this.#getBookRelatedBooks(
-      id,
-      subcategories.subcategoriesIds,
-      subcategories.categoryId,
-      10
-    );
+    const [fileExtensions, relatedBooks] = await Promise.all([
+      this.#bookFilesRepository.getBookFileTypes(files),
+      this.#getBookRelatedBooks(
+        id,
+        subcategories.subcategoriesIds,
+        subcategories.categoryId,
+        NUMBER_OF_RELATED_BOOKS
+      ),
+    ]);
 
     return {
       ...book,
