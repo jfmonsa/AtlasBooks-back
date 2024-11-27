@@ -1,59 +1,62 @@
 import express from "express";
-// import dotenv from 'dotenv';
-// dotenv.config();
-// const morganBody = require("morgan-body"); ni idea que es, dejar comentado por si trin
-//import morgan from "morgan"; ??
+import { setupDIContainer } from "./config/di-container.js";
+
+// middlewares
 import cors from "cors";
+import corsOptions from "./config/cors.js";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import { formatResponse } from "./middlewares/formatResponse.js";
+import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js";
 
-const app = express();
-const port = process.env.PORT || 3000;
-import router from "./routes/index.js";
-import corsOptions from "./utils/cors.js";
+// api
+import { swaggerDocs as swaggerDocsV1 } from "./config/swagger.js";
+import loadRoutes from "./api/router.js";
 
-// Middlewares
-// app.use(morgan("dev")); ??
-// const whitelist = [
-//   "https://atlas-books-back.vercel.app/",
-//   "http://localhost:5173",
-// ];
+class Server {
+  constructor() {
+    this.app = express();
+  }
 
-app.use(
-  cors(corsOptions
-  )
-);
-// -- support post requests
-app.use(express.json());
-// -- support file uploading
-app.use(express.static("storage"));
-// -- converts form data in objects, extended false = accept only simple data, not matrices and so on
-app.use(express.urlencoded({ extended: false }));
-// -- support cookies
-app.use(cookieParser());
-// -- support serving static files
-app.use("/storage", express.static("storage"));
+  async create() {
+    setupDIContainer();
+    await this.#setupMiddlewares();
+    return this.app;
+  }
 
-// Routes API Rest
-app.use("/api", router);
+  async #setupMiddlewares() {
+    // -- Middlewares --
+    this.app.use(cors(corsOptions));
+    // support post requests
+    this.app.use(express.json());
+    // for form data
+    this.app.use(express.urlencoded({ extended: false }));
+    // support cookies
+    this.app.use(cookieParser());
 
-// handling errors
-app.use((err, req, res, next) => {
-  return res.status(500).json({
-    status: "error",
-    message: err.message,
-  });
-});
+    // log requests
+    if (process.env.NODE_ENV === "dev") {
+      this.app.use(morgan("dev"));
+    }
+    // format response
+    this.app.use(formatResponse);
 
-app.listen(port, () => {
-  console.log(`Server at: http://localhost:${port}`);
-});
+    // Routes API Rest
+    this.app.use("/api/:version", await loadRoutes());
 
-//y esto xd?
-// morganBody(app, {
-//   skip: function (req, res) {
-//     return (
-//       [403, 404, 409, 401].includes(res.statusCode) || res.statusCode < 400
-//     );
-//   },
-//   stream: loggerSlack,
-// });
+    // handling errors
+    this.app.use(errorHandlerMiddleware);
+  }
+
+  // for local devlopment
+  async start() {
+    const port = process.env.PORT;
+
+    this.app.listen(port, () => {
+      console.log(`-> 💻 Server runing at: ${process.env.SERVER_URL}`);
+      swaggerDocsV1(this.app);
+    });
+  }
+}
+
+export default Server;
