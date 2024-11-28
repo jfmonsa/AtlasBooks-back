@@ -48,12 +48,12 @@ class Server {
     this.app.use(errorHandlerMiddleware);
   }
 
-  // for local devlopment
+  // for local development
   async start() {
     const port = process.env.PORT;
 
     this.app.listen(port, () => {
-      console.log(`-> 💻 Server runing at: ${process.env.SERVER_URL}`);
+      console.log(`-> 💻 Server running at: ${process.env.SERVER_URL}`);
       swaggerDocsV1(this.app);
     });
   }
