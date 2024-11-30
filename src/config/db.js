@@ -10,9 +10,8 @@ class Database {
   initialize() {
     if (this.pool) return;
 
-    const DB_ENV = process.env.DB_ENV;
     const config =
-      DB_ENV === "prod"
+      process.env.NODE_ENV === "prod"
         ? { connectionString: process.env.POSTGRES_URL }
         : {
             user: process.env.LOCALDB_USER,
@@ -28,7 +27,7 @@ class Database {
     this.pool
       .connect()
       .then(() => {
-        console.log(`-> 🗂️  Connection to (${DB_ENV}) DB ok`);
+        console.log(`-> 🗂️  Connection to (${process.env.NODE_ENV}) DB ok`);
       })
       .catch(err => {
         console.error("Database connection error:", err);

@@ -7,15 +7,6 @@ export default class FeedRecommenedService {
     this.#bookRecommenedRepository = feedRecommendedRepository;
   }
 
-  // TODO: recomend book based on user criteria
-  // TODO: implement pagination
-  // Old Feed Recommended algo:
-  // 1. Get 10 most downloaded books
-  // 2. Get 10 more books from the same category as the mostDownloadedBooks 10 books
-  // 3. Add two of the most recent books
-  // 4. Get the rest of the books randomly
-  // 5. Shuffle the entire array before returning it
-
   /**
    * Get 50 books with coverPath in the following priority order:
    * 1. Query Top 10 downloaded books
@@ -30,47 +21,30 @@ export default class FeedRecommenedService {
   async getFeedRecomendedForUser() {
     let feed = [];
 
-    await this.#bookRecommenedRepository.getMostDownloadedBooks(
-      10,
-      feed.map(book => book.id)
-    );
+    const mostDownloadedBooks = await this.#bookRecommenedRepository.getMostDownloadedBooks(10);
+    feed = feed.concat(mostDownloadedBooks);
 
-    feed = feed.concat(
-      await this.#bookRecommenedRepository.getMostCommentedBooks(
-        10,
-        feed.map(book => book.id)
-      )
-    );
+    const mostCommentedBooks = await this.#bookRecommenedRepository.getMostCommentedBooks(10, feed.map(book => book.id));
+    feed = feed.concat(mostCommentedBooks);
 
-    feed = feed.concat(
-      await this.#bookRecommenedRepository.getTopRatedBooks(
-        10,
-        feed.map(book => book.id)
-      )
-    );
+    const topRatedBooks = await this.#bookRecommenedRepository.getTopRatedBooks(10, feed.map(book => book.id));
+    feed = feed.concat(topRatedBooks);
 
-    feed = feed.concat(
-      await this.#bookRecommenedRepository.getMostRecentBooks(
-        10,
-        feed.map(book => book.id)
-      )
-    );
+    const recentlyAddedBooks = await this.#bookRecommenedRepository.getMostRecentBooks(10, feed.map(book => book.id));
+    feed = feed.concat(recentlyAddedBooks);
 
-    feed = feed.concat(
-      await this.#bookRecommenedRepository.getRandomlyBooks(
-        50 - feed.length,
-        feed.map(book => book.id)
-      )
-    );
+    const remainingBooks = await this.#bookRecommenedRepository.getRandomlyBooks(50 - feed.length, feed.map(book => book.id));
+    feed = feed.concat(remainingBooks);
 
-    // format data
-    feed = feed.map(book => ({
-      authors: book.authors.join(", "),
-      title: book.title,
-      pathBookCover: book.coverImgPath,
-      bookId: book.id,
-    }));
+    // Shuffle the entire array before returning it
+    shuffleArray(feed);
 
-    return shuffleArray(feed);
+    // Remove duplicate authors
+    feed = feed.map(book => {
+      book.authors = [...new Set(book.authors)];
+      return book;
+    });
+
+    return feed;
   }
 }
