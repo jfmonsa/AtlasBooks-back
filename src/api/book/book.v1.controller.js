@@ -50,9 +50,13 @@ export default class BookController {
       }
     }
 
+    // Parse and remove duplicate authors
+    const authorsArray = Array.isArray(authors) ? authors : JSON.parse(authors);
+    const uniqueAuthors = Array.from(new Set(authorsArray));
+
     await this.#bookService.create({
       ...bookData,
-      authors: Array.isArray(authors) ? authors : JSON.parse(authors),
+      authors: uniqueAuthors,
       languages: Array.isArray(languages) ? languages : JSON.parse(languages),
       subcategoryIds: Array.isArray(subcategoryIds)
         ? subcategoryIds

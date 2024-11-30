@@ -73,7 +73,7 @@ router.get(
   "/rate",
   apiVersionMiddleware(1),
   validateDTO(getRateV1DTO),
-  cache('5 minutes'),
+  cache("5 minutes"),
   errorHandler(bookController.getRateOfBookByUserId)
 );
 
@@ -304,7 +304,7 @@ router.get(
   "/:id",
   apiVersionMiddleware(1),
   validateDTO(getBookDataV1DTO),
-  cache('5 minutes'),
+  cache("5 minutes"),
   errorHandler(bookController.getById)
 );
 

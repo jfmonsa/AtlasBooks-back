@@ -21,19 +21,35 @@ export default class FeedRecommenedService {
   async getFeedRecomendedForUser() {
     let feed = [];
 
-    const mostDownloadedBooks = await this.#bookRecommenedRepository.getMostDownloadedBooks(10);
+    const mostDownloadedBooks =
+      await this.#bookRecommenedRepository.getMostDownloadedBooks(10);
     feed = feed.concat(mostDownloadedBooks);
 
-    const mostCommentedBooks = await this.#bookRecommenedRepository.getMostCommentedBooks(10, feed.map(book => book.id));
+    const mostCommentedBooks =
+      await this.#bookRecommenedRepository.getMostCommentedBooks(
+        10,
+        feed.map(book => book.id)
+      );
     feed = feed.concat(mostCommentedBooks);
 
-    const topRatedBooks = await this.#bookRecommenedRepository.getTopRatedBooks(10, feed.map(book => book.id));
+    const topRatedBooks = await this.#bookRecommenedRepository.getTopRatedBooks(
+      10,
+      feed.map(book => book.id)
+    );
     feed = feed.concat(topRatedBooks);
 
-    const recentlyAddedBooks = await this.#bookRecommenedRepository.getMostRecentBooks(10, feed.map(book => book.id));
+    const recentlyAddedBooks =
+      await this.#bookRecommenedRepository.getMostRecentBooks(
+        10,
+        feed.map(book => book.id)
+      );
     feed = feed.concat(recentlyAddedBooks);
 
-    const remainingBooks = await this.#bookRecommenedRepository.getRandomlyBooks(50 - feed.length, feed.map(book => book.id));
+    const remainingBooks =
+      await this.#bookRecommenedRepository.getRandomlyBooks(
+        50 - feed.length,
+        feed.map(book => book.id)
+      );
     feed = feed.concat(remainingBooks);
 
     // Shuffle the entire array before returning it
