@@ -1,4 +1,4 @@
-import { elasticSearchBooks } from "../../elastic-Search/cloud-connection.js";
+import { elasticSearchBooks } from "../../repositories/elasticSearch.repository.js";
 export default class SearchFiltersController {
   #searchFiltersService;
 

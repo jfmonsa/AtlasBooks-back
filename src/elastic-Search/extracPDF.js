@@ -25,7 +25,7 @@ export async function processPDF(filePath) {
     }
 
     const data = await pdf(dataBuffer);
-    //console.log("Data:", data);
+
     let cuerpo = data.text;
 
     // Limpiar el texto eliminando saltos de línea adicionales, pero manteniendo los espacios entre palabras
@@ -33,9 +33,6 @@ export async function processPDF(filePath) {
 
     // Eliminar los símbolos :, (, y )
     cuerpo = cuerpo.replace(/[:()]/g, "");
-
-    //console.log("Cuerpo:", cuerpo);
-    //console.log("Cuerpo JSON:", JSON.stringify(cuerpo));
 
     return cuerpo;
   } catch (error) {

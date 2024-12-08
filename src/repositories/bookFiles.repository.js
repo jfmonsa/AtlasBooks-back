@@ -4,6 +4,7 @@ import cloudinary, {
   CLOUDINARY_FOLDERS,
 } from "../config/cloudinary.js";
 import { getFileExtension } from "../helpers/fileExtension.js";
+import { indexBookScript } from "../repositories/elasticSearch.repository.js";
 
 export default class BookFilesRepository extends BaseRepository {
   constructor() {
@@ -41,9 +42,11 @@ export default class BookFilesRepository extends BaseRepository {
    * Uploads and inserts the book files into the database.
    * @param {number} bookId - The ID of the book.
    * @param {Array} files - The book files to be uploaded and inserted.
+   * @param {title} title - The title of the book.
    * @param {Object} client - The database client.
+   *
    */
-  async uploadAndInsertBookFiles(bookId, files, client) {
+  async uploadAndInsertBookFiles(bookId, files, title, client) {
     const uploadPromises = files.map(async file => {
       const uploadResult = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
@@ -75,6 +78,11 @@ export default class BookFilesRepository extends BaseRepository {
           originalName: file.originalname,
         },
         client
+      );
+
+      await indexBookScript(
+        { id: bookId, title: title },
+        uploadResult.secure_url
       );
 
       return uploadResult;
