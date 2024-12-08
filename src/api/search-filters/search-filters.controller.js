@@ -1,3 +1,4 @@
+import { elasticSearchBooks } from "../../elastic-Search/cloud-connection.js";
 export default class SearchFiltersController {
   #searchFiltersService;
 
@@ -10,8 +11,11 @@ export default class SearchFiltersController {
   }
 
   async searchBooks(req, res) {
-    req.query;
-    const books = await this.#searchFiltersService.searchBooks(req.query);
+    const elasticSearchIds = await elasticSearchBooks(req.query.search);
+    const books = await this.#searchFiltersService.searchBooks({
+      ...req.query,
+      elasticSearch: elasticSearchIds,
+    });
     return res.formatResponse(books);
   }
 
@@ -23,5 +27,10 @@ export default class SearchFiltersController {
   async searchPublicLists(req, res) {
     const lists = await this.#searchFiltersService.searchPublicLists(req.query);
     return res.formatResponse(lists);
+  }
+
+  async fetchBookTitles(req, res) {
+    const titles = await this.#searchFiltersService.fetchBookTitles();
+    return res.formatResponse(titles);
   }
 }
