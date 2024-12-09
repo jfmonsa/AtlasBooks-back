@@ -8,6 +8,7 @@ export default class SearchFiltersRepository extends BaseRepository {
   }
 
   async searchBooks({
+    elasticSearch,
     search,
     language,
     yearFrom,
@@ -82,8 +83,20 @@ export default class SearchFiltersRepository extends BaseRepository {
       params.push(subCategoryId);
     }
 
-    if (conditions.length > 0) {
-      baseQuery += ` WHERE ${conditions.join(" AND ")}`;
+    let finalCondition =
+      conditions.length > 0 ? `(${conditions.join(" AND ")})` : "";
+
+    if (elasticSearch && elasticSearch.length > 0) {
+      if (finalCondition) {
+        finalCondition = `(${finalCondition}) OR (book.id = ANY($${params.length + 1}))`;
+      } else {
+        finalCondition = `book.id = ANY($${params.length + 1})`;
+      }
+      params.push(elasticSearch);
+    }
+
+    if (finalCondition) {
+      baseQuery += ` WHERE ${finalCondition}`;
     }
 
     const result = await this.executeQuery(baseQuery, params);
@@ -115,5 +128,12 @@ export default class SearchFiltersRepository extends BaseRepository {
             (book_list.title ILIKE $1 OR book_list.description ILIKE $1)
             AND book_list.is_public = true`;
     return await this.executeQuery(query, [`%${listName}%`]);
+  }
+
+  async fetchBookTitles() {
+    const query = `
+        SELECT id, title
+        FROM book`;
+    return await this.executeQuery(query);
   }
 }

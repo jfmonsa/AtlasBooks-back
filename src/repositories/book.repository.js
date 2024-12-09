@@ -95,6 +95,7 @@ export default class BookRepository extends BaseRepository {
       await this.#bookFilesRepository.uploadAndInsertBookFiles(
         bookId,
         bookFiles,
+        bookDetails.title,
         client
       );
 
