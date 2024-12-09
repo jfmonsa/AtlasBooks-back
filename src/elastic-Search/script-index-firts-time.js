@@ -6,11 +6,12 @@ import { indexBookScript } from "../repositories/elasticSearch.repository.js";
  * @fileoverview Script to index all books in ElasticSearch for the first time.
  */
 
-const urlToTestNube2 = "../../../test/data/testNube2.pdf";
+const urlToTestNube2 = "";
 
 const searchFiltersRepository = new SearchFiltersRepository();
 
 async function fetchAndStoreBookTitles() {
+  console.log("Fetching book titles...");
   try {
     const bookTitles = await searchFiltersRepository.fetchBookTitles();
     const titlesArray = bookTitles.map(book => ({
@@ -38,7 +39,8 @@ export async function mapIndex(indexName, mapping) {
   console.log(`Mapping for index ${indexName} created successfully`);
 }
 
-async function indexAllBooks() {
+export async function indexAllBooks() {
+  console.log("Indexing all books...");
   try {
     const books = await fetchAndStoreBookTitles();
     console.log("books", books);
@@ -50,5 +52,3 @@ async function indexAllBooks() {
     console.error("Error:", error);
   }
 }
-
-indexAllBooks();

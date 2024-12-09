@@ -48,12 +48,12 @@ export async function indexBookScript(book, secureUrl = null) {
   const bookId = book.id || book;
   const title = book.title || arguments[1];
   const url = secureUrl || arguments[2];
-  console.log(`Indexing book with ID ${bookId} and title ${title}`);
+
   const body = {
     id: bookId,
     title: title,
     body: await processPDF(url),
   };
 
-  indexBook("test1", body);
+  indexBook("books", body);
 }
