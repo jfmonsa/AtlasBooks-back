@@ -6,31 +6,33 @@ import { indexBookScript } from "../repositories/elasticSearch.repository.js";
  * @fileoverview Script to index all books in ElasticSearch for the first time.
  */
 
-const urlToTestNube2 = "";
+const urlToTestPdf = "";
 
+// NOTE: we have to create a new instance of the repository to use the fetchBookTitles method
+// because the repository was intended to be used in the context of the API using a DI container
 const searchFiltersRepository = new SearchFiltersRepository();
 
-async function fetchAndStoreBookTitles() {
-  console.log("Fetching book titles...");
+/** Retrieves and transforms book titles.*/
+async function retrieveBookTitles() {
   try {
     const bookTitles = await searchFiltersRepository.fetchBookTitles();
     const titlesArray = bookTitles.map(book => ({
       id: book.id,
       title: book.title,
     }));
-    console.log("Book Titles:", titlesArray);
     return titlesArray;
   } catch (error) {
     console.error("Error fetching book titles:", error);
   }
 }
 
-//Used to create an index, maping and indexBooks in ElasticSearch for testing purposes
+/** Creates an index in ElasticSearch. */
 export async function createIndex(indexName) {
   await client.indices.create({ index: indexName });
   console.log(`Index ${indexName} created successfully`);
 }
 
+/** Maps an index in ElasticSearch. */
 export async function mapIndex(indexName, mapping) {
   await client.indices.putMapping({
     index: indexName,
@@ -39,16 +41,16 @@ export async function mapIndex(indexName, mapping) {
   console.log(`Mapping for index ${indexName} created successfully`);
 }
 
+/** Indexes all books in ElasticSearch. */
 export async function indexAllBooks() {
-  console.log("Indexing all books...");
+  console.log("Indexing all books in elastic search index...");
   try {
-    const books = await fetchAndStoreBookTitles();
-    console.log("books", books);
+    const books = await retrieveBookTitles();
     for (const book of books) {
-      await indexBookScript(book, urlToTestNube2);
+      await indexBookScript(book, urlToTestPdf);
     }
-    console.log("Todos los libros han sido indexados");
+    console.log("All books have been indexed");
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error indexing all books:", error);
   }
 }
