@@ -1,4 +1,4 @@
-import { elasticSearchBooks } from "../../repositories/elasticSearch.repository.js";
+import { searchBooksInElastic } from "../../repositories/elasticSearch.repository.js";
 export default class SearchFiltersController {
   #searchFiltersService;
 
@@ -11,7 +11,7 @@ export default class SearchFiltersController {
   }
 
   async searchBooks(req, res) {
-    const elasticSearchIds = await elasticSearchBooks(req.query.search);
+    const elasticSearchIds = await searchBooksInElastic(req.query.search);
     const books = await this.#searchFiltersService.searchBooks({
       ...req.query,
       elasticSearch: elasticSearchIds,
