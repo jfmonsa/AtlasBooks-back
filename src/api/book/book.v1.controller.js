@@ -101,7 +101,6 @@ export default class BookController {
   async getRateOfBookByUserId(req, res) {
     const { userId, idBook } = req.query;
 
-    console.log(userId, idBook);
     if (!userId) {
       return res.formatResponse({ rate: 0 });
     }
