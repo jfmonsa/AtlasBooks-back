@@ -28,7 +28,7 @@ export default class BookRepository extends BaseRepository {
     if (!subcategoryIds) return [];
 
     const query = `
-      SELECT b.id, b.title, b.cover_img_path, array_agg(ba.author) AS authors 
+      SELECT b.id, b.title, b.cover_img_path, array_agg(DISTINCT ba.author) AS authors 
       FROM BOOK b
       INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.id_book
       INNER JOIN BOOK_AUTHORS ba ON b.id = ba.id_book
@@ -42,7 +42,7 @@ export default class BookRepository extends BaseRepository {
   async getRelatedBooksByCategory(idBook, categoryId, limit) {
     if (!categoryId) return [];
     const query = `
-      SELECT b.id, b.title, b.cover_img_path, array_agg(ba.author) AS authors
+      SELECT b.id, b.title, b.cover_img_path, array_agg(DISTINCT ba.author) AS authors
       FROM BOOK b
       INNER JOIN BOOK_IN_SUBCATEGORY bis ON b.id = bis.id_book
       INNER JOIN BOOK_AUTHORS ba ON b.id = ba.id_book
@@ -57,7 +57,7 @@ export default class BookRepository extends BaseRepository {
 
   async getRelatedBooksRandomly(idBook, limit) {
     const query = `
-      SELECT b.id, b.title, b.cover_img_path, array_agg(ba.author) AS authors
+      SELECT b.id, b.title, b.cover_img_path, array_agg(DISTINCT ba.author) AS authors
       FROM BOOK b
       INNER JOIN BOOK_AUTHORS ba ON b.id = ba.id_book
       WHERE b.id != $1
@@ -80,7 +80,7 @@ export default class BookRepository extends BaseRepository {
       ...bookDetails
     } = bookData;
 
-    super.transaction(async client => {
+    await super.transaction(async client => {
       const coverUrl =
         await this.#bookFilesRepository.uploadCoverImage(coverBookFile);
       const { id: bookId } = await super.create(
@@ -95,13 +95,18 @@ export default class BookRepository extends BaseRepository {
       await this.#bookFilesRepository.uploadAndInsertBookFiles(
         bookId,
         bookFiles,
+        bookDetails.title,
         client
       );
+
+      // Remove duplicate authors
+      const uniqueAuthors = Array.from(new Set(authors));
       await this.#bookAuthorsRepository.insertBookAuthors(
         bookId,
-        authors,
+        uniqueAuthors,
         client
       );
+
       await this.#bookLanguagesRepository.insertBookLanguages(
         bookId,
         languages,

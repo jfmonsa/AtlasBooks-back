@@ -5,6 +5,7 @@
 # DB
 
 # Tools
-+ Linter
-+ Test Library
-+ Prettier
+
+- Linter
+- Test Library
+- Prettier

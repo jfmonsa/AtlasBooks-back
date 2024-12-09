@@ -69,7 +69,6 @@ export default class BookService {
       comments,
     };
   }
-
   /**
    * Retrieves related books based on given parameters based on priority:
    *  1. Related books by subcategory
@@ -111,13 +110,16 @@ export default class BookService {
       relatedBooks = relatedBooks.concat(randomBooks);
     }
 
-    // format data
-    return relatedBooks.map(book => ({
-      authors: book.authors.join(", "),
-      title: book.title,
-      pathBookCover: book.coverImgPath,
-      bookId: book.id,
-    }));
+    // format data and remove duplicate authors
+    return relatedBooks.map(book => {
+      const uniqueAuthors = Array.from(new Set(book.authors));
+      return {
+        authors: uniqueAuthors.join(", "),
+        title: book.title,
+        pathBookCover: book.coverImgPath,
+        bookId: book.id,
+      };
+    });
   }
 
   async create(bookData) {
