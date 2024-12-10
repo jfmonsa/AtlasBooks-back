@@ -121,4 +121,24 @@ export default class UserRepository extends BaseRepository {
   async updateUserEmail(idUser, newEmail) {
     await super.update(idUser, { email: newEmail });
   }
+
+  async updateUserRole(userId, newRole) {
+    return await super.update(userId, { role: newRole });
+  }
+
+  async getUserRole(userId) {
+    const result = await super.executeQuery(
+      `SELECT role FROM users WHERE id = $1`,
+      [userId]
+    );
+    return result[0]?.role;
+  }
+
+  async registerBookDownload(userId, bookId) {
+    const query = `
+      INSERT INTO BOOK_DOWNLOAD (id_user, id_book, date_downloaded)
+      VALUES ($1, $2, NOW())
+    `;
+    await super.executeQuery(query, [userId, bookId]);
+  }
 }

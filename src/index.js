@@ -35,6 +35,11 @@ app.use(formatResponse);
 // Routes API Rest
 app.use("/api/:version", await loadRoutes());
 
+// test route for server (use for cron job to keep server alive)
+app.use("/ping", (_req, res) => {
+  res.send("pong");
+});
+
 // handling errors
 app.use(errorHandlerMiddleware);
 

@@ -1,4 +1,5 @@
-import { NotFoundError } from "../../helpers/exeptions.js";
+import { NotFoundError, ForbiddenError } from "../../helpers/exeptions.js";
+import { ROLES } from "../../helpers/roles.js";
 
 export default class BookService {
   #bookRepository;
@@ -8,6 +9,7 @@ export default class BookService {
   #bookFilesRepository;
   #bookAuthorsRepository;
   #bookLanguagesRepository;
+  #userRepository;
 
   constructor({
     bookRepository,
@@ -17,6 +19,7 @@ export default class BookService {
     bookFilesRepository,
     bookAuthorsRepository,
     bookLanguagesRepository,
+    userRepository,
   }) {
     this.#bookRepository = bookRepository;
     this.#bookRateRepository = bookRateRepository;
@@ -25,6 +28,7 @@ export default class BookService {
     this.#bookFilesRepository = bookFilesRepository;
     this.#bookAuthorsRepository = bookAuthorsRepository;
     this.#bookLanguagesRepository = bookLanguagesRepository;
+    this.#userRepository = userRepository;
   }
 
   /**
@@ -122,12 +126,45 @@ export default class BookService {
     });
   }
 
-  async create(bookData) {
+  async create(bookData, userId) {
     await this.#bookRepository.createBookWithDetails(bookData);
+    await this.checkAndUpdateUserRole(userId);
+  }
+
+  /**
+   * Checks if the user has uploaded 5 books and updates their role to premium.
+   * @param {string} userId - The ID of the user.
+   */
+  async checkAndUpdateUserRole(userId) {
+    const uploadedBooksCount =
+      await this.#bookRepository.countBooksUploadedByUser(userId);
+    const currentUserRole = await this.#userRepository.getUserRole(userId);
+
+    if (
+      currentUserRole === ROLES.USER_PREMIUM ||
+      currentUserRole === ROLES.ADMIN
+    )
+      return;
+    if (uploadedBooksCount >= 5) {
+      await this.#userRepository.updateUserRole(userId, ROLES.USER_PREMIUM);
+    }
   }
 
   async downloadBook(userId, bookId, fileName) {
     await this.verifyBookExists(bookId);
+
+    const userRole = await this.#userRepository.getUserRole(userId);
+
+    // Check if the user has reached the daily download limit
+    if (userRole !== ROLES.USER_PREMIUM) {
+      const dailyDownloads =
+        await this.#bookRepository.countDailyDownloadsByUser(userId);
+      if (dailyDownloads >= 5) {
+        throw new ForbiddenError(
+          "You have reached the daily download limit for non-premium users."
+        );
+      }
+    }
 
     const fileCloudUrl = await this.#bookFilesRepository.getFileCloudUrl(
       fileName,

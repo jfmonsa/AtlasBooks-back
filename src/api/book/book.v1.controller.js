@@ -33,6 +33,7 @@ export default class BookController {
     const { cover: coverBookFile, bookFiles } = req.files;
     const { id: userIdWhoUploadBook } = req.user;
     const bookData = req.body;
+    const { id: userId } = req.user;
 
     // file validation
     if (!bookFiles || !Array.isArray(bookFiles) || bookFiles.length === 0) {
@@ -54,17 +55,20 @@ export default class BookController {
     const authorsArray = Array.isArray(authors) ? authors : JSON.parse(authors);
     const uniqueAuthors = Array.from(new Set(authorsArray));
 
-    await this.#bookService.create({
-      ...bookData,
-      authors: uniqueAuthors,
-      languages: Array.isArray(languages) ? languages : JSON.parse(languages),
-      subcategoryIds: Array.isArray(subcategoryIds)
-        ? subcategoryIds
-        : JSON.parse(subcategoryIds),
-      coverBookFile,
-      bookFiles,
-      userIdWhoUploadBook,
-    });
+    await this.#bookService.create(
+      {
+        ...bookData,
+        authors: uniqueAuthors,
+        languages: Array.isArray(languages) ? languages : JSON.parse(languages),
+        subcategoryIds: Array.isArray(subcategoryIds)
+          ? subcategoryIds
+          : JSON.parse(subcategoryIds),
+        coverBookFile,
+        bookFiles,
+        userIdWhoUploadBook,
+      },
+      userId
+    );
 
     res.formatResponse(null, "Book created successfully", HTTP_CODES.CREATED);
   }
@@ -101,7 +105,6 @@ export default class BookController {
   async getRateOfBookByUserId(req, res) {
     const { userId, idBook } = req.query;
 
-    console.log(userId, idBook);
     if (!userId) {
       return res.formatResponse({ rate: 0 });
     }
