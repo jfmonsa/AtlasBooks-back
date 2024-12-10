@@ -34,20 +34,21 @@ Index to backend documentation files
 
 - **Recommended Books Feed**: Curated suggestions based on user preferences.
 - **Advanced Search**: Filter books by author, title, genre, and publication date.
+- **Full-Text Search**: Leverage **ElasticSearch** for advanced full-text searches within book content and metadata, ensuring precise and fast results.
 
 ### 📚 Book Management
 
 - **Upload Books**: Drag-and-drop functionality for book files and cover images.
 - **Book Pages**: Download, rate, comment, and share books directly from their dedicated pages.
 - **Recommendations**: Personalized suggestions based on your downloads and book lists.
-- **Report Books**: Flag inappropriate content to maintain a quality library
+- **Report Books**: Flag inappropriate content to maintain a quality library.
 
 ### 📋 List Management
 
 - **Create Lists**: Organize your reading journey with custom book lists.
 - **Public Lists**: Share your lists with the community or explore others' collections.
 
-### Admin options
+### Admin Options
 
 - **User Management**: Ban/unban users violating platform policies.
 - **Reports Dashboard**: Address flagged books and user issues effectively.
@@ -57,6 +58,7 @@ Index to backend documentation files
 - **Frontend**: Built with React.js and Vite, emphasizing responsive and accessible design using modern CSS techniques.
 - **Backend**: Developed using Node.js and Express for robust API handling.
 - **Database**: PostgreSQL powers efficient data storage and management.
+- **Search Engine**: **ElasticSearch** for powerful full-text search capabilities.
 
 ### Other Tools
 
