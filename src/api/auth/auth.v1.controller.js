@@ -4,7 +4,7 @@ import { ValidationError, ConflictError } from "../../helpers/exeptions.js";
 const COOKIE_SETTINGS = {
   secure: process.env.NODE_ENV === "prod",
   httpOnly: true,
-  sameSite: "None",
+  sameSite: process.env.NODE_ENV === "prod" ? "None" : "Lax",
 };
 
 export default class AuthController {
