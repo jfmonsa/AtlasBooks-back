@@ -11,7 +11,7 @@ const corsOptions = {
       : callback(new AppError("Not allowed by CORS").message);
   },
   credentials: true,
-  SameSite: "None", // since frontend is on a different domain use "None"
+  SameSite: "None", // NOTE: since frontend is on a different domain use "None"
   secure: process.env.NODE_ENV === "prod",
 };
 

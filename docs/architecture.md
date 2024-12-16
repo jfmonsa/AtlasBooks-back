@@ -1,99 +1,100 @@
 # Architecture
 
-Este proyecto implementa una arquitectura de 3 capas (3-Layered / 3-tier architecture) cada una con una responsabilidad específica. También tiene algunas influencias de la Arquitectura Clean (Por el uso de dependencias unidireacionales / Regla de dependencias)
+This project implements a 3-layered architecture (3-tier architecture), where each layer has a specific responsibility. It is also influenced by Clean Architecture due to its unidirectional dependency flow (Dependency Rule).
 
-Separación clara de responsabilidades:
+Clear separation of concerns:
 
-- Presentación (Routes/Controllers)
-- Lógica de negocio (Services)
-- Acceso a datos (Repositories)
+- Presentation (Routes/Controllers)
+- Business Logic (Services)
+- Data Access (Repositories)
 
 Dependencias unidireccionales:
 
-- Controllers dependen de Services
-- Services dependen de Repositories
-- Cada capa solo conoce la inmediatamente inferior
+Unidirectional dependencies:
 
-## Tabla de Contenidos
+- Controllers depend on Services
+- Services depend on Repositories
+- Each layer only knows the one directly below it
 
-<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+## Table of Contents
 
-- [Estructura de Archivos](#estructura-de-archivos)
-- [Capas de la Arquictectura](#capas-de-la-arquictectura)
-  - [Http Layer](#http-layer)
-  - [Business Logic Layer](#business-logic-layer)
-  - [Data Acess Layer](#data-acess-layer)
-  - [Otros Archivos ¿En que capa los ubicamos?](#otros-archivos-en-que-capa-los-ubicamos)
-- [Flujo de datos](#flujo-de-datos)
-- [Sobre La Inyección de dependencias](#sobre-la-inyección-de-dependencias)
-  - [DI Container](#di-container)
-- [Ejemplo real de como implementar una funcionalidad usando esta arquitectura](#ejemplo-real-de-como-implementar-una-funcionalidad-usando-esta-arquitectura)
-  - [1. Capa HTTP](#1-capa-http)
-  - [2. Escribir el Servicio](#2-escribir-el-servicio)
-  - [3. Repositories](#3-repositories)
-  - [4. Registar las dependencias en el container](#4-registar-las-dependencias-en-el-container)
-- [Resumen: Principales Principios y Patrones de diseño Usados](#resumen-principales-principios-y-patrones-de-diseño-usados)
-- [Convenciones](#convenciones)
-- [Recursos](#recursos)
+  * [Table of Contents](#table-of-contents)
+  * [Estructura de Archivos](#estructura-de-archivos)
+  * [Architecture Layers](#architecture-layers)
+    + [Http Layer](#http-layer)
+    + [Business Logic Layer](#business-logic-layer)
+    + [Data Acess Layer](#data-acess-layer)
+    + [Other Files: Which Layer Do They Belong To?](#other-files-which-layer-do-they-belong-to)
+  * [Flujo de datos](#flujo-de-datos)
+  * [About Dependency Injection](#about-dependency-injection)
+    + [DI Container](#di-container)
+  * [Real Example of How to Implement a Functionality Using This Architecture](#real-example-of-how-to-implement-a-functionality-using-this-architecture)
+    + [1. Capa HTTP](#1-capa-http)
+    + [2. Write the Service](#2-write-the-service)
+    + [3. 3. Repositories](#3-3-repositories)
+    + [4. Register the Dependencies in the Container](#4-register-the-dependencies-in-the-container)
+  * [Summary: Main Principles and Design Patterns Used](#summary-main-principles-and-design-patterns-used)
+  * [Conventions](#conventions)
+  * [Recursos](#recursos)
 
 <!-- TOC end -->
-
-<!-- TOC --><a name="architecture"></a>
 
 ## Estructura de Archivos
 
 ```
 src/
-├── api/                   # Capa de presentación HTTP
-│   ├── auth/               # Módulo de autenticación
+├── api/                   # HTTP Presentation Layer
+│   ├── auth/               # Authentication Module
 │   │   ├── dto/             # Data Transfer Objects
-│   │   ├── routes/          # Definición de rutas
-│   │   ├── controllers/     # Controladores HTTP
-│   │   └── services/        # Lógica de negocio
-├── config/                # Configuraciones
-├── helpers/               # Utilidades
-├── middlewares/           # Middlewares de Express
-└── repositories/          # Capa de acceso a datos
-storage/                  # archivos estaticos
-db/                       # scripts y diagramas de la db
-docs/                     # documentacion interna del proyecto
-
+│   │   ├── routes/          # Route definitions
+│   │   ├── controllers/     # HTTP Controllers
+│   │   └── services/        # Business logic
+├── config/                # Configuration files
+├── helpers/               # Utilities
+├── middlewares/           # Express Middlewares
+└── repositories/          # Data Access Layer
+storage/                   # Static files
+db/                        # Database scripts and diagrams
+docs/                      # Internal project documentation
 ```
 
-## Capas de la Arquictectura
+## Architecture Layers
 
 ### Http Layer
 
-- **Ubicación**: `api/{module}/{module}.{version}.routes.js`, `api/{module}/{module}.{version}.controller.js`, `api/{module}/dto/{name}.{version}.dto.js`
-- **Responsabilidad**: Manejo de peticiones HTTP y respuestas
-- **Componentes**:
-  - Routes: Definición de endpoints, jsdoc para swagger y middleware pipeline
-  - Controllers: Traducción de peticiones HTTP a casos de uso
-  - DTOs: Validación y transformación de datos de entrada
+- **Location**: `api/{module}/{module}.{version}.routes.js`, `api/{module}/{module}.{version}.controller.js`, `api/{module}/dto/{name}.{version}.dto.js`
+- **Responsibility**: Handles HTTP requests and responses
+- **Components**:
+  - Routes: Defines endpoints, Swagger documentation, and middleware pipeline
+  - Controllers: Translates HTTP requests into use cases
+  - DTOs: Validates and transforms input data
+
+> [!IMPORTANT]
+> any object property that its name contains `Id` or starts with `id` will be encoded if is a request object or decode if is a response object by a middleware. for this we are using [sqids](https://sqids.org/)
 
 ### Business Logic Layer
 
-- **Ubiación**: `api/{module}/{module}.{version}.service.js`
-- **Responsabilidad**: Implementación de la lógica de negocio
-- **Características**:
-  - Independiente de frameworks
-  - Orquestación de operaciones
-  - Manejo de transacciones
-  - Validaciones de negocio
+- **Location**: `api/{module}/{module}.{version}.service.js`
+- **Responsability**: Implements business logic
+- **Characteristics**:
+  - Independent from frameworks
+  - Orchestrates operations
+  - Manages transactions
+  - Handles business validations
 
 ### Data Acess Layer
 
-- **Ubicación**: `repositories/{tableName}.repository.js`
-- **Responsabilidad**: Interactuar con la base de datos, cada respository define metodos que implementan consultas a la bd.
+- **Location**: `repositories/{tableName}.repository.js`
+- **Responsibility**: Interacts with the database; each repository defines methods that implement database queries.
 - **Características**:
-  - Patrón Repository
-  - Generalmente un repository para cada tabla de la bd (Aunque no es regla de oro)
-  - Manejo de transacciones a nivel de base de datos
-  - Promueve la reutilización de consultas sql especialmente de los metodos de la super-clase `BaseRepository` que abstraen las principales operaciones del CRUD, evitando repetir y repetir sentencias sql en lo posible
+  - Implements the Repository Pattern
+  - Typically one repository per database table (not a strict rule)
+  - Handles database-level transactions
+  - Promotes query reuse, especially via the BaseRepository superclass, which abstracts common CRUD operations to avoid repetitive SQL statements
 
-### Otros Archivos ¿En que capa los ubicamos?
+### Other Files: Which Layer Do They Belong To?
 
-Los demás archivos del proyecto los podríamos ubicar en una "capa" de infraestructura:
+Other project files could be grouped into an "Infrastructure" layer:
 
 - `config/`
 - `middlewares/`
@@ -103,40 +104,40 @@ Los demás archivos del proyecto los podríamos ubicar en una "capa" de infraest
 
 ## Flujo de datos
 
-1. Las peticiones HTTP entran por los routes
-2. Pasan por el pipeline de middlewares (validación, autenticación, etc.)
-3. Llegan al controller correspondiente
-4. El controller delega al service
-5. El service implementa la lógica de negocio usando los repositories
-6. La respuesta sigue el camino inverso
+1. HTTP requests enter through the routes
+2. They pass through the middleware pipeline (validation, authentication, etc.)
+3. They reach the corresponding controller
+4. The controller delegates the task to the service
+5. The service implements the business logic using repositories
+6. The response follows the reverse path
 
 [![Diagrama del flujo de datos, hecho con mermaid :'D](https://mermaid.ink/img/pako:eNplkUFzgjAQhf9KZk92igiIgDl40UMvHZ1qe-hwycBWM0JCk2BrHf57A6LWaU7Z5Htv3-yeIJM5AgWNnzWKDBecbRUrU0HsmRcchRnOZo8vsjaoKVkt1xsyYhUfHfyRwi3XBtUZPiMt_MzzvMAvppCSN1bwnCmy2CzP2O2zRedSGCWLAhUlC2akJodOkEvdR7gCLb5GdeCZtb20HtQalRWyhzPeA11krKTmRqojJUYxoVlmuBQD13V7-EYMrWB4NX_VNVNckkyhDXJv3IJ_Q5_aAA4xco-i-Re5pS-je9psVralrqTQeDeyzrMbNSWB55O57WswBwdKVCXjud3PqVWkYHZYYgrUXu1U9ymkorEcq41cH0UG1KgaHVCy3u6AfrBC26qucuvXb_b6WjHxLmV5kdgS6Am-gQ6nbhTHwSSaJKEfxWHiwBGo70_csZd44yjxQn86DYLGgZ_OwHe9OEnicBxMwnjseVHc_AJCecIH?type=png)](https://mermaid.live/edit#pako:eNplkUFzgjAQhf9KZk92igiIgDl40UMvHZ1qe-hwycBWM0JCk2BrHf57A6LWaU7Z5Htv3-yeIJM5AgWNnzWKDBecbRUrU0HsmRcchRnOZo8vsjaoKVkt1xsyYhUfHfyRwi3XBtUZPiMt_MzzvMAvppCSN1bwnCmy2CzP2O2zRedSGCWLAhUlC2akJodOkEvdR7gCLb5GdeCZtb20HtQalRWyhzPeA11krKTmRqojJUYxoVlmuBQD13V7-EYMrWB4NX_VNVNckkyhDXJv3IJ_Q5_aAA4xco-i-Re5pS-je9psVralrqTQeDeyzrMbNSWB55O57WswBwdKVCXjud3PqVWkYHZYYgrUXu1U9ymkorEcq41cH0UG1KgaHVCy3u6AfrBC26qucuvXb_b6WjHxLmV5kdgS6Am-gQ6nbhTHwSSaJKEfxWHiwBGo70_csZd44yjxQn86DYLGgZ_OwHe9OEnicBxMwnjseVHc_AJCecIH)
 
-## Sobre La Inyección de dependencias
+## About Dependency Injection
 
-Para implementar servicies, constrollers y repositories hacemos uso del patrón de inyección de dependencias (DI). Ya que:
+To implement services, controllers, and repositories, we use the Dependency Injection (DI) pattern because:
 
-- Facilidad para hacer tes unitarios, más limpios y mantenibles. hacemos un mock de la dependencia que necesitamos e inyectarla en el test.
-- Bajo acoplamiento entre compnentes
-- Facil cambio de implmentaciones
-- Desarrollo más modular
-- Reutilizaciónd el Código
+- It makes unit testing easier, cleaner, and more maintainable. We can mock the dependency we need and inject it into the test.
+- Low coupling between components.
+- Easy to change implementations.
+- More modular development.
+- Code reuse.
 
 ### DI Container
 
-- Gestión centralizada de instancias
-- Resolución automática de dependencias
-- Lifecycle management
-- En el archivo `config/di-container.js`
+- Centralized instance management.
+- Automatic dependency resolution.
+- Lifecycle management.
+- Located in the file `config/di-container.js`
 
 > [!NOTE]
-> Para profundizar en estos conceptos, ir a la sección de [Recursos](architecture.md#Recursos)
+> o delve deeper into these concepts, go to the Resources section. [Resources](architecture.md#Resources)
 
-## Ejemplo real de como implementar una funcionalidad usando esta arquitectura
+## Real Example of How to Implement a Functionality Using This Architecture
 
 ### 1. Capa HTTP
 
-1. Crear el dto que valide los datos de la request, en este caso:
+1. Create the DTO that validates the request data, in this case:
 
 ```js
 import { Joi, passwordField } from "../../../helpers/validations.js";
@@ -152,7 +153,7 @@ const registerDTO = {
 export default registerDTO;
 ```
 
-2. Crear un nuevo componente (service, controller o repository)
+2. Create a new component (service, controller, or repository)
 
 ```js
 export default class AuthController {
@@ -192,18 +193,18 @@ export default class AuthController {
 ```
 
 > [!IMPORTANT]
-> Notese que usamos `#` en el nombre de las dependencias, esto es importante porque de esta manera implementamos propiedades `private` de las clase en javascript
+> Note that we use # in the name of the dependencies. This is important because it allows us to implement private properties in JavaScript classes
 
-> [!DANGER]
-> Importante el uso de `this.<method> = this.<method>.bind(this)` para cada metodo definido en los controllers, si esto no se hace fallará, ya que javascript tomara `this` no como referencia a la clase misma sino a el app de express, ya que express se encarga de llamar directamente al controller
-
-> [!IMPORTANT]
-> Notese que no usamos `res.json(<object>)` para enviar la response del controller sino `res.formatResponse(<object>,<HTTP_CODE>)` deebemos usar este siempre ya que automaticamente formatea la response, esto para que las responses sean consistente en toda el api.
+> [!WARNING]
+> It is important to use `this.<method> = this.<method>.bind(this)` for each method defined in the controllers. If this is not done, it will fail because JavaScript will take `this` not as a reference to the class itself but to the express app, as express calls the controller directly.
 
 > [!IMPORTANT]
-> Notese que no escribimos el código HTTP de respuesta directamente sino que lo importamos de `helpers/httpCodes.js` y lo pasamos a `formatResponse()` como `HTTP_CODES.CREATED` (Usar el codigo que corresponda) esto es una practica aconsejable. sino le pasamos un codigo a el metodo `formatResponse()` automaticamente enviará un `200`
+> Note that we do not use `res.json(<object>)` to send the response from the controller but `res.formatResponse(<object>, <HTTP_CODE>)`. We should always use this as it automatically formats the response, ensuring consistency across the API.
 
-3. llamar el controller en el router, los middlewares a usar (no ovidar escribir el comentario jsdoc con la documentación del endpoint al final)
+> [!IMPORTANT]
+> Note that we do not write the HTTP response code directly but import it from `helpers/httpCodes`.js and pass it to `formatResponse()` as HTTP_CODES.CREATED (use the appropriate code). If no code is passed to the `formatResponse()` method, it will automatically send a `200`.
+
+3. Call the controller methos in `.routes` file of each module, the middlewares to use (do not forget to write the jsdoc / swagger comment with the endpoint documentation at the top definition of each `route`)
 
 ```js
 import { Router } from "express";
@@ -225,13 +226,13 @@ router.post(
 );
 ```
 
-### 2. Escribir el Servicio
+### 2. Write the Service
 
-- Contiene la lógica del negocio
-- Aqui llamamos operaciones de la bd definidas en el respository
-- Aquí lanzamos `throw new <AppError, ValidationError, NotFoundError>` errores definidos en `helpers/exceptions.js`
-- retornar los datos al controller
-- Ya no es necesario hacer `.bind(this)` a los metodos del servicio (ni del repository)
++ Contains the business logic.
++ Here we call database operations defined in the repository.
++ Here we throw `throw new <AppError, ValidationError, NotFoundError>` errors defined in `helpers/exceptions.js`
++ Return the data to the controller.
++ It is no longer necessary to bind `this` to the methods of the service (or the repository).
 
 ```js
 export default class AuthService {
@@ -282,16 +283,16 @@ export default class AuthService {
 }
 ```
 
-### 3. Repositories
+### 3. 3. Repositories
 
 > [!NOTA]
-> Revisar en `repositories/` si con la tabla o tablas con las que se quiere interactuar ya existen las clases `respositories/{nombreTabla}.repository.js` en caso de no existir crearla. De lo contrario, trabajar sobre una ya creada definiendo metodos que interactuen con la bd
+> Check in `repositories/` if the table or tables you want to interact with already have `respositories/{nombreTabla}.repository.js` classes. If they do not exist, create them. Otherwise, work on an existing one by defining methods that interact with the database.
 
-### 4. Registar las dependencias en el container
+### 4. Register the Dependencies in the Container
 
-Toda clase que use el mecanismo de DI como: controllers, services y repositories deben ser registradas en el cotainer de DI
+Every class that uses the DI mechanism, such as controllers, services, and repositories, must be registered in the DI container.
 
-En `config/di-container.js`
+In `config/di-container.js`
 
 ```js
 // import dependencies
@@ -320,28 +321,28 @@ export function setupDIContainer() {
 }
 ```
 
-## Resumen: Principales Principios y Patrones de diseño Usados
+## Summary: Main Principles and Design Patterns Used
 
-- Principios SOLID:
-  - Single Responsibility Principle en cada clase (**_De hecho el más importante_**)
-  - Dependency Inversion mediante el contenedor DI
-  - Interface Segregation mediante repositories específicos
++ SOLID Principles:
+  + Single Responsibility Principle in each class (_The most important_)
+  + Dependency Inversion through the DI container.
+  + Interface Segregation through specific repositories.
 
 ---
 
-- Dependency Injection (DI)
-- Repository Pattern
-- DTO (Data Trasnfer Object) Pattern para las validaciones de las requests
++ Dependency Injection (DI)
++ Repository Pattern
++ DTO (Data Transfer Object) Pattern for request validations
 
-## Convenciones
 
-- Nombres de archivos en kebab-case
-- Clases en PascalCase
-- Métodos y variables en camelCase
-- Uso de módulos ES6
+## Conventions
++ File names in kebab-case.
++ Classes in PascalCase.
++ Methods and variables in camelCase.
++ Use of ES6 modules.
 
 ## Recursos
 
 **Dependency Inyection**
 
-- https://youtu.be/TxxdqfhMUnI?si=C2BMCwrWNplNByqW - (_Super Recomendado, tomado como base para implementar la DI en este proyecto, 1er video de una seríe de 4 videos de +-10min_) Dependency Injection in Node with awilix
+- https://youtu.be/TxxdqfhMUnI?si=C2BMCwrWNplNByqW - Highly recommended, used as a basis for implementing DI in this project, 1st video in a series of 4 videos of about 10 minutes each Dependency Injection in Node with awilix

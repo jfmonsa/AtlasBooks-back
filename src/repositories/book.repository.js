@@ -95,6 +95,7 @@ export default class BookRepository extends BaseRepository {
       await this.#bookFilesRepository.uploadAndInsertBookFiles(
         bookId,
         bookFiles,
+        bookDetails.title,
         client
       );
 
@@ -117,5 +118,26 @@ export default class BookRepository extends BaseRepository {
         client
       );
     });
+  }
+
+  /** Counts the number of books uploaded by a specific user */
+  async countBooksUploadedByUser(userId) {
+    const query = `
+    SELECT COUNT(*) AS count
+    FROM BOOK_UPLOAD
+    WHERE id_user = $1
+  `;
+    const result = await super.executeQuery(query, [userId]);
+    return result?.[0].count;
+  }
+
+  async countDailyDownloadsByUser(userId) {
+    const query = `
+      SELECT COUNT(*) AS count
+      FROM BOOK_DOWNLOAD
+      WHERE id_user = $1 AND date_downloaded >= CURRENT_DATE
+    `;
+    const result = await super.executeQuery(query, [userId]);
+    return result?.[0].count;
   }
 }
