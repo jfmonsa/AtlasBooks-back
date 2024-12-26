@@ -1,7 +1,6 @@
 /**
  * @file Handles de config of a Dependency Injection Container to automatically
  * load all services, controllers and repositories  across the whole app
- *
  */
 import { createContainer, asClass, asFunction } from "awilix";
 

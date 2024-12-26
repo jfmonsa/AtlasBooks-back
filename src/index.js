@@ -12,6 +12,8 @@ import { errorHandlerMiddleware } from "./middlewares/errorHandlerMiddleware.js"
 // api
 import { swaggerDocs as swaggerDocsV1 } from "./config/swagger.js";
 import loadRoutes from "./api/router.js";
+// keep serer awake
+import "./config/cron-jobs/awake-server.js";
 
 setupDIContainer();
 const app = express();
