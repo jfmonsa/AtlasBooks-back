@@ -19,8 +19,6 @@ class Database {
             database: process.env.LOCALDB_NAME,
             password: process.env.LOCALDB_PASSWORD,
             port: process.env.LOCALDB_PORT,
-            idleTimeoutMillis: 30000, // 30 seconds
-            connectionTimeoutMillis: 2000, // 2 seconds
           };
 
     this.pool = new Pool(config);
@@ -35,8 +33,9 @@ class Database {
     // Test connection
     this.pool
       .connect()
-      .then(() => {
+      .then(client => {
         console.log(`-> 🗂️  Connection to (${process.env.NODE_ENV}) DB ok`);
+        client.release();
       })
       .catch(err => {
         console.error("Error connecting to the database", err);
